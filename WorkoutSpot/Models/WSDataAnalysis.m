@@ -81,7 +81,7 @@
     
     double *stepSpaces = malloc(length * sizeof(double));
     stepSpaces[0] = 0;
-    vDSP_vsubD(data, 1, data + 1, 1, stepSpaces, 1, length - 1);
+    vDSP_vsubD(data, 1, data + 1, 1, stepSpaces + 1, 1, length - 1);
     
     WSDataAnalysis *ret = [[WSDataAnalysis alloc] initWithInterpolatedData:stepSpaces length:length];
     return ret;
