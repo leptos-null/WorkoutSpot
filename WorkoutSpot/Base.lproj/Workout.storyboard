@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Qx-RQ-bgH">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="W0U-Tl-eIX">
+            <objects>
+                <viewController storyboardIdentifier="WorkoutController" id="6Qx-RQ-bgH" customClass="WSViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ayd-EU-u9j">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OGh-eW-8XG">
+                                <rect key="frame" x="0.0" y="44" width="414" height="473"/>
+                                <connections>
+                                    <outlet property="delegate" destination="6Qx-RQ-bgH" id="5MG-QY-Qsv"/>
+                                </connections>
+                            </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Point" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xCM-wB-C2h" userLabel="Point Label">
+                                <rect key="frame" x="12" y="529" width="39" height="20.5"/>
+                                <accessibility key="accessibilityConfiguration" label="Point Statistics"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Segment" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cm5-md-BOo" userLabel="Segment Label">
+                                <rect key="frame" x="333.5" y="529" width="68.5" height="20.5"/>
+                                <accessibility key="accessibilityConfiguration" label="Segment Statistics">
+                                    <accessibilityTraits key="traits" staticText="YES" summaryElement="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="esl-wV-JQv">
+                                <rect key="frame" x="22" y="564.5" width="370" height="32"/>
+                                <segments>
+                                    <segment title="Time"/>
+                                    <segment title="Distance"/>
+                                </segments>
+                                <connections>
+                                    <action selector="domainSegmentDidChange:" destination="6Qx-RQ-bgH" eventType="valueChanged" id="Mty-U3-mH8"/>
+                                </connections>
+                            </segmentedControl>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-aG-BGs" customClass="WSGraphView">
+                                <rect key="frame" x="4" y="607.5" width="406" height="198.5"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <gestureRecognizers/>
+                            </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="K9a-vq-1Bn">
+                                <rect key="frame" x="4" y="607.5" width="406" height="198.5"/>
+                                <subviews>
+                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ngb-Ij-eXA">
+                                        <rect key="frame" x="0.0" y="0.0" width="406" height="198.5"/>
+                                    </view>
+                                </subviews>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="bottom" secondItem="Sj5-sb-ltG" secondAttribute="bottom" id="0E0-cj-kuq"/>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="height" secondItem="K9a-vq-1Bn" secondAttribute="height" id="8nt-TG-B2j"/>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="leading" secondItem="Sj5-sb-ltG" secondAttribute="leading" id="NJx-vj-00U"/>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="centerY" secondItem="Sj5-sb-ltG" secondAttribute="centerY" id="TXl-vt-Lya"/>
+                                    <constraint firstItem="Sj5-sb-ltG" firstAttribute="trailing" secondItem="ngb-Ij-eXA" secondAttribute="trailing" id="U2S-Zq-z0X"/>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="top" secondItem="Sj5-sb-ltG" secondAttribute="top" id="X0h-of-LjS"/>
+                                    <constraint firstItem="ngb-Ij-eXA" firstAttribute="width" secondItem="K9a-vq-1Bn" secondAttribute="width" id="xil-Bm-iwr"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Sj5-sb-ltG"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="hFE-Lr-jFL"/>
+                                <connections>
+                                    <outlet property="delegate" destination="6Qx-RQ-bgH" id="gOM-ad-bOf"/>
+                                    <outletCollection property="gestureRecognizers" destination="gQr-d7-Uay" appends="YES" id="7vV-PS-gbp"/>
+                                </connections>
+                            </scrollView>
+                            <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9o-70-iYc" customClass="WSGraphView">
+                                <rect key="frame" x="4" y="814" width="406" height="48"/>
+                                <subviews>
+                                    <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCR-Hx-vxt">
+                                        <rect key="frame" x="0.0" y="0.0" width="406" height="48"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="aCR-Hx-vxt" secondAttribute="trailing" id="0WV-ZB-0zc"/>
+                                    <constraint firstAttribute="bottom" secondItem="aCR-Hx-vxt" secondAttribute="bottom" id="DZ9-to-cW4"/>
+                                    <constraint firstItem="aCR-Hx-vxt" firstAttribute="top" secondItem="H9o-70-iYc" secondAttribute="top" id="DrO-Nf-N39"/>
+                                    <constraint firstItem="aCR-Hx-vxt" firstAttribute="leading" secondItem="H9o-70-iYc" secondAttribute="leading" id="j7J-7h-E8E"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="rRv-pX-8rP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="height" secondItem="rRv-pX-8rP" secondAttribute="height" multiplier="0.2425" id="1B6-rh-0xW"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="Wqs-aG-BGs" secondAttribute="trailing" constant="4" id="2P4-NK-6lP"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="Cm5-md-BOo" secondAttribute="trailing" constant="12" id="36Y-qJ-IjD"/>
+                            <constraint firstItem="xCM-wB-C2h" firstAttribute="top" secondItem="OGh-eW-8XG" secondAttribute="bottom" constant="12" id="3C0-Dd-r82"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="leading" secondItem="Wqs-aG-BGs" secondAttribute="leading" id="EUi-ra-kmS"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="top" secondItem="esl-wV-JQv" secondAttribute="bottom" constant="12" id="FSF-23-6ep"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="trailing" secondItem="Wqs-aG-BGs" secondAttribute="trailing" id="JLC-SM-O7j"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="esl-wV-JQv" secondAttribute="trailing" constant="22" id="QOn-Xe-gAK"/>
+                            <constraint firstItem="Cm5-md-BOo" firstAttribute="top" secondItem="xCM-wB-C2h" secondAttribute="top" id="SYQ-zB-ibj"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="trailing" secondItem="K9a-vq-1Bn" secondAttribute="trailing" id="ZwS-OW-gK7"/>
+                            <constraint firstItem="esl-wV-JQv" firstAttribute="top" secondItem="xCM-wB-C2h" secondAttribute="bottom" constant="15" id="bhG-4d-9qo"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="top" secondItem="K9a-vq-1Bn" secondAttribute="top" id="c7p-6v-lzX"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="leading" secondItem="K9a-vq-1Bn" secondAttribute="leading" id="cGV-Ac-DnD"/>
+                            <constraint firstItem="Cm5-md-BOo" firstAttribute="bottom" secondItem="xCM-wB-C2h" secondAttribute="bottom" id="cJG-gi-h26"/>
+                            <constraint firstItem="OGh-eW-8XG" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" id="cZX-4r-UDd"/>
+                            <constraint firstItem="esl-wV-JQv" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="22" id="esF-1b-8kr"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="height" secondItem="Wqs-aG-BGs" secondAttribute="height" multiplier="0.2425" id="iYt-h3-MGp"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="4" id="kRh-aj-XTE"/>
+                            <constraint firstItem="OGh-eW-8XG" firstAttribute="top" secondItem="rRv-pX-8rP" secondAttribute="top" id="loY-5O-flw"/>
+                            <constraint firstItem="Cm5-md-BOo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xCM-wB-C2h" secondAttribute="trailing" id="rBm-ay-OHk"/>
+                            <constraint firstItem="xCM-wB-C2h" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="12" id="sQ0-bY-co6"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="top" secondItem="Wqs-aG-BGs" secondAttribute="bottom" constant="8" id="swe-1x-aH3"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="bottom" secondItem="K9a-vq-1Bn" secondAttribute="bottom" id="yH5-wZ-eJQ"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="OGh-eW-8XG" secondAttribute="trailing" id="zTt-mP-f3e"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="bottom" secondItem="rRv-pX-8rP" secondAttribute="bottom" id="zzh-Hd-Wht"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="domainControl" destination="esl-wV-JQv" id="Kl9-yW-24T"/>
+                        <outlet property="fakeScrollContent" destination="ngb-Ij-eXA" id="e4K-rE-xPO"/>
+                        <outlet property="graphPreview" destination="H9o-70-iYc" id="5JZ-Tl-pJl"/>
+                        <outlet property="graphScrollViewProxy" destination="K9a-vq-1Bn" id="t6g-8d-Vsj"/>
+                        <outlet property="graphView" destination="Wqs-aG-BGs" id="gEU-ni-CY7"/>
+                        <outlet property="mapView" destination="OGh-eW-8XG" id="8Os-AL-17t"/>
+                        <outlet property="pointLabel" destination="xCM-wB-C2h" id="Amt-pn-5Kc"/>
+                        <outlet property="previewSegmentLeading" destination="j7J-7h-E8E" id="FYs-8T-Aae"/>
+                        <outlet property="previewSegmentTrailing" destination="0WV-ZB-0zc" id="IQ3-5E-mgx"/>
+                        <outlet property="previewSegmentView" destination="aCR-Hx-vxt" id="3AK-aG-qWl"/>
+                        <outlet property="segmentLabel" destination="Cm5-md-BOo" id="P9E-KV-ddP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R5u-hV-QgT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="gQr-d7-Uay">
+                    <connections>
+                        <action selector="graphPanGesture:" destination="6Qx-RQ-bgH" id="VLQ-35-I0i"/>
+                    </connections>
+                </panGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1314.4927536231885" y="148.66071428571428"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
