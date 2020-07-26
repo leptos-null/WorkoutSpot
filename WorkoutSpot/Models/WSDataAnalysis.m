@@ -24,17 +24,6 @@
     return [self initWithInterpolatedData:intropData length:intropLen];
 }
 
-/// Create a data analysis object with @c data that is increasing by @c 1 within the domain.
-/// @discussion
-/// @c data is stored by this object, and passed to @c free on @c dealloc
-- (instancetype)initWithInterpolatedData:(const double *)data length:(vDSP_Length)length {
-    if (self = [super init]) {
-        _data = data;
-        _length = length;
-    }
-    return self;
-}
-
 - (double)_accelerateFunction:(void (*)(const double *, vDSP_Stride, double *, vDSP_Length))function range:(NSRange)range {
     double ret = 0;
     function(_data + range.location, 1, &ret, range.length);
@@ -176,10 +165,20 @@
 @end
 
 @implementation WSDataAnalysis (WSAnalysisInternals)
+
+- (instancetype)initWithInterpolatedData:(const double *)data length:(vDSP_Length)length {
+    if (self = [super init]) {
+        _data = data;
+        _length = length;
+    }
+    return self;
+}
+
 - (const double *)data {
     return _data;
 }
 - (vDSP_Length)length {
     return _length;
 }
+
 @end

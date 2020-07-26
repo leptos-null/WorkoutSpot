@@ -110,6 +110,11 @@
 
 @interface WSDataAnalysis (WSAnalysisInternals)
 
+/// Create a data analysis object with @c data that is increasing by @c 1 within the domain.
+/// @discussion
+/// @c data is stored by this object, and passed to @c free on @c dealloc
+- (instancetype)initWithInterpolatedData:(const double *)data length:(vDSP_Length)length;
+
 @property (nonatomic, readonly) const double *data NS_RETURNS_INNER_POINTER;
 @property (nonatomic, readonly) vDSP_Length length;
 
