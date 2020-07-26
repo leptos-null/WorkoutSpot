@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
+#import "WSDataAnalysis.h"
 
 @interface WSPointCloud : NSObject
 
@@ -15,8 +16,11 @@
 
 - (SCNVector3)pointAtIndex:(NSUInteger)index;
 
-/// Sums the distance between each point in @c range
-- (float)rollingDistanceOverRange:(NSRange)range;
+/// Computes the distance between @c vectors in three-dimensional space
+/// @code
+/// spacing[n] = vectors[n] - vectors[n - 1]
+/// @endcode
+- (WSDataAnalysis *)stepSpace;
 
 - (SCNGeometry *)geometryForRange:(NSRange)range;
 

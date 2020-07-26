@@ -30,31 +30,51 @@
     return _vectors[index];
 }
 
-- (float)rollingDistanceOverRange:(NSRange)range {
-    if (range.length == 0) {
-        return NAN;
-    }
-    // TODO: benchmark against each computation in Accelerate
-    // e.g.
-    // vDSP_vsubD(data, 1, data + 1, 1, xDiff, 1, length);
-    // vDSP_vsubD(data, 1, data + 1, 1, yDiff, 1, length);
-    // vDSP_vsubD(data, 1, data + 1, 1, zDiff, 1, length);
-    // vDSP_vsq(xDiff, 1, xSqr, 1, length);
-    // vDSP_vsq(yDiff, 1, ySqr, 1, length);
-    // vDSP_vsq(zDiff, 1, zSqr, 1, length);
-    // vDSP_vadd(xSqr, 1, ySqr, 1, sumSqr, 1, length);
-    // vDSP_vadd(sumSqr, 1, zSqr, 1, sumSqr, 1, length);
-    // vvsqrtf(sqrRt, sumSqr, &len);
-    // vDSP_sve(sqrRt, 1, &dist, length);
+- (WSDataAnalysis *)stepSpace {
+    const SCNVector3 *vectors = _vectors;
+    const NSUInteger length = _length;
     
-    float dist = 0;
-    const SCNVector3 *vectors = _vectors + range.location;
-    for (NSUInteger i = 0; i < (range.length - 1); i++) {
-        // sqrt( (a.x - b.x)**2 + (a.y - b.y)**2 + (a.z - b.z)**2 )
-        dist += simd_distance(SCNVector3ToFloat3(vectors[i + 1]),
-                              SCNVector3ToFloat3(vectors[i + 0]));
+    vDSP_Length const dimensions = 3;
+    
+    float *strungSteps = malloc(dimensions * sizeof(float) * length);
+    float *strungSquares = malloc(dimensions * sizeof(float) * length);
+    
+    for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
+        const NSUInteger strungOffset = length * dimension;
+        
+        strungSteps[strungOffset] = 0;
+        vDSP_vsub(((float *)vectors) + dimension, dimensions,
+                  ((float *)(vectors + 1)) + dimension, dimensions,
+                  strungSteps + strungOffset + 1, 1, length - 1);
     }
-    return dist;
+    
+    vDSP_vsq(strungSteps, 1, strungSquares, 1, length * dimensions);
+    
+    float *squareSums = malloc(length * sizeof(float));
+    
+    const float zeroScalar = 0;
+    vDSP_vfill(&zeroScalar, squareSums, 1, length);
+    
+    for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
+        const NSUInteger strungOffset = length * dimension;
+        vDSP_vadd(strungSquares + strungOffset, 1, squareSums, 1, squareSums, 1, length);
+    }
+    
+    NSAssert(length <= INT_MAX, @"vForce requires length to be represented by an int");
+    int const len = (length & INT_MAX);
+    
+    float *squareRoots = malloc(length * sizeof(float));
+    vvsqrtf(squareRoots, squareSums, &len);
+    
+    double *distances = malloc(length * sizeof(double));
+    vDSP_vspdp(squareRoots, 1, distances, 1, length);
+    
+    free(squareRoots);
+    free(squareSums);
+    free(strungSquares);
+    free(strungSteps);
+    
+    return [[WSDataAnalysis alloc] initWithInterpolatedData:distances length:length];
 }
 
 - (SCNGeometry *)geometryForRange:(NSRange)range {
