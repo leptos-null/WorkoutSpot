@@ -41,7 +41,7 @@
 - (SCNVector3)globePoint {
     return [self.analysisDomain.globeMap pointAtIndex:self.index];
 }
-- (WSHeartRate)beatsPerSecond {
+- (WSHeartRate)heartRate {
     return [self.analysisDomain.heartRate datumAtIndex:self.index];
 }
 
@@ -49,10 +49,10 @@
     CLLocationCoordinate2D coord = self.coordinate;
     return [NSString stringWithFormat:@"<%@: %p; analysisDomain = %@; index = %lu; "
             "date = %@; distance = %f; speed = %f; altitude = %f; grade = %f; "
-            "coordinate = (%f, %f); beatsPerSecond = %.0f>",
+            "coordinate = (%f, %f); heartRate = %.0f>",
             [self class], self, self.analysisDomain, self.index,
             self.date, self.distance, self.speed, self.altitude, self.grade,
-            coord.latitude, coord.longitude, self.beatsPerSecond];
+            coord.latitude, coord.longitude, self.heartRate];
 }
 
 @end

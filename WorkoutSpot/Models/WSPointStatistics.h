@@ -27,7 +27,7 @@
 @property (nonatomic, readonly) double grade;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readonly) SCNVector3 globePoint;
-@property (nonatomic, readonly) WSHeartRate beatsPerSecond;
+@property (nonatomic, readonly) WSHeartRate heartRate;
 
 @end
 
