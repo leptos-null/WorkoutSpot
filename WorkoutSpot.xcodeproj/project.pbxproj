@@ -22,7 +22,6 @@
 		FA65E61E248859B400ABFEFA /* WSGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E61D248859B400ABFEFA /* WSGraphView.m */; };
 		FA65E62D248AD4A300ABFEFA /* UIColor+WSColors.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E62C248AD4A300ABFEFA /* UIColor+WSColors.m */; };
 		FA65E633248BDF3700ABFEFA /* WSGraphGuide.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E632248BDF3700ABFEFA /* WSGraphGuide.m */; };
-		FA65E639248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E638248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.m */; };
 		FA65E63D2492E4BD00ABFEFA /* WSPointStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E63C2492E4BD00ABFEFA /* WSPointStatistics.m */; };
 		FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */; };
 		FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8243C724B381E60024B460 /* WSPointCloud.m */; };
@@ -71,8 +70,6 @@
 		FA65E62C248AD4A300ABFEFA /* UIColor+WSColors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+WSColors.m"; sourceTree = "<group>"; };
 		FA65E631248BDF3700ABFEFA /* WSGraphGuide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSGraphGuide.h; sourceTree = "<group>"; };
 		FA65E632248BDF3700ABFEFA /* WSGraphGuide.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSGraphGuide.m; sourceTree = "<group>"; };
-		FA65E637248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+WSAppending.h"; sourceTree = "<group>"; };
-		FA65E638248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+WSAppending.m"; sourceTree = "<group>"; };
 		FA65E63B2492E4BD00ABFEFA /* WSPointStatistics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPointStatistics.h; sourceTree = "<group>"; };
 		FA65E63C2492E4BD00ABFEFA /* WSPointStatistics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPointStatistics.m; sourceTree = "<group>"; };
 		FA65E63E2492E52700ABFEFA /* WSSegmentStatistics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSSegmentStatistics.h; sourceTree = "<group>"; };
@@ -227,8 +224,6 @@
 				FA65E62C248AD4A300ABFEFA /* UIColor+WSColors.m */,
 				FADB7E5524CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.h */,
 				FADB7E5624CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.m */,
-				FA65E637248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.h */,
-				FA65E638248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -418,7 +413,6 @@
 				FA65E62D248AD4A300ABFEFA /* UIColor+WSColors.m in Sources */,
 				FAEABA172486B32E00481612 /* main.m in Sources */,
 				FA65E61724875D5500ABFEFA /* WSWorkoutViewCell.m in Sources */,
-				FA65E639248D6BEC00ABFEFA /* NSMutableAttributedString+WSAppending.m in Sources */,
 				FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */,
 				FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */,
 				FAEABA092486B32E00481612 /* WSSceneDelegate.m in Sources */,

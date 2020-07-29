@@ -12,7 +12,7 @@
 #import "../Models/UIBezierPath+WSCenteredCircle.h"
 #import "../Models/WSPointStatistics.h"
 #import "../Models/WSSegmentStatistics.h"
-#import "../Models/NSMutableAttributedString+WSAppending.h"
+
 
 typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     /* lower index -> below higher layers (index 1 covers index 0) */
