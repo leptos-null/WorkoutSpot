@@ -13,6 +13,8 @@
 		FA0AF86724957C5600E1E164 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0AF86524957C5600E1E164 /* LaunchScreen.storyboard */; };
 		FA0AF86A24957C5600E1E164 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0AF86924957C5600E1E164 /* main.m */; };
 		FA0B27B324955F9900A3D994 /* Workout.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0B27B124955F9900A3D994 /* Workout.storyboard */; };
+		FA46F27C24CF979D00D9C7F6 /* WSSegmentsStatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F27B24CF979D00D9C7F6 /* WSSegmentsStatsView.m */; };
+		FA46F27F24CF97BC00D9C7F6 /* WSPointStatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */; };
 		FA65E60F2486E54C00ABFEFA /* WSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E60E2486E54C00ABFEFA /* WSViewController.m */; };
 		FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E612248732FC00ABFEFA /* WSFormatterUtils.m */; };
 		FA65E61724875D5500ABFEFA /* WSWorkoutViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */; };
@@ -51,6 +53,10 @@
 		FA0AF86924957C5600E1E164 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FA0B27B224955F9900A3D994 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Workout.storyboard; sourceTree = "<group>"; };
 		FA2CE7CB24B7F940004D6C4E /* NSRange+WSIndex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSRange+WSIndex.h"; sourceTree = "<group>"; };
+		FA46F27A24CF979D00D9C7F6 /* WSSegmentsStatsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSSegmentsStatsView.h; sourceTree = "<group>"; };
+		FA46F27B24CF979D00D9C7F6 /* WSSegmentsStatsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSSegmentsStatsView.m; sourceTree = "<group>"; };
+		FA46F27D24CF97BC00D9C7F6 /* WSPointStatsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPointStatsView.h; sourceTree = "<group>"; };
+		FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPointStatsView.m; sourceTree = "<group>"; };
 		FA65E60D2486E54C00ABFEFA /* WSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSViewController.h; sourceTree = "<group>"; };
 		FA65E60E2486E54C00ABFEFA /* WSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSViewController.m; sourceTree = "<group>"; };
 		FA65E611248732FC00ABFEFA /* WSFormatterUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSFormatterUtils.h; sourceTree = "<group>"; };
@@ -187,6 +193,10 @@
 				FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */,
 				FA65E61C248859B400ABFEFA /* WSGraphView.h */,
 				FA65E61D248859B400ABFEFA /* WSGraphView.m */,
+				FA46F27D24CF97BC00D9C7F6 /* WSPointStatsView.h */,
+				FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */,
+				FA46F27A24CF979D00D9C7F6 /* WSSegmentsStatsView.h */,
+				FA46F27B24CF979D00D9C7F6 /* WSSegmentsStatsView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -397,6 +407,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA46F27C24CF979D00D9C7F6 /* WSSegmentsStatsView.m in Sources */,
 				FAEABA0C2486B32E00481612 /* WSTableViewController.m in Sources */,
 				FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */,
 				FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */,
@@ -417,6 +428,7 @@
 				FA65E61E248859B400ABFEFA /* WSGraphView.m in Sources */,
 				FA65E61B2488262800ABFEFA /* WSWorkoutAnalysis.m in Sources */,
 				FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */,
+				FA46F27F24CF97BC00D9C7F6 /* WSPointStatsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

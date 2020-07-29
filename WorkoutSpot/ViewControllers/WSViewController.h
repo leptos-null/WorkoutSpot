@@ -12,6 +12,8 @@
 
 #import "../Models/WSWorkoutAnalysis.h"
 #import "../Views/WSGraphView.h"
+#import "../Views/WSPointStatsView.h"
+#import "../Views/WSSegmentsStatsView.h"
 
 @interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate>
 
@@ -30,8 +32,8 @@
 @property (nonatomic) NSUInteger pointIndex;
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong, nonatomic) IBOutlet UILabel *pointLabel;
-@property (strong, nonatomic) IBOutlet UILabel *segmentLabel;
+@property (strong, nonatomic) IBOutlet WSPointStatsView *pointStatsView;
+@property (strong, nonatomic) IBOutlet WSSegmentsStatsView *segmentStatsView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
 @property (strong, nonatomic) IBOutlet WSGraphView *graphView;

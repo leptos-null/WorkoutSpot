@@ -149,57 +149,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     [self setPointIndex:self.pointIndex];
     
-    CLLocationDistance deltaDistance = segmentStats.deltaDistance;
-    CLLocationDistance climbing = segmentStats.ascending;
-    double avgGrade = segmentStats.averageGrade;
-    NSTimeInterval deltaTime = segmentStats.duration;
-    
-    CLLocationSpeed avgSpeed = segmentStats.averageSpeed;
-    WSHeartRate avgHeartRate = segmentStats.averageHeartRate;
-    
-    NSMutableAttributedString *segmentAttr = [NSMutableAttributedString new];
-    NSMutableString *segmentAccess = [NSMutableString string];
-    [segmentAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.segmentColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Duration: %@\n", [WSFormatterUtils abbreviatedSeconds:deltaTime]];
-    [segmentAccess appendFormat:@"Duration: %@. ", [WSFormatterUtils expandedSeconds:deltaTime]];
-    [segmentAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.segmentColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Distance: %@\n", [WSFormatterUtils abbreviatedMeters:deltaDistance]];
-    [segmentAccess appendFormat:@"Distance: %@. ", [WSFormatterUtils expandedMeters:deltaDistance]];
-    [segmentAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.altitudeColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Climbing: %@\n", [WSFormatterUtils abbreviatedMeters:climbing]];
-    [segmentAccess appendFormat:@"Climbing: %@. ", [WSFormatterUtils expandedMeters:climbing]];
-    [segmentAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.segmentColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Avg. Grade: %@\n", [WSFormatterUtils percentage:avgGrade]];
-    [segmentAccess appendFormat:@"Average Grade: %@. ", [WSFormatterUtils percentage:avgGrade]];
-    [segmentAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.speedColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Avg. Speed: %@\n", [WSFormatterUtils abbreviatedMetersPerSecond:avgSpeed]];
-    [segmentAccess appendFormat:@"Average Speed: %@. ", [WSFormatterUtils expandedMetersPerSecond:avgSpeed]];
-    if (analysis.heartRate != nil) {
-        [segmentAttr appendAttributes:@{
-            NSForegroundColorAttributeName : UIColor.heartRateColor,
-            NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-        } format:@"Avg. Heart Rate: %@ BPM\n", [WSFormatterUtils beatsPerMinute:avgHeartRate]];
-        [segmentAccess appendFormat:@"Average Heart Rate: %@ BPM. ", [WSFormatterUtils beatsPerMinute:avgHeartRate]];
-    }
-    
-    NSString *lineBreak = @"\n";
-    if ([segmentAttr.string hasSuffix:lineBreak]) {
-        NSUInteger lineBreakLen = lineBreak.length;
-        [segmentAttr deleteCharactersInRange:NSMakeRange(segmentAttr.length - lineBreakLen, lineBreakLen)];
-    }
-    
-    self.segmentLabel.attributedText = segmentAttr;
-    self.segmentLabel.accessibilityLabel = segmentAccess;
+    self.segmentStatsView.stats = segmentStats;
     
     NSUInteger maxRangeIdx = NSRangeMaxIndex(fullRange);
     NSUInteger maxViewIdx = NSRangeMaxIndex(viewRange);
@@ -233,68 +183,16 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     WSAnalysisDomain *analysis = self.activeDomain;
     WSPointStatistics *pointStats = analysis[pointIndex];
     
-    WSHeartRate heartRate = pointStats.beatsPerSecond;
-    CLLocationSpeed speed = pointStats.speed;
-    CLLocationDistance distance = pointStats.distance;
-    CLLocationDistance altitude = pointStats.altitude;
-    double grade = pointStats.grade;
-    NSDate *date = pointStats.date;
-    
     _pointAnnotation.coordinate = pointStats.coordinate;
     
     CGFloat const circleRadii = 4;
-    
     WSGraphView *graphView = self.graphView;
     
     _heartPointLayer.path = [[graphView.heartGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _speedPointLayer.path = [[graphView.speedGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _altitudePointLayer.path = [[graphView.altitudeGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     
-    BOOL hasHeartData = (analysis.heartRate != nil);
-    
-    NSMutableAttributedString *pointAttr = [NSMutableAttributedString new];
-    NSMutableString *pointAccess = [NSMutableString string];
-    [pointAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.labelColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Time: %@\n", [WSFormatterUtils timeOnlyFromDate:date]];
-    [pointAccess appendFormat:@"Time: %@. ", [WSFormatterUtils timeOnlyFromDate:date]];
-    [pointAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.labelColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Distance: %@\n", [WSFormatterUtils abbreviatedMeters:distance]];
-    [pointAccess appendFormat:@"Distance: %@. ", [WSFormatterUtils expandedMeters:distance]];
-    [pointAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.altitudeColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Altitude: %@\n", [WSFormatterUtils abbreviatedMeters:altitude]];
-    [pointAccess appendFormat:@"Altitude: %@. ", [WSFormatterUtils expandedMeters:altitude]];
-    [pointAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.labelColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Grade: %@\n", [WSFormatterUtils percentage:grade]];
-    [pointAccess appendFormat:@"Grade: %@. ", [WSFormatterUtils percentage:grade]];
-    [pointAttr appendAttributes:@{
-        NSForegroundColorAttributeName : UIColor.speedColor,
-        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-    } format:@"Speed: %@\n", [WSFormatterUtils abbreviatedMetersPerSecond:speed]];
-    [pointAccess appendFormat:@"Speed: %@. ", [WSFormatterUtils expandedMetersPerSecond:speed]];
-    if (hasHeartData) {
-        [pointAttr appendAttributes:@{
-            NSForegroundColorAttributeName : UIColor.heartRateColor,
-            NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
-        } format:@"Heart Rate: %@ BPM\n", [WSFormatterUtils beatsPerMinute:heartRate]];
-        [pointAccess appendFormat:@"Heart Rate: %@ BPM. ", [WSFormatterUtils beatsPerMinute:heartRate]];
-    }
-    
-    NSString *lineBreak = @"\n";
-    if ([pointAttr.string hasSuffix:lineBreak]) {
-        NSUInteger lineBreakLen = lineBreak.length;
-        [pointAttr deleteCharactersInRange:NSMakeRange(pointAttr.length - lineBreakLen, lineBreakLen)];
-    }
-    
-    self.pointLabel.attributedText = pointAttr;
-    self.pointLabel.accessibilityLabel = pointAccess;
+    self.pointStatsView.stats = pointStats;
 }
 
 // MARK: - UI Setters
@@ -475,11 +373,11 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 // MARK: - Description
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p; view = %@; mapView = %@; pointLabel = %@; segmentLabel = %@; graphView = %@; "
+    return [NSString stringWithFormat:@"<%@: %p; view = %@; mapView = %@; pointStatsView = %@; segmentStatsView = %@; graphView = %@; "
             "workoutAnalysis = %@; routeOverlay = %@; segmentOverlay = %@; "
             "viewRange = %@; pointIndex = %lu; "
             "graphScrollViewProxy = %@; fakeScrollContent = %@; graphPreview = %@>",
-            [self class], self, self.viewIfLoaded, self.mapView, self.pointLabel, self.segmentLabel, self.graphView,
+            [self class], self, self.viewIfLoaded, self.mapView, self.pointStatsView, self.segmentStatsView, self.graphView,
             self.workoutAnalysis, self.routeOverlay, self.segmentOverlay,
             NSStringFromRange(self.viewRange), self.pointIndex,
             self.graphScrollViewProxy, self.fakeScrollContent, self.graphPreview];

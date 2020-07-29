@@ -1,0 +1,133 @@
+//
+//  WSSegmentsStatsView.m
+//  WorkoutSpot
+//
+//  Created by Leptos on 7/27/20.
+//  Copyright © 2020 Leptos. All rights reserved.
+//
+
+#import "WSSegmentsStatsView.h"
+#import "../Models/UIColor+WSColors.h"
+#import "../Services/WSFormatterUtils.h"
+
+@implementation WSSegmentsStatsView
+
+typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
+    WSSegmentStatsLabelIndexDuration,
+    WSSegmentStatsLabelIndexDistance,
+    WSSegmentStatsLabelIndexClimbed,
+    WSSegmentStatsLabelIndexGrade,
+    WSSegmentStatsLabelIndexSpeed,
+    WSSegmentStatsLabelIndexHeartRate,
+    
+    WSSegmentStatsLabelCaseCount
+};
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    if (self = [super initWithCoder:coder]) {
+        for (UIView *arrangedSubview in self.arrangedSubviews) {
+            [arrangedSubview removeFromSuperview];
+        }
+        
+        self.durationLabel = [UILabel new];
+        self.distanceLabel = [UILabel new];
+        self.climbedLabel = [UILabel new];
+        self.gradeLabel = [UILabel new];
+        self.speedLabel = [UILabel new];
+        self.heartRateLabel = [UILabel new];
+    }
+    return self;
+}
+
+- (void)setStats:(WSSegmentStatistics *)stats {
+    _stats = stats;
+    
+    NSTimeInterval deltaTime = stats.duration;
+    self.durationLabel.text = [@"Duration: " stringByAppendingString:[WSFormatterUtils abbreviatedSeconds:deltaTime]];
+    self.durationLabel.accessibilityLabel = [@"Duration: " stringByAppendingString:[WSFormatterUtils expandedSeconds:deltaTime]];
+    
+    CLLocationDistance dist = stats.deltaDistance;
+    self.distanceLabel.text = [@"Distance: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:dist]];
+    self.distanceLabel.accessibilityLabel = [@"Distance: " stringByAppendingString:[WSFormatterUtils expandedMeters:dist]];
+    
+    CLLocationDistance climbed = stats.ascending;
+    self.climbedLabel.text = [@"Climbing: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:climbed]];
+    self.climbedLabel.accessibilityLabel = [@"Climbing: " stringByAppendingString:[WSFormatterUtils expandedMeters:climbed]];
+    
+    double grade = stats.averageGrade;
+    self.gradeLabel.text = [@"Avg. Grade: " stringByAppendingString:[WSFormatterUtils percentage:grade]];
+    self.gradeLabel.accessibilityLabel = [@"Average Grade: " stringByAppendingString:[WSFormatterUtils percentage:grade]];
+    
+    CLLocationSpeed speed = stats.averageSpeed;
+    self.speedLabel.text = [@"Avg. Speed: " stringByAppendingString:[WSFormatterUtils abbreviatedMetersPerSecond:speed]];
+    self.speedLabel.accessibilityLabel = [@"Average Speed: " stringByAppendingString:[WSFormatterUtils expandedMetersPerSecond:speed]];
+    
+    WSHeartRate heartRate = stats.averageHeartRate;
+    self.heartRateLabel.text = [NSString stringWithFormat:@"Avg. Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
+    self.heartRateLabel.accessibilityLabel = [NSString stringWithFormat:@"Average Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
+}
+
+- (void)_setGenericLabelProperties:(UILabel *)label {
+    label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
+    label.adjustsFontForContentSizeCategory = YES;
+    label.textAlignment = NSTextAlignmentRight;
+}
+
+// MARK: - UI Setters
+
+- (void)setDurationLabel:(UILabel *)durationLabel {
+    [self.durationLabel removeFromSuperview];
+    
+    _durationLabel = durationLabel;
+    durationLabel.textColor = UIColor.segmentColor;
+    [self _setGenericLabelProperties:durationLabel];
+    
+    [self insertArrangedSubview:durationLabel atIndex:WSSegmentStatsLabelIndexDuration];
+}
+- (void)setDistanceLabel:(UILabel *)distanceLabel {
+    [self.distanceLabel removeFromSuperview];
+    
+    _distanceLabel = distanceLabel;
+    distanceLabel.textColor = UIColor.segmentColor;
+    [self _setGenericLabelProperties:distanceLabel];
+    
+    [self insertArrangedSubview:distanceLabel atIndex:WSSegmentStatsLabelIndexDistance];
+}
+- (void)setClimbedLabel:(UILabel *)climbedLabel {
+    [self.climbedLabel removeFromSuperview];
+    
+    _climbedLabel = climbedLabel;
+    climbedLabel.textColor = UIColor.altitudeColor;
+    [self _setGenericLabelProperties:climbedLabel];
+    
+    [self insertArrangedSubview:climbedLabel atIndex:WSSegmentStatsLabelIndexClimbed];
+}
+- (void)setGradeLabel:(UILabel *)gradeLabel {
+    [self.gradeLabel removeFromSuperview];
+    
+    _gradeLabel = gradeLabel;
+    gradeLabel.textColor = UIColor.segmentColor;
+    [self _setGenericLabelProperties:gradeLabel];
+    
+    [self insertArrangedSubview:gradeLabel atIndex:WSSegmentStatsLabelIndexGrade];
+}
+- (void)setSpeedLabel:(UILabel *)speedLabel {
+    [self.speedLabel removeFromSuperview];
+    
+    _speedLabel = speedLabel;
+    speedLabel.textColor = UIColor.speedColor;
+    [self _setGenericLabelProperties:speedLabel];
+    
+    [self insertArrangedSubview:speedLabel atIndex:WSSegmentStatsLabelIndexSpeed];
+}
+- (void)setHeartRateLabel:(UILabel *)heartRateLabel {
+    [self.heartRateLabel removeFromSuperview];
+    
+    _heartRateLabel = heartRateLabel;
+    heartRateLabel.textColor = UIColor.heartRateColor;
+    [self _setGenericLabelProperties:heartRateLabel];
+    
+    [self insertArrangedSubview:heartRateLabel atIndex:WSSegmentStatsLabelIndexHeartRate];
+}
+
+@end
