@@ -23,7 +23,7 @@
                                     <outlet property="delegate" destination="6Qx-RQ-bgH" id="5MG-QY-Qsv"/>
                                 </connections>
                             </mapView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="oC6-iZ-khx" userLabel="Left Stack View" customClass="WSPointStatsView">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="oC6-iZ-khx" userLabel="Point Stats" customClass="WSPointStatsView">
                                 <rect key="frame" x="12" y="529" width="41.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bor-TH-8qq" userLabel="Demo">
@@ -34,7 +34,7 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="F7l-oq-mtF" userLabel="Right Stack View" customClass="WSSegmentsStatsView">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="F7l-oq-mtF" userLabel="Segment Stats" customClass="WSSegmentStatsView">
                                 <rect key="frame" x="360.5" y="529" width="41.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYL-Ly-L0r" userLabel="Demo">

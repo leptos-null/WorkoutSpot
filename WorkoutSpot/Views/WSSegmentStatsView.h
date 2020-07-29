@@ -1,5 +1,5 @@
 //
-//  WSSegmentsStatsView.h
+//  WSSegmentStatsView.h
 //  WorkoutSpot
 //
 //  Created by Leptos on 7/27/20.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "../Models/WSSegmentStatistics.h"
 
-@interface WSSegmentsStatsView : UIStackView
+@interface WSSegmentStatsView : UIStackView
 
 @property (strong, nonatomic) WSSegmentStatistics *stats;
 

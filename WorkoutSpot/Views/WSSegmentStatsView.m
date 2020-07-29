@@ -1,16 +1,16 @@
 //
-//  WSSegmentsStatsView.m
+//  WSSegmentStatsView.m
 //  WorkoutSpot
 //
 //  Created by Leptos on 7/27/20.
 //  Copyright © 2020 Leptos. All rights reserved.
 //
 
-#import "WSSegmentsStatsView.h"
+#import "WSSegmentStatsView.h"
 #import "../Models/UIColor+WSColors.h"
 #import "../Services/WSFormatterUtils.h"
 
-@implementation WSSegmentsStatsView
+@implementation WSSegmentStatsView
 
 typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     WSSegmentStatsLabelIndexDuration,

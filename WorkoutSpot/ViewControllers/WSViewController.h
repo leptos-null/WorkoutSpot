@@ -13,7 +13,7 @@
 #import "../Models/WSWorkoutAnalysis.h"
 #import "../Views/WSGraphView.h"
 #import "../Views/WSPointStatsView.h"
-#import "../Views/WSSegmentsStatsView.h"
+#import "../Views/WSSegmentStatsView.h"
 
 @interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate>
 
@@ -33,7 +33,7 @@
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) IBOutlet WSPointStatsView *pointStatsView;
-@property (strong, nonatomic) IBOutlet WSSegmentsStatsView *segmentStatsView;
+@property (strong, nonatomic) IBOutlet WSSegmentStatsView *segmentStatsView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
 @property (strong, nonatomic) IBOutlet WSGraphView *graphView;
