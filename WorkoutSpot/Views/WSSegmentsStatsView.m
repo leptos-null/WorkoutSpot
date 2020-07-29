@@ -45,26 +45,32 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     NSTimeInterval deltaTime = stats.duration;
     self.durationLabel.text = [@"Duration: " stringByAppendingString:[WSFormatterUtils abbreviatedSeconds:deltaTime]];
     self.durationLabel.accessibilityLabel = [@"Duration: " stringByAppendingString:[WSFormatterUtils expandedSeconds:deltaTime]];
+    self.durationLabel.hidden = (stats.analysisDomain.time == nil);
     
     CLLocationDistance dist = stats.deltaDistance;
     self.distanceLabel.text = [@"Distance: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:dist]];
     self.distanceLabel.accessibilityLabel = [@"Distance: " stringByAppendingString:[WSFormatterUtils expandedMeters:dist]];
+    self.distanceLabel.hidden = (stats.analysisDomain.distance == nil);
     
     CLLocationDistance climbed = stats.ascending;
     self.climbedLabel.text = [@"Climbing: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:climbed]];
     self.climbedLabel.accessibilityLabel = [@"Climbing: " stringByAppendingString:[WSFormatterUtils expandedMeters:climbed]];
+    self.climbedLabel.hidden = (stats.analysisDomain.ascending == nil);
     
     double grade = stats.averageGrade;
     self.gradeLabel.text = [@"Avg. Grade: " stringByAppendingString:[WSFormatterUtils percentage:grade]];
     self.gradeLabel.accessibilityLabel = [@"Average Grade: " stringByAppendingString:[WSFormatterUtils percentage:grade]];
+    self.gradeLabel.hidden = (stats.analysisDomain.grade == nil);
     
     CLLocationSpeed speed = stats.averageSpeed;
     self.speedLabel.text = [@"Avg. Speed: " stringByAppendingString:[WSFormatterUtils abbreviatedMetersPerSecond:speed]];
     self.speedLabel.accessibilityLabel = [@"Average Speed: " stringByAppendingString:[WSFormatterUtils expandedMetersPerSecond:speed]];
+    self.speedLabel.hidden = (stats.analysisDomain.speed == nil);
     
     WSHeartRate heartRate = stats.averageHeartRate;
     self.heartRateLabel.text = [NSString stringWithFormat:@"Avg. Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
     self.heartRateLabel.accessibilityLabel = [NSString stringWithFormat:@"Average Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
+    self.heartRateLabel.hidden = (stats.analysisDomain.heartRate == nil);
 }
 
 - (void)_setGenericLabelProperties:(UILabel *)label {
