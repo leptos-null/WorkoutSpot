@@ -36,7 +36,10 @@
     double meters = [workout.totalDistance doubleValueForUnit:[HKUnit meterUnit]];
     
     self.dateLabel.text = [WSFormatterUtils dateOnlyFromDate:startDate];
+    self.dateLabel.accessibilityLabel = [WSFormatterUtils dateOnlyFromDate:startDate];
+    
     self.timeLabel.text = [WSFormatterUtils timeOnlyFromDate:startDate];
+    self.timeLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:startDate];
     
     self.durationLabel.text = [WSFormatterUtils contractedSeconds:duration];
     self.durationLabel.accessibilityLabel = [WSFormatterUtils expandedSeconds:duration];
