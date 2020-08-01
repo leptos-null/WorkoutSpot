@@ -9,9 +9,12 @@
 #import "WSTableViewController.h"
 #import "WSViewController.h"
 #import "../Views/WSWorkoutViewCell.h"
+#import "../Models/WSPoseWorkout.h"
+#import "../Models/NSArray+WSMapping.h"
 
 @implementation WSTableViewController {
-    UITableViewDiffableDataSource<NSString *, HKWorkout *> *_dataSource;
+    HKAnchoredObjectQuery *_workoutQuery;
+    UITableViewDiffableDataSource<NSString *, WSHashWorkout *> *_dataSource;
 }
 
 - (void)viewDidLoad {
@@ -26,7 +29,7 @@
     ];
     [self.healthStore requestAuthorizationToShareTypes:nil readTypes:[NSSet setWithArray:types] completion:^(BOOL success, NSError *error) {
         if (error) {
-            NSLog(@"%@", error);
+            NSLog(@"HKHealthStoreRequestAuthorizationCompleted: %@", error);
             return;
         }
         if (success) {
@@ -37,52 +40,87 @@
     }];
     
     _dataSource = [[UITableViewDiffableDataSource alloc] initWithTableView:self.tableView
-                            cellProvider:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath, HKWorkout *workout) {
+                            cellProvider:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath, WSHashWorkout *hashWorkout) {
         WSWorkoutViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[WSWorkoutViewCell reusableIdentifier] forIndexPath:indexPath];
-        cell.workout = workout;
+        cell.workout = hashWorkout.workout;
         return cell;
     }];
-    
-    self.tableView.dataSource = _dataSource;
+    _dataSource.defaultRowAnimation = UITableViewRowAnimationTop;
 }
 
 - (IBAction)beginHealthQuery {
+    dispatch_assert_queue(dispatch_get_main_queue());
+    
     [self.refreshControl beginRefreshing];
+    
+    HKHealthStore *healthStore = self.healthStore;
+    
+    [healthStore stopQuery:_workoutQuery];
     
     HKQuantity *zeroDistance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:0];
     NSPredicate *predicate = [HKQuery predicateForWorkoutsWithOperatorType:NSGreaterThanPredicateOperatorType totalDistance:zeroDistance];
     
-    HKWorkoutType *sample = [HKWorkoutType workoutType];
+    HKWorkoutType *sampleType = [HKWorkoutType workoutType];
     __weak __typeof(self) weakself = self;
-    HKSampleQuery *workoutQuery = [[HKSampleQuery alloc] initWithSampleType:sample predicate:predicate limit:HKObjectQueryNoLimit sortDescriptors:@[
-        [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
-    ] resultsHandler:^(HKSampleQuery *query, NSArray<__kindof HKSample *> *results, NSError *error) {
+    
+    NSDiffableDataSourceSnapshot<NSString *, WSHashWorkout *> *snapshot = [NSDiffableDataSourceSnapshot new];
+    void(^updateHandler)(HKAnchoredObjectQuery *, NSArray<__kindof HKSample *> *, NSArray<HKDeletedObject *> *, HKQueryAnchor *, NSError *) =
+    ^(HKAnchoredObjectQuery *query, NSArray<HKWorkout *> *workouts, NSArray<HKDeletedObject *> *deletedObjects, HKQueryAnchor *newAnchor, NSError *error) {
         if (error) {
-            NSLog(@"%@", error);
+            NSLog(@"HKAnchoredObjectQueryHandler: %@", error);
             return;
         }
-        [weakself setWorkouts:results];
-    }];
-    [self.healthStore executeQuery:workoutQuery];
+        
+        NSString *const sectionHeader = @"Workouts";
+        if (weakself) {
+            __strong __typeof(self) strongself = weakself;
+            UITableViewDiffableDataSource<NSString *, WSHashWorkout *> *dataSource = strongself->_dataSource;
+            
+            if (![snapshot.sectionIdentifiers containsObject:sectionHeader]) {
+                [snapshot appendSectionsWithIdentifiers:@[ sectionHeader ]];
+            }
+            
+            // workouts seems to be in chronological order added to HealthKit
+            NSUInteger const workoutCount = workouts.count;
+            NSMutableArray<WSHashWorkout *> *addIdents = [NSMutableArray arrayWithCapacity:workoutCount];
+            [workouts enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(HKWorkout *workout, NSUInteger idx, BOOL *stop) {
+                addIdents[workoutCount - idx - 1] = [[WSHashWorkout alloc] initWithWorkout:workout];
+            }];
+            
+            NSArray<WSHashWorkout *> *startWorkouts = [snapshot itemIdentifiersInSectionWithIdentifier:sectionHeader];
+            
+            WSHashWorkout *firstIdentifier = startWorkouts.firstObject;
+            if (firstIdentifier != nil) {
+                [snapshot insertItemsWithIdentifiers:addIdents beforeItemWithIdentifier:firstIdentifier];
+            } else {
+                [snapshot appendItemsWithIdentifiers:addIdents intoSectionWithIdentifier:sectionHeader];
+            }
+            
+            [snapshot deleteItemsWithIdentifiers:[deletedObjects map:^WSHashWorkout *(HKDeletedObject *obj) {
+                return [[WSPoseWorkout alloc] initWithWorkoutUUID:obj.UUID];
+            }]];
+            
+            [dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakself.refreshControl endRefreshing];
+                });
+            }];
+        }
+    };
+    
+    HKAnchoredObjectQuery *workoutQuery = [[HKAnchoredObjectQuery alloc] initWithType:sampleType predicate:predicate anchor:HKAnchoredObjectQueryNoAnchor
+                                                                                limit:HKObjectQueryNoLimit resultsHandler:updateHandler];
+    workoutQuery.updateHandler = updateHandler;
+    
+    _workoutQuery = workoutQuery;
+    [healthStore executeQuery:workoutQuery];
 }
 
 - (WSViewController *)_controllerForIndexPath:(NSIndexPath *)indexPath {
-    HKWorkout *workout = [_dataSource itemIdentifierForIndexPath:indexPath];
+    WSHashWorkout *hashWorkout = [_dataSource itemIdentifierForIndexPath:indexPath];
     WSViewController *controller = [WSViewController fromStoryboard];
-    controller.workoutAnalysis = [[WSWorkoutAnalysis alloc] initWithWorkout:workout store:self.healthStore];
+    controller.workoutAnalysis = [[WSWorkoutAnalysis alloc] initWithWorkout:hashWorkout.workout store:self.healthStore];
     return controller;
-}
-
-- (void)setWorkouts:(NSArray<HKWorkout *> *)workouts {
-    NSDiffableDataSourceSnapshot<NSString *, HKWorkout *> *snapshot = [NSDiffableDataSourceSnapshot new];
-    [snapshot appendSectionsWithIdentifiers:@[ @"Workouts" ] ];
-    [snapshot appendItemsWithIdentifiers:workouts];
-    
-    [_dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.refreshControl endRefreshing];
-        });
-    }];
 }
 
 // MARK: - UITableViewDelegate
