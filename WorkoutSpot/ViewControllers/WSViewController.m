@@ -50,15 +50,12 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         return;
     }
     
-    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:self.routeOverlay];
+    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:routeOverlay];
     renderer.strokeColor = UIColor.routeColor;
     renderer.lineWidth = 6;
     _routeRenderer = renderer;
     
     [mapView insertOverlay:routeOverlay atIndex:WSMapOverlayIndexRoute];
-    UIEdgeInsets padding = UIEdgeInsetsMake(18, 18, 18, 18);
-    BOOL shouldAnimate = (self.navigationController != nil);
-    [mapView setVisibleMapRect:routeOverlay.boundingMapRect edgePadding:padding animated:shouldAnimate];
 }
 
 - (void)setSegmentOverlay:(MKPolyline *)segmentOverlay {
@@ -73,7 +70,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         return;
     }
     
-    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:self.segmentOverlay];
+    MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:segmentOverlay];
     renderer.strokeColor = UIColor.segmentColor;
     renderer.lineWidth = 6;
     _segmentRenderer = renderer;
@@ -113,6 +110,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     self.graphView.segmentStats = fullStats;
     self.graphPreview.segmentStats = fullStats;
     
+    self.routeOverlay = fullStats.route;
     if (@available(iOS 14.0, *)) {
         self.segmentOverlay = fullStats.route;
     }
@@ -126,7 +124,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     } else {
         self.pointIndex = 0;
         self.viewRange = domainRange;
-        self.routeOverlay = fullStats.route;
+        [self focusMapOnRoute];
     }
     
     // this denominator is not particullarly meaningful
@@ -202,6 +200,8 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     _pointAnnotation = [MKPointAnnotation new];
     [mapView addAnnotation:_pointAnnotation];
+    
+    [self focusMapOnRoute];
 }
 
 - (void)setGraphScrollViewProxy:(UIScrollView *)graphScrollViewProxy {
@@ -278,8 +278,18 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         [self _setLayerColors];
     }
 }
+// MARK: - Public Methods
 
-// MARK: - Private methods
+- (void)focusMapOnRoute {
+    id<MKOverlay> routeOverlay = self.routeOverlay;
+    if (routeOverlay) {
+        UIEdgeInsets padding = UIEdgeInsetsMake(18, 18, 18, 18);
+        BOOL shouldAnimate = (self.navigationController != nil);
+        [self.mapView setVisibleMapRect:routeOverlay.boundingMapRect edgePadding:padding animated:shouldAnimate];
+    }
+}
+
+// MARK: - Private Methods
 
 - (IBAction)graphPanGesture:(UIPanGestureRecognizer *)gesture {
     if (gesture.numberOfTouches == 1) {

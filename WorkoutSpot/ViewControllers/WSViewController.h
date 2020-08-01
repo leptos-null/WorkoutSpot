@@ -45,6 +45,8 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *previewSegmentLeading;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *previewSegmentTrailing;
 
+- (void)focusMapOnRoute;
+
 @end
 
 
