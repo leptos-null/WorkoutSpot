@@ -153,7 +153,8 @@
     // assuming receiverInDomain.dx == 1
     offset -= base;
     
-    return fmax(0, fmin(round(offset), NSRangeMaxIndex(self.fullRange)));
+    NSUInteger ret = round(offset);
+    return MAX(0, MIN(ret, NSRangeMaxIndex(self.fullRange)));
 }
 
 - (NSRange)rangeFromRange:(NSRange)range inDomain:(WSAnalysisDomain *)domain {
