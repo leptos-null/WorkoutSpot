@@ -76,18 +76,28 @@
     __weak __typeof(self) weakself = self;
     __block NSUInteger lineCount = 0;
     NSUInteger const routeCount = routes.count;
-    NSMutableArray<CLLocation *> *locations = [NSMutableArray array];
+    NSMutableArray<NSArray<CLLocation *> *> *locations = [NSMutableArray arrayWithCapacity:routeCount];
+    for (NSUInteger routeIdx = 0; routeIdx < routeCount; routeIdx++) {
+        locations[routeIdx] = @[];
+    }
+    
     [routes enumerateObjectsUsingBlock:^(HKWorkoutRoute *route, NSUInteger idx, BOOL *stop) {
         [weakself locationsForRoute:route handler:^(NSArray<CLLocation *> *locs, NSError *error) {
             if (error) {
                 handler(nil, error);
                 return;
             }
-            [locations addObjectsFromArray:locs];
+            // this handler can be called in any order
+            // use a second array to enforce the order
+            locations[idx] = locs;
             dispatch_async(dispatch_get_main_queue(), ^{
                 lineCount++;
                 if (lineCount == routeCount) {
-                    handler(locations, nil);
+                    NSMutableArray<CLLocation *> *flat = [NSMutableArray array];
+                    for (NSArray<CLLocation *> *location in locations) {
+                        [flat addObjectsFromArray:location];
+                    }
+                    handler(flat, nil);
                 }
             });
         }];
