@@ -9,12 +9,10 @@
 #import "WSTableViewController.h"
 #import "WSViewController.h"
 #import "../Views/WSWorkoutViewCell.h"
-#import "../Models/WSPoseWorkout.h"
-#import "../Models/NSArray+WSMapping.h"
 
 @implementation WSTableViewController {
     HKAnchoredObjectQuery *_workoutQuery;
-    UITableViewDiffableDataSource<NSString *, WSHashWorkout *> *_dataSource;
+    UITableViewDiffableDataSource<NSString *, HKWorkout *> *_dataSource;
 }
 
 - (void)viewDidLoad {
@@ -40,9 +38,9 @@
     }];
     
     _dataSource = [[UITableViewDiffableDataSource alloc] initWithTableView:self.tableView
-                            cellProvider:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath, WSHashWorkout *hashWorkout) {
+                            cellProvider:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath, HKWorkout *workout) {
         WSWorkoutViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[WSWorkoutViewCell reusableIdentifier] forIndexPath:indexPath];
-        cell.workout = hashWorkout.workout;
+        cell.workout = workout;
         return cell;
     }];
     _dataSource.defaultRowAnimation = UITableViewRowAnimationTop;
@@ -63,7 +61,12 @@
     HKWorkoutType *sampleType = [HKWorkoutType workoutType];
     __weak __typeof(self) weakself = self;
     
-    NSDiffableDataSourceSnapshot<NSString *, WSHashWorkout *> *snapshot = [NSDiffableDataSourceSnapshot new];
+    NSString *const sectionHeader = @"Workouts";
+    NSDiffableDataSourceSnapshot<NSString *, HKWorkout *> *snapshot = [NSDiffableDataSourceSnapshot new];
+    [snapshot appendSectionsWithIdentifiers:@[ sectionHeader ]];
+    
+    NSMutableDictionary<NSUUID *, HKWorkout *> *const workoutLookup = [NSMutableDictionary dictionary];
+    
     void(^updateHandler)(HKAnchoredObjectQuery *, NSArray<__kindof HKSample *> *, NSArray<HKDeletedObject *> *, HKQueryAnchor *, NSError *) =
     ^(HKAnchoredObjectQuery *query, NSArray<HKWorkout *> *workouts, NSArray<HKDeletedObject *> *deletedObjects, HKQueryAnchor *newAnchor, NSError *error) {
         if (error) {
@@ -71,36 +74,73 @@
             return;
         }
         
-        NSString *const sectionHeader = @"Workouts";
         if (weakself) {
             __strong __typeof(self) strongself = weakself;
-            UITableViewDiffableDataSource<NSString *, WSHashWorkout *> *dataSource = strongself->_dataSource;
             
-            if (![snapshot.sectionIdentifiers containsObject:sectionHeader]) {
-                [snapshot appendSectionsWithIdentifiers:@[ sectionHeader ]];
+            NSUInteger const workoutCount = workouts.count;
+            NSMutableArray<HKWorkout *> *addingWorkouts = [NSMutableArray arrayWithCapacity:workoutCount];
+            // workouts seems to be in chronological order added to HealthKit
+            // read in reverse to get array as close as to the intended order as possible
+            [workouts enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(HKWorkout *workout, NSUInteger idx, BOOL *stop) {
+                addingWorkouts[workoutCount - idx - 1] = workout;
+                workoutLookup[workout.UUID] = workout;
+            }];
+            [addingWorkouts sortUsingDescriptors:@[
+                [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
+            ]];
+            
+            NSArray<HKWorkout *> *existingWorkouts = [snapshot itemIdentifiersInSectionWithIdentifier:sectionHeader];
+            
+            HKWorkout *lastAdding = addingWorkouts.lastObject;
+            HKWorkout *firstExisting = existingWorkouts.firstObject;
+            /* intended order:
+             *   ... // most recent (newer)
+             *   addingWorkouts[n-2]
+             *   addingWorkouts[n-1] // lastInsert
+             *   existingWorkouts[0] // firstExisting
+             *   existingWorkouts[1]
+             *   ... // least recent (older)
+             */
+            
+            if (lastAdding != nil) { // do we have anything to add anyway?
+                if (firstExisting != nil) {
+                    if ([lastAdding.startDate compare:firstExisting.startDate] == NSOrderedAscending) {
+                        // this should be the least warm branch.
+                        // re-sort the entire workout list if appending the sorted additions
+                        //   doesn't result in a list with the intended order
+                        [snapshot deleteItemsWithIdentifiers:existingWorkouts];
+                        
+                        [addingWorkouts addObjectsFromArray:existingWorkouts];
+                        [addingWorkouts sortUsingDescriptors:@[
+                            [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
+                        ]];
+                        
+                        [snapshot appendItemsWithIdentifiers:addingWorkouts intoSectionWithIdentifier:sectionHeader];
+                    } else {
+                        // theoretically, this is the warmest branch of the three,
+                        //   however in reality it's probably second
+                        [snapshot insertItemsWithIdentifiers:addingWorkouts beforeItemWithIdentifier:firstExisting];
+                    }
+                } else {
+                    // this should only be executed one time for each invocation of this method.
+                    //   it's more likely that the app is launched, or the user pulls to reload,
+                    //   than a workout is added while the app is running.
+                    // most likely, this is the warmest branch of the three
+                    [snapshot appendItemsWithIdentifiers:addingWorkouts intoSectionWithIdentifier:sectionHeader];
+                }
             }
             
-            // workouts seems to be in chronological order added to HealthKit
-            NSUInteger const workoutCount = workouts.count;
-            NSMutableArray<WSHashWorkout *> *addIdents = [NSMutableArray arrayWithCapacity:workoutCount];
-            [workouts enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(HKWorkout *workout, NSUInteger idx, BOOL *stop) {
-                addIdents[workoutCount - idx - 1] = [[WSHashWorkout alloc] initWithWorkout:workout];
+            NSMutableArray<HKWorkout *> *deletedWorkouts = [NSMutableArray arrayWithCapacity:deletedObjects.count];
+            [deletedObjects enumerateObjectsUsingBlock:^(HKDeletedObject *deletedObj, NSUInteger idx, BOOL *stop) {
+                NSUUID *uuid = deletedObj.UUID;
+                deletedWorkouts[idx] = workoutLookup[uuid];
+                [workoutLookup removeObjectForKey:uuid];
             }];
             
-            NSArray<WSHashWorkout *> *startWorkouts = [snapshot itemIdentifiersInSectionWithIdentifier:sectionHeader];
+            [snapshot deleteItemsWithIdentifiers:deletedWorkouts];
             
-            WSHashWorkout *firstIdentifier = startWorkouts.firstObject;
-            if (firstIdentifier != nil) {
-                [snapshot insertItemsWithIdentifiers:addIdents beforeItemWithIdentifier:firstIdentifier];
-            } else {
-                [snapshot appendItemsWithIdentifiers:addIdents intoSectionWithIdentifier:sectionHeader];
-            }
             
-            [snapshot deleteItemsWithIdentifiers:[deletedObjects map:^WSHashWorkout *(HKDeletedObject *obj) {
-                return [[WSPoseWorkout alloc] initWithWorkoutUUID:obj.UUID];
-            }]];
-            
-            [dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
+            [strongself->_dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakself.refreshControl endRefreshing];
                 });
@@ -117,9 +157,9 @@
 }
 
 - (WSViewController *)_controllerForIndexPath:(NSIndexPath *)indexPath {
-    WSHashWorkout *hashWorkout = [_dataSource itemIdentifierForIndexPath:indexPath];
+    HKWorkout *workout = [_dataSource itemIdentifierForIndexPath:indexPath];
     WSViewController *controller = [WSViewController fromStoryboard];
-    controller.workoutAnalysis = [[WSWorkoutAnalysis alloc] initWithWorkout:hashWorkout.workout store:self.healthStore];
+    controller.workoutAnalysis = [[WSWorkoutAnalysis alloc] initWithWorkout:workout store:self.healthStore];
     return controller;
 }
 

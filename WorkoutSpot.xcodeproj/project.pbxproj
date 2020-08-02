@@ -15,9 +15,6 @@
 		FA0B27B324955F9900A3D994 /* Workout.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0B27B124955F9900A3D994 /* Workout.storyboard */; };
 		FA46F27C24CF979D00D9C7F6 /* WSSegmentStatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F27B24CF979D00D9C7F6 /* WSSegmentStatsView.m */; };
 		FA46F27F24CF97BC00D9C7F6 /* WSPointStatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */; };
-		FA46F28824D22A1C00D9C7F6 /* NSArray+WSMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F28724D22A1C00D9C7F6 /* NSArray+WSMapping.m */; };
-		FA46F28B24D4DDFF00D9C7F6 /* WSHashWorkout.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F28A24D4DDFF00D9C7F6 /* WSHashWorkout.m */; };
-		FA46F28E24D4DE6B00D9C7F6 /* WSPoseWorkout.m in Sources */ = {isa = PBXBuildFile; fileRef = FA46F28D24D4DE6B00D9C7F6 /* WSPoseWorkout.m */; };
 		FA65E60F2486E54C00ABFEFA /* WSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E60E2486E54C00ABFEFA /* WSViewController.m */; };
 		FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E612248732FC00ABFEFA /* WSFormatterUtils.m */; };
 		FA65E61724875D5500ABFEFA /* WSWorkoutViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */; };
@@ -59,12 +56,6 @@
 		FA46F27B24CF979D00D9C7F6 /* WSSegmentStatsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSSegmentStatsView.m; sourceTree = "<group>"; };
 		FA46F27D24CF97BC00D9C7F6 /* WSPointStatsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPointStatsView.h; sourceTree = "<group>"; };
 		FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPointStatsView.m; sourceTree = "<group>"; };
-		FA46F28624D22A1C00D9C7F6 /* NSArray+WSMapping.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+WSMapping.h"; sourceTree = "<group>"; };
-		FA46F28724D22A1C00D9C7F6 /* NSArray+WSMapping.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+WSMapping.m"; sourceTree = "<group>"; };
-		FA46F28924D4DDFF00D9C7F6 /* WSHashWorkout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSHashWorkout.h; sourceTree = "<group>"; };
-		FA46F28A24D4DDFF00D9C7F6 /* WSHashWorkout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSHashWorkout.m; sourceTree = "<group>"; };
-		FA46F28C24D4DE6B00D9C7F6 /* WSPoseWorkout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPoseWorkout.h; sourceTree = "<group>"; };
-		FA46F28D24D4DE6B00D9C7F6 /* WSPoseWorkout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPoseWorkout.m; sourceTree = "<group>"; };
 		FA65E60D2486E54C00ABFEFA /* WSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSViewController.h; sourceTree = "<group>"; };
 		FA65E60E2486E54C00ABFEFA /* WSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSViewController.m; sourceTree = "<group>"; };
 		FA65E611248732FC00ABFEFA /* WSFormatterUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSFormatterUtils.h; sourceTree = "<group>"; };
@@ -237,12 +228,6 @@
 				FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */,
 				FA65E631248BDF3700ABFEFA /* WSGraphGuide.h */,
 				FA65E632248BDF3700ABFEFA /* WSGraphGuide.m */,
-				FA46F28924D4DDFF00D9C7F6 /* WSHashWorkout.h */,
-				FA46F28A24D4DDFF00D9C7F6 /* WSHashWorkout.m */,
-				FA46F28C24D4DE6B00D9C7F6 /* WSPoseWorkout.h */,
-				FA46F28D24D4DE6B00D9C7F6 /* WSPoseWorkout.m */,
-				FA46F28624D22A1C00D9C7F6 /* NSArray+WSMapping.h */,
-				FA46F28724D22A1C00D9C7F6 /* NSArray+WSMapping.m */,
 				FA65E62B248AD4A300ABFEFA /* UIColor+WSColors.h */,
 				FA65E62C248AD4A300ABFEFA /* UIColor+WSColors.m */,
 				FADB7E5524CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.h */,
@@ -426,15 +411,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA46F27C24CF979D00D9C7F6 /* WSSegmentStatsView.m in Sources */,
-				FA46F28E24D4DE6B00D9C7F6 /* WSPoseWorkout.m in Sources */,
 				FAEABA0C2486B32E00481612 /* WSTableViewController.m in Sources */,
 				FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */,
-				FA46F28824D22A1C00D9C7F6 /* NSArray+WSMapping.m in Sources */,
 				FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */,
 				FADB7E5724CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.m in Sources */,
 				FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */,
 				FA65E633248BDF3700ABFEFA /* WSGraphGuide.m in Sources */,
-				FA46F28B24D4DDFF00D9C7F6 /* WSHashWorkout.m in Sources */,
 				FAEABA062486B32E00481612 /* WSAppDelegate.m in Sources */,
 				FA65E62D248AD4A300ABFEFA /* UIColor+WSColors.m in Sources */,
 				FAEABA172486B32E00481612 /* main.m in Sources */,
