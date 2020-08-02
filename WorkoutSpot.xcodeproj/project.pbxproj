@@ -161,6 +161,19 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		FA46F28F24D5F82900D9C7F6 /* DataProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */,
+				FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */,
+				FAD80E78249F06EF0088FC4C /* WSCoordinateAnalysis.h */,
+				FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */,
+				FA8243C624B381E60024B460 /* WSPointCloud.h */,
+				FA8243C724B381E60024B460 /* WSPointCloud.m */,
+			);
+			path = DataProcessing;
+			sourceTree = "<group>";
+		};
 		FA56B1BC2486B6A500C659FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,14 +226,9 @@
 				FA2CE7CB24B7F940004D6C4E /* NSRange+WSIndex.h */,
 				FA65E6192488262800ABFEFA /* WSWorkoutAnalysis.h */,
 				FA65E61A2488262800ABFEFA /* WSWorkoutAnalysis.m */,
-				FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */,
-				FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */,
-				FAD80E78249F06EF0088FC4C /* WSCoordinateAnalysis.h */,
-				FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */,
-				FA8243C624B381E60024B460 /* WSPointCloud.h */,
-				FA8243C724B381E60024B460 /* WSPointCloud.m */,
 				FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */,
 				FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */,
+				FA46F28F24D5F82900D9C7F6 /* DataProcessing */,
 				FAD80E75249ECCDE0088FC4C /* WSStampedQuantity.h */,
 				FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */,
 				FA65E63B2492E4BD00ABFEFA /* WSPointStatistics.h */,
