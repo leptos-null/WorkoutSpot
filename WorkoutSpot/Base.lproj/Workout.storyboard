@@ -56,15 +56,15 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-aG-BGs" customClass="WSGraphView">
-                                <rect key="frame" x="4" y="607.5" width="406" height="198.5"/>
+                                <rect key="frame" x="0.0" y="607.5" width="414" height="198.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <gestureRecognizers/>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="K9a-vq-1Bn">
-                                <rect key="frame" x="4" y="607.5" width="406" height="198.5"/>
+                                <rect key="frame" x="0.0" y="607.5" width="414" height="198.5"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ngb-Ij-eXA">
-                                        <rect key="frame" x="0.0" y="0.0" width="406" height="198.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="198.5"/>
                                     </view>
                                 </subviews>
                                 <gestureRecognizers/>
@@ -85,10 +85,10 @@
                                 </connections>
                             </scrollView>
                             <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9o-70-iYc" customClass="WSGraphView">
-                                <rect key="frame" x="4" y="814" width="406" height="48"/>
+                                <rect key="frame" x="0.0" y="814" width="414" height="48"/>
                                 <subviews>
                                     <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCR-Hx-vxt">
-                                        <rect key="frame" x="0.0" y="0.0" width="406" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -104,7 +104,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="height" secondItem="rRv-pX-8rP" secondAttribute="height" multiplier="0.2425" id="1B6-rh-0xW"/>
-                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="Wqs-aG-BGs" secondAttribute="trailing" constant="4" id="2P4-NK-6lP"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="Wqs-aG-BGs" secondAttribute="trailing" id="2P4-NK-6lP"/>
                             <constraint firstItem="F7l-oq-mtF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oC6-iZ-khx" secondAttribute="trailing" id="6IO-aU-1de"/>
                             <constraint firstItem="F7l-oq-mtF" firstAttribute="top" secondItem="oC6-iZ-khx" secondAttribute="top" id="9sJ-je-UEV"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="F7l-oq-mtF" secondAttribute="trailing" constant="12" id="EQb-z9-4Pu"/>
@@ -121,7 +121,7 @@
                             <constraint firstItem="esl-wV-JQv" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="22" id="esF-1b-8kr"/>
                             <constraint firstItem="H9o-70-iYc" firstAttribute="height" secondItem="Wqs-aG-BGs" secondAttribute="height" multiplier="0.2425" id="iYt-h3-MGp"/>
                             <constraint firstItem="oC6-iZ-khx" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="12" id="jgV-bL-lBS"/>
-                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="4" id="kRh-aj-XTE"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" id="kRh-aj-XTE"/>
                             <constraint firstItem="OGh-eW-8XG" firstAttribute="top" secondItem="rRv-pX-8rP" secondAttribute="top" id="loY-5O-flw"/>
                             <constraint firstItem="esl-wV-JQv" firstAttribute="top" secondItem="oC6-iZ-khx" secondAttribute="bottom" constant="15" id="qLD-fv-Bhc"/>
                             <constraint firstItem="H9o-70-iYc" firstAttribute="top" secondItem="Wqs-aG-BGs" secondAttribute="bottom" constant="8" id="swe-1x-aH3"/>
