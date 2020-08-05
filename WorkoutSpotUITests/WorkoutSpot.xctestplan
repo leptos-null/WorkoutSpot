@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "881705AD-4ED4-4EDF-86AA-D681DE88667C",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:WorkoutSpot.xcodeproj",
+      "identifier" : "FAEABA002486B32E00481612",
+      "name" : "WorkoutSpot"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:WorkoutSpot.xcodeproj",
+        "identifier" : "FA03990D24D8ED6F001EB526",
+        "name" : "WorkoutSpotUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
