@@ -133,12 +133,16 @@
             NSMutableArray<HKWorkout *> *deletedWorkouts = [NSMutableArray arrayWithCapacity:deletedObjects.count];
             [deletedObjects enumerateObjectsUsingBlock:^(HKDeletedObject *deletedObj, NSUInteger idx, BOOL *stop) {
                 NSUUID *uuid = deletedObj.UUID;
-                deletedWorkouts[idx] = workoutLookup[uuid];
-                [workoutLookup removeObjectForKey:uuid];
+                HKWorkout *lookedUp = workoutLookup[uuid];
+                // objects deleted while the app isn't alive are sent here (on launch)
+                // when we do launch, the objects that were deleted don't exist anymore,
+                //   so they're not sent to us (subsequently, not added to the lookup)
+                if (lookedUp != nil) {
+                    deletedWorkouts[idx] = lookedUp;
+                    [workoutLookup removeObjectForKey:uuid];
+                }
             }];
-            
             [snapshot deleteItemsWithIdentifiers:deletedWorkouts];
-            
             
             [strongself->_dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
