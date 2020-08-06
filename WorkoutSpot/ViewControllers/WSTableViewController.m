@@ -15,8 +15,12 @@
     UITableViewDiffableDataSource<NSString *, HKWorkout *> *_dataSource;
 }
 
+// TODO: Information if no workouts are found
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    __weak __typeof(self) weakself = self;
     
     self.healthStore = [HKHealthStore new];
     // TODO: WorkoutType accessors
@@ -32,7 +36,7 @@
         }
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self beginHealthQuery];
+                [weakself beginHealthQuery];
             });
         }
     }];
