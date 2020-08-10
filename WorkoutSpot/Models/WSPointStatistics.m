@@ -32,6 +32,9 @@
 - (CLLocationDistance)altitude {
     return [self.analysisDomain.altitude datumAtIndex:self.index];
 }
+- (CLLocationDistance)ascending {
+    return [self.analysisDomain.ascending datumAtIndex:self.index];
+}
 - (double)grade {
     return [self.analysisDomain.grade datumAtIndex:self.index];
 }

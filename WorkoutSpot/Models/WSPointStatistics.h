@@ -24,6 +24,7 @@
 @property (nonatomic, readonly) CLLocationDistance distance;
 @property (nonatomic, readonly) CLLocationSpeed speed;
 @property (nonatomic, readonly) CLLocationDistance altitude;
+@property (nonatomic, readonly) CLLocationDistance ascending;
 @property (nonatomic, readonly) double grade;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readonly) SCNVector3 globePoint;
