@@ -184,15 +184,23 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     WSPointStatistics *leadingStats = analysis[viewRange.location];
     WSPointStatistics *trailingStats = analysis[maxViewIdx];
-    SEL const domainKey = analysis.domainKey;
-    if (domainKey == @selector(time)) {
-        self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingStats.date];
-        self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
-    } else if (domainKey == @selector(distance)) {
-        self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.distance];
-        self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.distance];
-    } else {
-        NSAssert(0, @"Unknown domainKey: %@", NSStringFromSelector(domainKey));
+    switch (analysis.domainKey) {
+        case WSDomainKeyTime: {
+            self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingStats.date];
+            self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
+        } break;
+        case WSDomainKeyDistance :{
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.distance];
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.distance];
+        } break;
+        case WSDomainKeyClimbing: {
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.ascending];
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.ascending];
+        } break;
+        default: {
+            self.leftDomainLabel.text = nil;
+            self.rightDomainLabel.text = nil;
+        } break;
     }
 }
 

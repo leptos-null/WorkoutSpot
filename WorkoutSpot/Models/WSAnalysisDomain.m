@@ -8,6 +8,19 @@
 
 #import "WSAnalysisDomain.h"
 
+NSString *NSStringFromWSDomainKey(WSDomainKey key) {
+    switch (key) {
+        case WSDomainKeyTime:
+            return @"Time";
+        case WSDomainKeyDistance:
+            return @"Distance";
+        case WSDomainKeyClimbing:
+            return @"Climbing";
+        default:
+            return nil;
+    }
+}
+
 @implementation WSAnalysisDomain
 
 // WSHeartRate
@@ -53,7 +66,7 @@
         NSTimeInterval *locationIndx = malloc(locationCount * sizeof(NSTimeInterval));
         vDSP_vsaddD(locationStamps, 1, &timeOffset, locationIndx, 1, locationCount);
         
-        _domainKey = @selector(time);
+        _domainKey = WSDomainKeyTime;
         _fullRange = NSMakeRange(0, ceil(timeDomainLength));
         
         _time = [[WSDataAnalysis alloc] initWithData:locationStamps keys:locationIndx domain:timeDomainLength length:locationCount];
@@ -97,7 +110,7 @@
     return self;
 }
 
-- (instancetype)initWithDomain:(WSAnalysisDomain *)domain key:(SEL)key {
+- (instancetype)initWithDomain:(WSAnalysisDomain *)domain key:(WSDomainKey)key {
     if (self = [super init]) {
         WSDataAnalysis *domainData = [domain dataForKey:key];
         
@@ -137,16 +150,24 @@
     return maxIndx * percent;
 }
 
-- (WSDataAnalysis *)dataForKey:(SEL)key {
-    WSDataAnalysis *(*resolver)(WSAnalysisDomain *self, SEL _cmd) = (void *)[self methodForSelector:key];
-    return resolver(self, key);
+- (WSDataAnalysis *)dataForKey:(WSDomainKey)key {
+    switch (key) {
+        case WSDomainKeyTime:
+            return self.time;
+        case WSDomainKeyDistance:
+            return self.distance;
+        case WSDomainKeyClimbing:
+            return self.ascending;
+        default:
+            return nil;
+    }
 }
 
 - (NSUInteger)indexFromIndex:(NSUInteger)index inDomain:(WSAnalysisDomain *)domain {
-    SEL domainSEL = self.domainKey;
+    WSDomainKey const domainKey = self.domainKey;
     
-    WSDataAnalysis *receiverInDomain = [self dataForKey:domainSEL];
-    WSDataAnalysis *parameterInDomain = [domain dataForKey:domainSEL];
+    WSDataAnalysis *receiverInDomain = [self dataForKey:domainKey];
+    WSDataAnalysis *parameterInDomain = [domain dataForKey:domainKey];
     
     double offset = [parameterInDomain datumAtIndex:index];
     double base = [receiverInDomain datumAtIndex:0];
@@ -164,7 +185,7 @@
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p; domainKey = %@; fullRange = %@>",
-            [self class], self, NSStringFromSelector(self.domainKey), NSStringFromRange(self.fullRange)];
+            [self class], self, NSStringFromWSDomainKey(self.domainKey), NSStringFromRange(self.fullRange)];
 }
 
 @end

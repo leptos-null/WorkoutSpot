@@ -127,7 +127,7 @@
             _timeDomain = [[WSAnalysisDomain alloc] initTimeDomainWithLocations:_queuedLocations
                                                                    heartSamples:_queuedQuantities
                                                                       startDate:workout.startDate endDate:workout.endDate];
-            _distanceDomain = [[WSAnalysisDomain alloc] initWithDomain:_timeDomain key:@selector(distance)];
+            _distanceDomain = [[WSAnalysisDomain alloc] initWithDomain:_timeDomain key:WSDomainKeyDistance];
             
             _queuedLocations = nil;
             _queuedQuantities = nil;

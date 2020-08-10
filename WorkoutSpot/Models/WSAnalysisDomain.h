@@ -13,6 +13,16 @@
 #import "WSCoordinateAnalysis.h"
 #import "WSStampedQuantity.h"
 
+typedef NS_ENUM(NSUInteger, WSDomainKey) {
+    WSDomainKeyTime,
+    WSDomainKeyDistance,
+    WSDomainKeyClimbing,
+    
+    WSDomainKeyCaseCount
+};
+
+NSString *NSStringFromWSDomainKey(WSDomainKey key);
+
 /// Beats per second
 typedef double WSHeartRate;
 
@@ -20,19 +30,19 @@ typedef double WSHeartRate;
 /// the derivative was not with respect to results in skewed values
 @interface WSAnalysisDomain : NSObject
 
+/// Create a new analysis domain in @c WSDomainKeyTime
 - (instancetype)initTimeDomainWithLocations:(NSArray<CLLocation *> *)locations
                                heartSamples:(NSArray<WSStampedQuantity *> *)quantities
                                   startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
-/// The @c key must correspond to data that is monotonically increasing
-- (instancetype)initWithDomain:(WSAnalysisDomain *)domain key:(SEL)key;
+/// @param domain Existing data to create a new analysis from
+/// @param key The domain to map @c domain into
+/// @return A new analysis domain in @c key with
+///   data points interpolated from @c domain
+- (instancetype)initWithDomain:(WSAnalysisDomain *)domain key:(WSDomainKey)key;
 
 /// The data that describes the domain for the receiver.
-/// @discussion The method is expected to have the signature
-/// @code
-/// - (WSDataAnalysis *)domainKey;
-/// @endcode
-@property (nonatomic, readonly) SEL domainKey;
+@property (nonatomic, readonly) WSDomainKey domainKey;
 /// The range representing all the data of the receiver
 @property (nonatomic, readonly) NSRange fullRange;
 /// @c NSTimeInterval since reference date
