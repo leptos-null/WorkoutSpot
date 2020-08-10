@@ -173,6 +173,27 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     } else {
         self.segmentOverlay = segmentStats.route;
     }
+    
+    self.maxHeartRateLabel.text = [[WSFormatterUtils beatsPerMinute:segmentStats.maximumHeartRate] stringByAppendingString:@" BPM"];
+    self.maxSpeedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:segmentStats.maximumSpeed];
+    self.maxAltitudeLabel.text = [WSFormatterUtils abbreviatedMeters:segmentStats.maximumAltitude];
+    
+    self.minHeartRateLabel.text = [[WSFormatterUtils beatsPerMinute:segmentStats.minimumHeartRate] stringByAppendingString:@" BPM"];
+    self.minSpeedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:segmentStats.minimumSpeed];
+    self.minAltitudeLabel.text = [WSFormatterUtils abbreviatedMeters:segmentStats.minimumAltitude];
+    
+    WSPointStatistics *leadingStats = analysis[viewRange.location];
+    WSPointStatistics *trailingStats = analysis[maxViewIdx];
+    SEL const domainKey = analysis.domainKey;
+    if (domainKey == @selector(time)) {
+        self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingStats.date];
+        self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
+    } else if (domainKey == @selector(distance)) {
+        self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.distance];
+        self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.distance];
+    } else {
+        NSAssert(0, @"Unknown domainKey: %@", NSStringFromSelector(domainKey));
+    }
 }
 
 - (void)setPointIndex:(NSUInteger)pointIndex {
@@ -250,6 +271,38 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     _domainControl = domainControl;
     
     [self domainSegmentDidChange:domainControl];
+}
+
+- (void)setMaxHeartRateLabel:(UILabel *)maxHeartRateLabel {
+    _maxHeartRateLabel = maxHeartRateLabel;
+    
+    maxHeartRateLabel.textColor = UIColor.heartRateColor;
+}
+- (void)setMaxSpeedLabel:(UILabel *)maxSpeedLabel {
+    _maxSpeedLabel = maxSpeedLabel;
+    
+    maxSpeedLabel.textColor = UIColor.speedColor;
+}
+- (void)setMaxAltitudeLabel:(UILabel *)maxAltitudeLabel {
+    _maxAltitudeLabel = maxAltitudeLabel;
+    
+    maxAltitudeLabel.textColor = UIColor.altitudeColor;
+}
+
+- (void)setMinHeartRateLabel:(UILabel *)minHeartRateLabel {
+    _minHeartRateLabel = minHeartRateLabel;
+    
+    minHeartRateLabel.textColor = UIColor.heartRateColor;
+}
+- (void)setMinSpeedLabel:(UILabel *)minSpeedLabel {
+    _minSpeedLabel = minSpeedLabel;
+    
+    minSpeedLabel.textColor = UIColor.speedColor;
+}
+- (void)setMinAltitudeLabel:(UILabel *)minAltitudeLabel {
+    _minAltitudeLabel = minAltitudeLabel;
+    
+    minAltitudeLabel.textColor = UIColor.altitudeColor;
 }
 
 // MARK: - View Controller overrides

@@ -40,6 +40,17 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *graphScrollViewProxy;
 @property (strong, nonatomic) IBOutlet UIView *fakeScrollContent;
 
+@property (strong, nonatomic) IBOutlet UILabel *maxHeartRateLabel;
+@property (strong, nonatomic) IBOutlet UILabel *maxSpeedLabel;
+@property (strong, nonatomic) IBOutlet UILabel *maxAltitudeLabel;
+
+@property (strong, nonatomic) IBOutlet UILabel *minHeartRateLabel;
+@property (strong, nonatomic) IBOutlet UILabel *minSpeedLabel;
+@property (strong, nonatomic) IBOutlet UILabel *minAltitudeLabel;
+
+@property (strong, nonatomic) IBOutlet UILabel *leftDomainLabel;
+@property (strong, nonatomic) IBOutlet UILabel *rightDomainLabel;
+
 @property (strong, nonatomic) IBOutlet WSGraphView *graphPreview;
 @property (strong, nonatomic) IBOutlet UIView *previewSegmentView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *previewSegmentLeading;
