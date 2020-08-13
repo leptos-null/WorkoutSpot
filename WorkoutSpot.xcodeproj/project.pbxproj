@@ -27,6 +27,8 @@
 		FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */; };
 		FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8243C724B381E60024B460 /* WSPointCloud.m */; };
 		FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */; };
+		FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */; };
+		FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */; };
@@ -94,6 +96,9 @@
 		FA8243C724B381E60024B460 /* WSPointCloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPointCloud.m; sourceTree = "<group>"; };
 		FAAB3CA424E4B41B00B184C7 /* HKObjectType+WSTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HKObjectType+WSTypes.h"; sourceTree = "<group>"; };
 		FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HKObjectType+WSTypes.m"; sourceTree = "<group>"; };
+		FAAB3CA724E5DA3000B184C7 /* WSEmptyListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSEmptyListView.h; sourceTree = "<group>"; };
+		FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSEmptyListView.m; sourceTree = "<group>"; };
+		FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyList.xib; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -234,6 +239,9 @@
 		FA65E61424875D3000ABFEFA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FAAB3CA724E5DA3000B184C7 /* WSEmptyListView.h */,
+				FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */,
+				FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */,
 				FA65E61524875D5500ABFEFA /* WSWorkoutViewCell.h */,
 				FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */,
 				FA65E61C248859B400ABFEFA /* WSGraphView.h */,
@@ -455,6 +463,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */,
 				FA0B27B324955F9900A3D994 /* Workout.storyboard in Resources */,
 				FAEABA142486B32E00481612 /* LaunchScreen.storyboard in Resources */,
 				FAEABA112486B32E00481612 /* Assets.xcassets in Resources */,
@@ -488,6 +497,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA46F27C24CF979D00D9C7F6 /* WSSegmentStatsView.m in Sources */,
+				FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */,
 				FAEABA0C2486B32E00481612 /* WSTableViewController.m in Sources */,
 				FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */,
 				FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */,

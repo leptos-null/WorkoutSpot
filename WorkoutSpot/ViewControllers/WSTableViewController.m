@@ -9,14 +9,13 @@
 #import "WSTableViewController.h"
 #import "WSViewController.h"
 #import "../Views/WSWorkoutViewCell.h"
+#import "../Views/WSEmptyListView.h"
 #import "../Models/HKObjectType+WSTypes.h"
 
 @implementation WSTableViewController {
     HKAnchoredObjectQuery *_workoutQuery;
     UITableViewDiffableDataSource<NSString *, HKWorkout *> *_dataSource;
 }
-
-// TODO: Information if no workouts are found
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,24 +36,30 @@
         }
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakself beginHealthQuery];
+                [weakself refreshHealthData:weakself.refreshControl];
             });
         }
     }];
     
-    _dataSource = [[UITableViewDiffableDataSource alloc] initWithTableView:self.tableView
+    UITableView *listView = self.tableView;
+    _dataSource = [[UITableViewDiffableDataSource alloc] initWithTableView:listView
                             cellProvider:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath, HKWorkout *workout) {
         WSWorkoutViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[WSWorkoutViewCell reusableIdentifier] forIndexPath:indexPath];
         cell.workout = workout;
         return cell;
     }];
     _dataSource.defaultRowAnimation = UITableViewRowAnimationTop;
+    
+    WSEmptyListView *emptyView = [WSEmptyListView fromNibWithOwner:self];
+    emptyView.titleLabel.text = @"Loading...";
+    emptyView.detailLabel.text = @"Querying HealthKit for workouts";
+    listView.backgroundView = emptyView;
 }
 
-- (IBAction)beginHealthQuery {
-    dispatch_assert_queue(dispatch_get_main_queue());
-    
-    [self.refreshControl beginRefreshing];
+- (IBAction)refreshHealthData:(UIRefreshControl *)refreshControl {
+    if (!refreshControl.refreshing) {
+        [refreshControl beginRefreshing];
+    }
     
     HKHealthStore *healthStore = self.healthStore;
     
@@ -149,10 +154,19 @@
             }];
             [snapshot deleteItemsWithIdentifiers:deletedWorkouts];
             
+            BOOL const snapshotIsEmpty = (snapshot.numberOfItems == 0);
             [strongself->_dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakself.refreshControl endRefreshing];
-                });
+                [refreshControl endRefreshing];
+                
+                UITableView *tableView = weakself.tableView;
+                tableView.scrollEnabled = !snapshotIsEmpty;
+                
+                WSEmptyListView *emptyView = (__kindof UIView *)tableView.backgroundView;
+                NSAssert([emptyView isKindOfClass:[WSEmptyListView class]], @"emptyView: WSEmptyListView");
+                
+                emptyView.titleLabel.text = snapshotIsEmpty ? @"No Workouts" : nil;
+                emptyView.detailLabel.text = snapshotIsEmpty ? @"Ensure that WorkoutSpot has permissions to view your workouts in HealthKit. "
+                "To add a workout to HealthKit, record or import a workout with an app that works with HealthKit." : nil;
             }];
         }
     };
