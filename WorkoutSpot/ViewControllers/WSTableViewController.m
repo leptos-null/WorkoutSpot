@@ -9,6 +9,7 @@
 #import "WSTableViewController.h"
 #import "WSViewController.h"
 #import "../Views/WSWorkoutViewCell.h"
+#import "../Models/HKObjectType+WSTypes.h"
 
 @implementation WSTableViewController {
     HKAnchoredObjectQuery *_workoutQuery;
@@ -23,11 +24,11 @@
     __weak __typeof(self) weakself = self;
     
     self.healthStore = [HKHealthStore new];
-    // TODO: WorkoutType accessors
+    
     NSArray<HKObjectType *> *types = @[
         [HKWorkoutType workoutType],
         [HKSeriesType workoutRouteType],
-        [HKSampleType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate],
+        [HKQuantityType heartRateType],
     ];
     [self.healthStore requestAuthorizationToShareTypes:nil readTypes:[NSSet setWithArray:types] completion:^(BOOL success, NSError *error) {
         if (error) {

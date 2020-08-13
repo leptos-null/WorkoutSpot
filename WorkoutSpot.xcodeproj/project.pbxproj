@@ -26,6 +26,7 @@
 		FA65E63D2492E4BD00ABFEFA /* WSPointStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E63C2492E4BD00ABFEFA /* WSPointStatistics.m */; };
 		FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */; };
 		FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8243C724B381E60024B460 /* WSPointCloud.m */; };
+		FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */; };
@@ -91,6 +92,8 @@
 		FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSSegmentStatistics.m; sourceTree = "<group>"; };
 		FA8243C624B381E60024B460 /* WSPointCloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPointCloud.h; sourceTree = "<group>"; };
 		FA8243C724B381E60024B460 /* WSPointCloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPointCloud.m; sourceTree = "<group>"; };
+		FAAB3CA424E4B41B00B184C7 /* HKObjectType+WSTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HKObjectType+WSTypes.h"; sourceTree = "<group>"; };
+		FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HKObjectType+WSTypes.m"; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -260,6 +263,8 @@
 				FA65E63F2492E52700ABFEFA /* WSSegmentStatistics.m */,
 				FA65E631248BDF3700ABFEFA /* WSGraphGuide.h */,
 				FA65E632248BDF3700ABFEFA /* WSGraphGuide.m */,
+				FAAB3CA424E4B41B00B184C7 /* HKObjectType+WSTypes.h */,
+				FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */,
 				FA65E62B248AD4A300ABFEFA /* UIColor+WSColors.h */,
 				FA65E62C248AD4A300ABFEFA /* UIColor+WSColors.m */,
 				FADB7E5524CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.h */,
@@ -494,6 +499,7 @@
 				FAEABA172486B32E00481612 /* main.m in Sources */,
 				FA65E61724875D5500ABFEFA /* WSWorkoutViewCell.m in Sources */,
 				FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */,
+				FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */,
 				FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */,
 				FAEABA092486B32E00481612 /* WSSceneDelegate.m in Sources */,
 				FA65E60F2486E54C00ABFEFA /* WSViewController.m in Sources */,

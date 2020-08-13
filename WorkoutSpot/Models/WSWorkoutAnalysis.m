@@ -8,6 +8,7 @@
 
 #import "WSWorkoutAnalysis.h"
 #import "WSStampedQuantity.h"
+#import "HKObjectType+WSTypes.h"
 
 @implementation WSWorkoutAnalysis {
     NSArray<CLLocation *> *_queuedLocations;
@@ -32,7 +33,7 @@
     NSMutableArray<WSStampedQuantity *> *heartRates = [NSMutableArray array];
     
     NSPredicate *predicate = [HKQuery predicateForObjectsFromWorkout:self.workout];
-    HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+    HKQuantityType *quantityType = [HKQuantityType heartRateType];
     HKQuantitySeriesSampleQuery *heartQuery = [[HKQuantitySeriesSampleQuery alloc] initWithQuantityType:quantityType predicate:predicate quantityHandler:^(HKQuantitySeriesSampleQuery *query, HKQuantity *quantity, NSDateInterval *dateInterval, __kindof HKQuantitySample *quantitySample, BOOL done, NSError *error) {
         if (error) {
             weakself.queuedError = error;
@@ -53,8 +54,9 @@
 
 - (void)_startRouteQuery {
     __weak __typeof(self) weakself = self;
-    NSPredicate *routePredicate = [HKQuery predicateForObjectsFromWorkout:self.workout];
-    HKSampleQuery *routeQuery = [[HKSampleQuery alloc] initWithSampleType:[HKSeriesType workoutRouteType] predicate:routePredicate limit:HKObjectQueryNoLimit sortDescriptors:@[
+    NSPredicate *predicate = [HKQuery predicateForObjectsFromWorkout:self.workout];
+    HKSeriesType *sampleType = [HKSeriesType workoutRouteType];
+    HKSampleQuery *routeQuery = [[HKSampleQuery alloc] initWithSampleType:sampleType predicate:predicate limit:HKObjectQueryNoLimit sortDescriptors:@[
         [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:YES]
     ] resultsHandler:^(HKSampleQuery *query, NSArray<__kindof HKSample *> *workoutRoutes, NSError *error) {
         if (error) {
