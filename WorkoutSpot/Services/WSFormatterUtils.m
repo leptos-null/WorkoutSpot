@@ -19,6 +19,7 @@
         formatter = [NSDateComponentsFormatter new];
         formatter.calendar = NSCalendar.autoupdatingCurrentCalendar;
         formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
+        formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
     });
     return [formatter stringFromTimeInterval:seconds];
 }
@@ -58,6 +59,7 @@
         formatter = [NSDateComponentsFormatter new];
         formatter.calendar = NSCalendar.autoupdatingCurrentCalendar;
         formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleShort;
+        formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
     });
     return [formatter stringFromTimeInterval:seconds];
 }
@@ -97,6 +99,7 @@
         formatter = [NSDateComponentsFormatter new];
         formatter.calendar = NSCalendar.autoupdatingCurrentCalendar;
         formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+        formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropLeading;
     });
     return [formatter stringFromTimeInterval:seconds];
 }
