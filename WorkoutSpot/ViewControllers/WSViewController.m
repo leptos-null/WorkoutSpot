@@ -87,6 +87,9 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             NSLog(@"WSWorkoutAnalysisCompleted: %@", error);
             return;
         }
+        // first set the active domain normally so `sameWorkout = NO`
+        // then use the segment control to ensure the model and UI match
+        weakself.activeDomain = analysis.timeDomain;
         [weakself domainSegmentDidChange:weakself.domainControl];
     }];
     
@@ -208,6 +211,10 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     _pointIndex = pointIndex;
     
     WSAnalysisDomain *analysis = self.activeDomain;
+    if (analysis == nil) {
+        return;
+    }
+    
     WSPointStatistics *pointStats = analysis[pointIndex];
     
     _pointAnnotation.coordinate = pointStats.coordinate;
@@ -404,6 +411,9 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     UIScrollView *scrollView = self.graphScrollViewProxy;
     NSRange const fullRange = self.activeDomain.fullRange;
     
+    if (range.length == 0 || fullRange.length == 0) {
+        return;
+    }
     scrollView.zoomScale = (CGFloat)fullRange.length / range.length;
     scrollView.contentOffset = CGPointMake(scrollView.contentSize.width * range.location / fullRange.length, 0);
 }
