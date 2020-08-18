@@ -177,14 +177,9 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         self.segmentOverlay = segmentStats.route;
     }
     
-    self.maxHeartRateLabel.text = [[WSFormatterUtils beatsPerMinute:segmentStats.maximumHeartRate] stringByAppendingString:@" BPM"];
-    self.maxSpeedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:segmentStats.maximumSpeed];
-    self.maxAltitudeLabel.text = [WSFormatterUtils abbreviatedMeters:segmentStats.maximumAltitude];
-    
-    self.minHeartRateLabel.text = [[WSFormatterUtils beatsPerMinute:segmentStats.minimumHeartRate] stringByAppendingString:@" BPM"];
-    self.minSpeedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:segmentStats.minimumSpeed];
-    self.minAltitudeLabel.text = [WSFormatterUtils abbreviatedMeters:segmentStats.minimumAltitude];
-    
+    self.minimaStatsView.stats = segmentStats;
+    self.maximaStatsView.stats = segmentStats;
+
     WSPointStatistics *leadingStats = analysis[viewRange.location];
     WSPointStatistics *trailingStats = analysis[maxViewIdx];
     switch (analysis.domainKey) {
@@ -288,36 +283,15 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     [self domainSegmentDidChange:domainControl];
 }
 
-- (void)setMaxHeartRateLabel:(UILabel *)maxHeartRateLabel {
-    _maxHeartRateLabel = maxHeartRateLabel;
+- (void)setMaximaStatsView:(WSExtremaStatsView *)maximaStatsView {
+    _maximaStatsView = maximaStatsView;
     
-    maxHeartRateLabel.textColor = UIColor.heartRateColor;
+    maximaStatsView.extremumType = WSExtremaTypeMax;
 }
-- (void)setMaxSpeedLabel:(UILabel *)maxSpeedLabel {
-    _maxSpeedLabel = maxSpeedLabel;
+- (void)setMinimaStatsView:(WSExtremaStatsView *)minimaStatsView {
+    _minimaStatsView = minimaStatsView;
     
-    maxSpeedLabel.textColor = UIColor.speedColor;
-}
-- (void)setMaxAltitudeLabel:(UILabel *)maxAltitudeLabel {
-    _maxAltitudeLabel = maxAltitudeLabel;
-    
-    maxAltitudeLabel.textColor = UIColor.altitudeColor;
-}
-
-- (void)setMinHeartRateLabel:(UILabel *)minHeartRateLabel {
-    _minHeartRateLabel = minHeartRateLabel;
-    
-    minHeartRateLabel.textColor = UIColor.heartRateColor;
-}
-- (void)setMinSpeedLabel:(UILabel *)minSpeedLabel {
-    _minSpeedLabel = minSpeedLabel;
-    
-    minSpeedLabel.textColor = UIColor.speedColor;
-}
-- (void)setMinAltitudeLabel:(UILabel *)minAltitudeLabel {
-    _minAltitudeLabel = minAltitudeLabel;
-    
-    minAltitudeLabel.textColor = UIColor.altitudeColor;
+    minimaStatsView.extremumType = WSExtremaTypeMin;
 }
 
 // MARK: - View Controller overrides

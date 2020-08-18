@@ -14,6 +14,7 @@
 #import "../Views/WSGraphView.h"
 #import "../Views/WSPointStatsView.h"
 #import "../Views/WSSegmentStatsView.h"
+#import "../Views/WSExtremaStatsView.h"
 
 @interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate>
 
@@ -40,13 +41,8 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *graphScrollViewProxy;
 @property (strong, nonatomic) IBOutlet UIView *fakeScrollContent;
 
-@property (strong, nonatomic) IBOutlet UILabel *maxHeartRateLabel;
-@property (strong, nonatomic) IBOutlet UILabel *maxSpeedLabel;
-@property (strong, nonatomic) IBOutlet UILabel *maxAltitudeLabel;
-
-@property (strong, nonatomic) IBOutlet UILabel *minHeartRateLabel;
-@property (strong, nonatomic) IBOutlet UILabel *minSpeedLabel;
-@property (strong, nonatomic) IBOutlet UILabel *minAltitudeLabel;
+@property (strong, nonatomic) IBOutlet WSExtremaStatsView *maximaStatsView;
+@property (strong, nonatomic) IBOutlet WSExtremaStatsView *minimaStatsView;
 
 @property (strong, nonatomic) IBOutlet UILabel *leftDomainLabel;
 @property (strong, nonatomic) IBOutlet UILabel *rightDomainLabel;

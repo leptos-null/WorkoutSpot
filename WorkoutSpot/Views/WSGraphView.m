@@ -10,8 +10,6 @@
 #import "../Models/UIColor+WSColors.h"
 #import "../Models/WSAnalysisDomain.h"
 
-// TODO: Axis labels
-
 @implementation WSGraphView
 
 - (void)drawRect:(CGRect)rect {
