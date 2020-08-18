@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "../Models/WSPointStatistics.h"
+#import "../../Models/WSPointStatistics.h"
 
 @interface WSPointStatsView : UIStackView
 

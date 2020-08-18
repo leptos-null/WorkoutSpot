@@ -12,9 +12,9 @@
 
 #import "../Models/WSWorkoutAnalysis.h"
 #import "../Views/WSGraphView.h"
-#import "../Views/WSPointStatsView.h"
-#import "../Views/WSSegmentStatsView.h"
-#import "../Views/WSExtremaStatsView.h"
+#import "../Views/StatsViews/WSPointStatsView.h"
+#import "../Views/StatsViews/WSSegmentStatsView.h"
+#import "../Views/StatsViews/WSExtremaStatsView.h"
 
 @interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate>
 

@@ -7,8 +7,8 @@
 //
 
 #import "WSPointStatsView.h"
-#import "../Models/UIColor+WSColors.h"
-#import "../Services/WSFormatterUtils.h"
+#import "../../Models/UIColor+WSColors.h"
+#import "../../Services/WSFormatterUtils.h"
 
 typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
     WSPointStatsLabelIndexTime,
@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
             [arrangedSubview removeFromSuperview];
         }
         
+        // must be set in order
         self.timeLabel = [UILabel new];
         self.distanceLabel = [UILabel new];
         self.altitudeLabel = [UILabel new];
@@ -77,6 +78,7 @@ typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
     label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
     label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentLeft;
+    label.lineBreakMode = NSLineBreakByTruncatingTail;
 }
 
 // MARK: - UI Setters

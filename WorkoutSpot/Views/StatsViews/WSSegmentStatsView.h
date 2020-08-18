@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "../Models/WSSegmentStatistics.h"
+#import "../../Models/WSSegmentStatistics.h"
 
 @interface WSSegmentStatsView : UIStackView
 

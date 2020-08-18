@@ -7,8 +7,8 @@
 //
 
 #import "WSSegmentStatsView.h"
-#import "../Models/UIColor+WSColors.h"
-#import "../Services/WSFormatterUtils.h"
+#import "../../Models/UIColor+WSColors.h"
+#import "../../Services/WSFormatterUtils.h"
 
 @implementation WSSegmentStatsView
 
@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
             [arrangedSubview removeFromSuperview];
         }
         
+        // must be set in order
         self.durationLabel = [UILabel new];
         self.distanceLabel = [UILabel new];
         self.climbedLabel = [UILabel new];
@@ -77,6 +78,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
     label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentRight;
+    label.lineBreakMode = NSLineBreakByTruncatingHead;
 }
 
 // MARK: - UI Setters

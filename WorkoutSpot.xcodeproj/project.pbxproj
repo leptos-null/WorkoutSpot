@@ -195,6 +195,19 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		FA33D60624EB65B200BE82AF /* StatsViews */ = {
+			isa = PBXGroup;
+			children = (
+				FA46F27D24CF97BC00D9C7F6 /* WSPointStatsView.h */,
+				FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */,
+				FA46F27A24CF979D00D9C7F6 /* WSSegmentStatsView.h */,
+				FA46F27B24CF979D00D9C7F6 /* WSSegmentStatsView.m */,
+				FA64BD9524EB05DD008F077D /* WSExtremaStatsView.h */,
+				FA64BD9624EB05DD008F077D /* WSExtremaStatsView.m */,
+			);
+			path = StatsViews;
+			sourceTree = "<group>";
+		};
 		FA46F28F24D5F82900D9C7F6 /* DataProcessing */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,12 +262,7 @@
 				FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */,
 				FA65E61C248859B400ABFEFA /* WSGraphView.h */,
 				FA65E61D248859B400ABFEFA /* WSGraphView.m */,
-				FA46F27D24CF97BC00D9C7F6 /* WSPointStatsView.h */,
-				FA46F27E24CF97BC00D9C7F6 /* WSPointStatsView.m */,
-				FA46F27A24CF979D00D9C7F6 /* WSSegmentStatsView.h */,
-				FA46F27B24CF979D00D9C7F6 /* WSSegmentStatsView.m */,
-				FA64BD9524EB05DD008F077D /* WSExtremaStatsView.h */,
-				FA64BD9624EB05DD008F077D /* WSExtremaStatsView.m */,
+				FA33D60624EB65B200BE82AF /* StatsViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";

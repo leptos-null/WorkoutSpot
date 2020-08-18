@@ -7,8 +7,8 @@
 //
 
 #import "WSExtremaStatsView.h"
-#import "../Models/UIColor+WSColors.h"
-#import "../Services/WSFormatterUtils.h"
+#import "../../Models/UIColor+WSColors.h"
+#import "../../Services/WSFormatterUtils.h"
 
 typedef NS_ENUM(NSUInteger, WSExtremaStatsLabelIndex) {
     WSExtremaStatsLabelIndexAltitude,
