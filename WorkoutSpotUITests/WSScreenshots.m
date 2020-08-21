@@ -70,18 +70,19 @@
     [self _writeScreenshot:app.screenshot name:@"1_preview"];
     
     [app.otherElements[@"Preview"] tap];
-    [self _writeScreenshot:app.screenshot name:@"2_time_base"];
     
     XCUIElement *graphScrollView = app.scrollViews[@"Graph"];
-    [graphScrollView swipeLeft]; // effectively pick a random non-zero spot
     [graphScrollView pinchWithScale:2 velocity:2];
-    [self _writeScreenshot:app.screenshot name:@"3_time_segment"];
+    [self _writeScreenshot:app.screenshot name:@"2_time_segment"];
+    [graphScrollView swipeLeft]; // effectively pick a random spot
+    [self _writeScreenshot:app.screenshot name:@"3_time_point"];
     
     [app.segmentedControls.buttons[@"Distance"] tap];
-    [self _writeScreenshot:app.screenshot name:@"4_distance_segment"];
-    
     [graphScrollView swipeRight]; // effectively pick another spot
-    [self _writeScreenshot:app.screenshot name:@"5_another_point"];
+    [self _writeScreenshot:app.screenshot name:@"4_distance_point"];
+    
+    [graphScrollView tap]; // effectively pick another spot
+    [self _writeScreenshot:app.screenshot name:@"5_distance_segment"];
 }
 
 @end
