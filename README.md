@@ -9,8 +9,8 @@ Change the segment selection by zooming and scrolling on the graph.
 
 ### Screenshots
 
-![Time domain](Screenshots/iPhone12,1/3_time_segment.png)
+![Time domain](Screenshots/iPhone12,1/2_time_segment.png)
 
-![Distance domain](Screenshots/iPhone12,1/5_another_point.png)
+![Distance domain](Screenshots/iPhone12,1/4_distance_point.png)
 
-[See more](Screenshots/)
+[More screenshots](Screenshots/)
