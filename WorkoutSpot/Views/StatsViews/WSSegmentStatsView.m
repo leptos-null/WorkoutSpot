@@ -77,8 +77,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
 - (void)_setGenericLabelProperties:(UILabel *)label {
     label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
     label.adjustsFontForContentSizeCategory = YES;
-    label.textAlignment = NSTextAlignmentRight;
-    label.lineBreakMode = NSLineBreakByTruncatingHead;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
 }
 
 // MARK: - UI Setters

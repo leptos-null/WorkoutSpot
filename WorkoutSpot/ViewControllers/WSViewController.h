@@ -37,6 +37,10 @@
 @property (strong, nonatomic) IBOutlet WSSegmentStatsView *segmentStatsView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *pointStatsEffectsCenter;
+@property (strong, nonatomic) IBOutlet UIView *pointStatsEffectsView;
+@property (nonatomic, getter=isShowingPointStats) BOOL showPointStats;
+
 @property (strong, nonatomic) IBOutlet WSGraphView *graphView;
 @property (strong, nonatomic) IBOutlet UIScrollView *graphScrollViewProxy;
 @property (strong, nonatomic) IBOutlet UIView *fakeScrollContent;

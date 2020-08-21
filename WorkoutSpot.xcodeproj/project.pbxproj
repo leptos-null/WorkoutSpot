@@ -30,6 +30,7 @@
 		FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA524E4B41B00B184C7 /* HKObjectType+WSTypes.m */; };
 		FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */; };
 		FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */; };
+		FAABBED224EEE78100AF7A6C /* WSFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABBED124EEE78100AF7A6C /* WSFloatingView.m */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */; };
@@ -102,6 +103,8 @@
 		FAAB3CA724E5DA3000B184C7 /* WSEmptyListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSEmptyListView.h; sourceTree = "<group>"; };
 		FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSEmptyListView.m; sourceTree = "<group>"; };
 		FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyList.xib; sourceTree = "<group>"; };
+		FAABBED024EEE78100AF7A6C /* WSFloatingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSFloatingView.h; sourceTree = "<group>"; };
+		FAABBED124EEE78100AF7A6C /* WSFloatingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSFloatingView.m; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 				FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */,
 				FA65E61C248859B400ABFEFA /* WSGraphView.h */,
 				FA65E61D248859B400ABFEFA /* WSGraphView.m */,
+				FAABBED024EEE78100AF7A6C /* WSFloatingView.h */,
+				FAABBED124EEE78100AF7A6C /* WSFloatingView.m */,
 				FA33D60624EB65B200BE82AF /* StatsViews */,
 			);
 			path = Views;
@@ -509,6 +514,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAABBED224EEE78100AF7A6C /* WSFloatingView.m in Sources */,
 				FA46F27C24CF979D00D9C7F6 /* WSSegmentStatsView.m in Sources */,
 				FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */,
 				FAEABA0C2486B32E00481612 /* WSTableViewController.m in Sources */,

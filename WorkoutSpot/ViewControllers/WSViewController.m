@@ -125,6 +125,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         self.viewRange = viewRange;
         [self _setScrollProxyPropertiesForGraphRange:viewRange];
     } else {
+        self.showPointStats = NO;
         self.pointIndex = 0;
         self.viewRange = domainRange;
         [self focusMapOnRoute];
@@ -179,7 +180,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     self.minimaStatsView.stats = segmentStats;
     self.maximaStatsView.stats = segmentStats;
-
+    
     WSPointStatistics *leadingStats = analysis[viewRange.location];
     WSPointStatistics *trailingStats = analysis[maxViewIdx];
     switch (analysis.domainKey) {
@@ -221,7 +222,38 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     _speedPointLayer.path = [[graphView.speedGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _altitudePointLayer.path = [[graphView.altitudeGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     
+    NSRange validRange = graphView.speedGraph.range;
+    NSUInteger clampIndex = MIN(MAX(validRange.location, pointIndex), NSRangeMaxIndex(validRange));
+    
+    CGPoint speedPointInGraph = [graphView.speedGraph pointForIndex:clampIndex];
+    CGPoint speedPointInView = [self.view convertPoint:speedPointInGraph fromView:graphView];
+    self.pointStatsEffectsCenter.constant = speedPointInView.x;
+    
     self.pointStatsView.stats = pointStats;
+}
+
+- (void)setShowPointStats:(BOOL)showPointStats {
+    _showPointStats = showPointStats;
+    
+    __weak __typeof(self) weakself = self;
+    [UIViewPropertyAnimator runningPropertyAnimatorWithDuration:0.125 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        weakself.pointStatsEffectsView.alpha = showPointStats ? 1 : 0;
+        weakself.segmentStatsView.alpha = showPointStats ? 0 : 1;
+        if (weakself) {
+            __strong __typeof(self) strongself = weakself;
+            strongself->_heartPointLayer.opacity = showPointStats ? 1 : 0;
+            strongself->_speedPointLayer.opacity = showPointStats ? 1 : 0;
+            strongself->_altitudePointLayer.opacity = showPointStats ? 1 : 0;
+            
+            MKMapView *mapView = weakself.mapView;
+            MKPointAnnotation *annotationView = strongself->_pointAnnotation;
+            if (showPointStats) {
+                [mapView addAnnotation:annotationView];
+            } else {
+                [mapView removeAnnotation:annotationView];
+            }
+        }
+    } completion:NULL];
 }
 
 // MARK: - UI Setters
@@ -233,6 +265,17 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     [mapView addAnnotation:_pointAnnotation];
     
     [self focusMapOnRoute];
+    
+    // MKMapTypeStandard         (no imagery, no 3D, yes road names)
+    // MKMapTypeSatellite        (real imagery, no 3D, no road names)
+    // MKMapTypeHybrid           (real imagery, no 3D, no road names)
+    // MKMapTypeSatelliteFlyover (composite imagery, yes 3D, no road names)
+    // MKMapTypeHybridFlyover    (composite imagery, yes 3D, yes road names)
+    // MKMapTypeMutedStandard    (no imagery, yes road names, yes 3D)
+    
+    // in both of the Flyovers, the polyline could be rendered
+    //  inside the Earth if the camera was at a shallow angle
+    // Muted results in less prominent street names
 }
 
 - (void)setGraphScrollViewProxy:(UIScrollView *)graphScrollViewProxy {
@@ -335,6 +378,11 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 
 - (IBAction)graphPanGesture:(UIPanGestureRecognizer *)gesture {
     if (gesture.numberOfTouches == 1) {
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            // only set on began, to avoid running side-effect code all the time
+            self.showPointStats = YES;
+        }
+        
         UIScrollView *scrollView = self.graphScrollViewProxy;
         CGPoint touch = [gesture locationOfTouch:0 inView:scrollView];
         
@@ -357,6 +405,12 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             break;
     }
     [self setActiveDomain:domain sameWorkout:YES];
+}
+
+- (IBAction)tapDismissGesture:(UITapGestureRecognizer *)tapGesture {
+    if (tapGesture.state == UIGestureRecognizerStateEnded) {
+        self.showPointStats = NO;
+    }
 }
 
 - (UIBezierPath *)_circleAtPoint:(CGPoint)point radius:(CGFloat)radius {
