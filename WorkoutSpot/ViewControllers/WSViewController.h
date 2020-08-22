@@ -35,11 +35,12 @@
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) IBOutlet WSPointStatsView *pointStatsView;
 @property (strong, nonatomic) IBOutlet WSSegmentStatsView *segmentStatsView;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *pointStatsEffectsCenter;
-@property (strong, nonatomic) IBOutlet UIView *pointStatsEffectsView;
 @property (nonatomic, getter=isShowingPointStats) BOOL showPointStats;
+@property (strong, nonatomic) IBOutlet UIView *pointStatsEffectsView;
+
+@property (strong, nonatomic) IBOutlet UIView *pointSlideLineView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *pointSlideLineCenter;
 
 @property (strong, nonatomic) IBOutlet WSGraphView *graphView;
 @property (strong, nonatomic) IBOutlet UIScrollView *graphScrollViewProxy;
@@ -50,6 +51,8 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *leftDomainLabel;
 @property (strong, nonatomic) IBOutlet UILabel *rightDomainLabel;
+
+@property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
 @property (strong, nonatomic) IBOutlet WSGraphView *graphPreview;
 @property (strong, nonatomic) IBOutlet UIView *previewSegmentView;

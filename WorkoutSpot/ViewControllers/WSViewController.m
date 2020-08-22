@@ -226,8 +226,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     NSUInteger clampIndex = MIN(MAX(validRange.location, pointIndex), NSRangeMaxIndex(validRange));
     
     CGPoint speedPointInGraph = [graphView.speedGraph pointForIndex:clampIndex];
-    CGPoint speedPointInView = [self.view convertPoint:speedPointInGraph fromView:graphView];
-    self.pointStatsEffectsCenter.constant = speedPointInView.x;
+    self.pointSlideLineCenter.constant = speedPointInGraph.x;
     
     self.pointStatsView.stats = pointStats;
 }
@@ -238,6 +237,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     __weak __typeof(self) weakself = self;
     [UIViewPropertyAnimator runningPropertyAnimatorWithDuration:0.125 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         weakself.pointStatsEffectsView.alpha = showPointStats ? 1 : 0;
+        weakself.pointSlideLineView.alpha = showPointStats ? 1 : 0;
         weakself.segmentStatsView.alpha = showPointStats ? 0 : 1;
         if (weakself) {
             __strong __typeof(self) strongself = weakself;
@@ -266,12 +266,12 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     [self focusMapOnRoute];
     
-    // MKMapTypeStandard         (no imagery, no 3D, yes road names)
+    // MKMapTypeStandard         (no imagery, yes 3D, yes road names)
     // MKMapTypeSatellite        (real imagery, no 3D, no road names)
     // MKMapTypeHybrid           (real imagery, no 3D, no road names)
     // MKMapTypeSatelliteFlyover (composite imagery, yes 3D, no road names)
     // MKMapTypeHybridFlyover    (composite imagery, yes 3D, yes road names)
-    // MKMapTypeMutedStandard    (no imagery, yes road names, yes 3D)
+    // MKMapTypeMutedStandard    (no imagery, yes 3D, yes road names)
     
     // in both of the Flyovers, the polyline could be rendered
     //  inside the Earth if the camera was at a shallow angle

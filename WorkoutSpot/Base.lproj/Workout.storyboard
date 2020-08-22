@@ -18,13 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="mutedStandard" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OGh-eW-8XG">
-                                <rect key="frame" x="0.0" y="44" width="414" height="438.5"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="435.5"/>
                                 <connections>
                                     <outlet property="delegate" destination="6Qx-RQ-bgH" id="5MG-QY-Qsv"/>
                                 </connections>
                             </mapView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7dg-ZV-meh" customClass="WSFloatingView">
-                                <rect key="frame" x="147.5" y="494.5" width="65.5" height="40.5"/>
+                                <rect key="frame" x="147.5" y="491.5" width="65.5" height="40.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="oC6-iZ-khx" userLabel="Point Stats" customClass="WSPointStatsView">
                                         <rect key="frame" x="12" y="10" width="41.5" height="20.5"/>
@@ -47,7 +47,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="F7l-oq-mtF" userLabel="Segment Stats" customClass="WSSegmentStatsView">
-                                <rect key="frame" x="12" y="504.5" width="41.5" height="20.5"/>
+                                <rect key="frame" x="12" y="501.5" width="41.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYL-Ly-L0r" userLabel="Demo">
                                         <rect key="frame" x="0.0" y="0.0" width="41.5" height="20.5"/>
@@ -57,23 +57,26 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="esl-wV-JQv">
-                                <rect key="frame" x="22" y="550" width="370" height="32"/>
-                                <segments>
-                                    <segment title="Time"/>
-                                    <segment title="Distance"/>
-                                </segments>
-                                <connections>
-                                    <action selector="domainSegmentDidChange:" destination="6Qx-RQ-bgH" eventType="valueChanged" id="Mty-U3-mH8"/>
-                                </connections>
-                            </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-aG-BGs" customClass="WSGraphView">
-                                <rect key="frame" x="0.0" y="593" width="372.5" height="198.5"/>
+                                <rect key="frame" x="0.0" y="544" width="372.5" height="198.5"/>
+                                <subviews>
+                                    <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEo-2Q-Bj1">
+                                        <rect key="frame" x="178" y="-12" width="4" height="210.5"/>
+                                        <color key="backgroundColor" systemColor="systemFillColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="4" id="VK4-0A-4Pi"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="XEo-2Q-Bj1" secondAttribute="bottom" id="FYT-3a-wIk"/>
+                                    <constraint firstItem="XEo-2Q-Bj1" firstAttribute="centerX" secondItem="Wqs-aG-BGs" secondAttribute="leading" constant="180" id="SR4-3K-c8u"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8sM-8c-GjQ" userLabel="Vertical Axis">
-                                <rect key="frame" x="372.5" y="593" width="41.5" height="198.5"/>
+                                <rect key="frame" x="372.5" y="544" width="41.5" height="198.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kdI-FF-fbI" userLabel="Max Labels" customClass="WSExtremaStatsView">
                                         <rect key="frame" x="0.0" y="0.0" width="41.5" height="20.5"/>
@@ -110,7 +113,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="phk-Yp-UUt" userLabel="Horizontal Axis">
-                                <rect key="frame" x="0.0" y="791.5" width="414" height="22.5"/>
+                                <rect key="frame" x="0.0" y="742.5" width="414" height="22.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LDC-mJ-RtZ">
                                         <rect key="frame" x="4" y="4" width="31" height="14.5"/>
@@ -135,7 +138,7 @@
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="K9a-vq-1Bn">
-                                <rect key="frame" x="0.0" y="593" width="372.5" height="198.5"/>
+                                <rect key="frame" x="0.0" y="544" width="372.5" height="198.5"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ngb-Ij-eXA">
                                         <rect key="frame" x="0.0" y="0.0" width="372.5" height="198.5"/>
@@ -158,11 +161,21 @@
                                     <outletCollection property="gestureRecognizers" destination="gQr-d7-Uay" appends="YES" id="7vV-PS-gbp"/>
                                 </connections>
                             </scrollView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="esl-wV-JQv">
+                                <rect key="frame" x="22" y="771" width="370" height="32"/>
+                                <segments>
+                                    <segment title="Time"/>
+                                    <segment title="Distance"/>
+                                </segments>
+                                <connections>
+                                    <action selector="domainSegmentDidChange:" destination="6Qx-RQ-bgH" eventType="valueChanged" id="Mty-U3-mH8"/>
+                                </connections>
+                            </segmentedControl>
                             <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9o-70-iYc" customClass="WSGraphView">
-                                <rect key="frame" x="0.0" y="814" width="372.5" height="48"/>
+                                <rect key="frame" x="0.0" y="814" width="414" height="48"/>
                                 <subviews>
                                     <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCR-Hx-vxt">
-                                        <rect key="frame" x="0.0" y="0.0" width="372.5" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -178,18 +191,18 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="height" secondItem="rRv-pX-8rP" secondAttribute="height" multiplier="0.2425" id="1B6-rh-0xW"/>
+                            <constraint firstItem="XEo-2Q-Bj1" firstAttribute="top" secondItem="7dg-ZV-meh" secondAttribute="bottom" id="33t-2d-QOl"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7dg-ZV-meh" secondAttribute="trailing" constant="12" id="BF0-Ks-VQ0"/>
                             <constraint firstItem="oC6-iZ-khx" firstAttribute="top" secondItem="F7l-oq-mtF" secondAttribute="top" id="BHL-r0-VbM"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="F7l-oq-mtF" secondAttribute="trailing" constant="12" id="EQb-z9-4Pu"/>
-                            <constraint firstItem="H9o-70-iYc" firstAttribute="leading" secondItem="Wqs-aG-BGs" secondAttribute="leading" id="EUi-ra-kmS"/>
-                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="top" secondItem="esl-wV-JQv" secondAttribute="bottom" constant="12" id="FSF-23-6ep"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="top" secondItem="esl-wV-JQv" secondAttribute="bottom" constant="12" id="FSF-23-6ep"/>
                             <constraint firstItem="phk-Yp-UUt" firstAttribute="top" secondItem="Wqs-aG-BGs" secondAttribute="bottom" id="Ho8-gP-JE6"/>
-                            <constraint firstItem="H9o-70-iYc" firstAttribute="trailing" secondItem="Wqs-aG-BGs" secondAttribute="trailing" id="JLC-SM-O7j"/>
                             <constraint firstItem="7dg-ZV-meh" firstAttribute="top" secondItem="OGh-eW-8XG" secondAttribute="bottom" constant="12" id="Lxw-Dq-RYq"/>
                             <constraint firstItem="F7l-oq-mtF" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="12" id="M75-Lj-Lre"/>
+                            <constraint firstItem="Wqs-aG-BGs" firstAttribute="top" secondItem="7dg-ZV-meh" secondAttribute="bottom" constant="12" id="PPx-3i-FT2"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="esl-wV-JQv" secondAttribute="trailing" constant="22" id="QOn-Xe-gAK"/>
                             <constraint firstItem="7dg-ZV-meh" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="12" id="RZv-R5-rlS"/>
-                            <constraint firstItem="7dg-ZV-meh" firstAttribute="centerX" secondItem="rRv-pX-8rP" secondAttribute="leading" priority="750" constant="180" id="Uly-2N-Qq9"/>
+                            <constraint firstItem="H9o-70-iYc" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" id="UMQ-Lf-gRE"/>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="trailing" secondItem="K9a-vq-1Bn" secondAttribute="trailing" id="ZwS-OW-gK7"/>
                             <constraint firstItem="8sM-8c-GjQ" firstAttribute="top" secondItem="Wqs-aG-BGs" secondAttribute="top" id="blz-sT-DK6"/>
                             <constraint firstItem="oC6-iZ-khx" firstAttribute="bottom" secondItem="F7l-oq-mtF" secondAttribute="bottom" id="c5X-XU-85U"/>
@@ -199,8 +212,10 @@
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="8sM-8c-GjQ" secondAttribute="trailing" id="d60-h5-Jxw"/>
                             <constraint firstItem="8sM-8c-GjQ" firstAttribute="bottom" secondItem="Wqs-aG-BGs" secondAttribute="bottom" id="ejH-7n-zh7"/>
                             <constraint firstItem="esl-wV-JQv" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" constant="22" id="esF-1b-8kr"/>
-                            <constraint firstItem="esl-wV-JQv" firstAttribute="top" secondItem="7dg-ZV-meh" secondAttribute="bottom" constant="15" id="h9U-3e-nm8"/>
+                            <constraint firstItem="esl-wV-JQv" firstAttribute="top" secondItem="phk-Yp-UUt" secondAttribute="bottom" constant="6" id="h9U-3e-nm8"/>
                             <constraint firstItem="H9o-70-iYc" firstAttribute="height" secondItem="Wqs-aG-BGs" secondAttribute="height" multiplier="0.2425" id="iYt-h3-MGp"/>
+                            <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="H9o-70-iYc" secondAttribute="trailing" id="kHN-TI-Vn0"/>
+                            <constraint firstItem="XEo-2Q-Bj1" firstAttribute="centerX" secondItem="7dg-ZV-meh" secondAttribute="centerX" priority="750" id="kPb-uz-XuQ"/>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" id="kRh-aj-XTE"/>
                             <constraint firstItem="OGh-eW-8XG" firstAttribute="top" secondItem="rRv-pX-8rP" secondAttribute="top" id="loY-5O-flw"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="phk-Yp-UUt" secondAttribute="trailing" id="mv7-MV-d9K"/>
@@ -208,7 +223,6 @@
                             <constraint firstItem="phk-Yp-UUt" firstAttribute="leading" secondItem="rRv-pX-8rP" secondAttribute="leading" id="wDz-lP-bpt"/>
                             <constraint firstItem="LDC-mJ-RtZ" firstAttribute="leading" secondItem="Wqs-aG-BGs" secondAttribute="leading" constant="4" id="yE5-47-ti8"/>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="bottom" secondItem="K9a-vq-1Bn" secondAttribute="bottom" id="yH5-wZ-eJQ"/>
-                            <constraint firstItem="H9o-70-iYc" firstAttribute="top" secondItem="phk-Yp-UUt" secondAttribute="bottom" id="yk0-4s-v6C"/>
                             <constraint firstItem="rRv-pX-8rP" firstAttribute="trailing" secondItem="OGh-eW-8XG" secondAttribute="trailing" id="zTt-mP-f3e"/>
                             <constraint firstItem="Wqs-aG-BGs" firstAttribute="trailing" secondItem="QZH-xw-yjh" secondAttribute="trailing" constant="4" id="zq0-Ky-Uwm"/>
                             <constraint firstItem="H9o-70-iYc" firstAttribute="bottom" secondItem="rRv-pX-8rP" secondAttribute="bottom" id="zzh-Hd-Wht"/>
@@ -227,7 +241,8 @@
                         <outlet property="mapView" destination="OGh-eW-8XG" id="8Os-AL-17t"/>
                         <outlet property="maximaStatsView" destination="kdI-FF-fbI" id="e7i-hZ-22w"/>
                         <outlet property="minimaStatsView" destination="nRK-C5-Oy8" id="6i5-Uy-zpf"/>
-                        <outlet property="pointStatsEffectsCenter" destination="Uly-2N-Qq9" id="45Q-SZ-QsO"/>
+                        <outlet property="pointSlideLineCenter" destination="SR4-3K-c8u" id="zrs-fz-mdR"/>
+                        <outlet property="pointSlideLineView" destination="XEo-2Q-Bj1" id="3j2-Rf-7TM"/>
                         <outlet property="pointStatsEffectsView" destination="7dg-ZV-meh" id="bYp-DY-k0M"/>
                         <outlet property="pointStatsView" destination="oC6-iZ-khx" id="IQa-Q0-UmH"/>
                         <outlet property="previewSegmentLeading" destination="j7J-7h-E8E" id="FYs-8T-Aae"/>
@@ -249,7 +264,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1314.4927536231885" y="148.66071428571428"/>
+            <point key="canvasLocation" x="1264" y="135"/>
         </scene>
     </scenes>
     <resources>
@@ -261,6 +276,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemFillColor">
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
