@@ -35,6 +35,11 @@
 
 /// The place on the y-axis an x value would be plotted
 - (CGFloat)yValueForX:(double)x;
+/// The @c x component of @c pointForIndex:
+/// @discussion Unlike @c pointForIndex: (which does perform range validation),
+///   this method does not perform range validation,
+///   and may return a value outside @c path.bounds
+- (CGFloat)xForIndex:(NSUInteger)index;
 /// The point on @c path where @c index is represented
 - (CGPoint)pointForIndex:(NSUInteger)index;
 

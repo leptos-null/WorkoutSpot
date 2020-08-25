@@ -222,11 +222,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     _speedPointLayer.path = [[graphView.speedGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _altitudePointLayer.path = [[graphView.altitudeGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     
-    NSRange validRange = graphView.speedGraph.range;
-    NSUInteger clampIndex = MIN(MAX(validRange.location, pointIndex), NSRangeMaxIndex(validRange));
-    
-    CGPoint speedPointInGraph = [graphView.speedGraph pointForIndex:clampIndex];
-    self.pointSlideLineCenter.constant = speedPointInGraph.x;
+    self.pointSlideLineCenter.constant = [graphView.speedGraph xForIndex:pointIndex];
     
     self.pointStatsView.stats = pointStats;
 }

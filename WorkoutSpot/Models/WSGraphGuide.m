@@ -90,6 +90,12 @@
 #endif
 }
 
+- (CGFloat)xForIndex:(NSUInteger)index {
+    NSInteger slide = index - self.range.location;
+    slide /= (NSInteger)_decimationFactor;
+    return slide * _xScale + _insets.left;
+}
+
 - (CGPoint)pointForIndex:(NSUInteger)index {
     NSRange range = self.range;
     NSParameterAssert(NSLocationInRange(index, range));
