@@ -89,12 +89,15 @@ typedef NS_ENUM(NSUInteger, WSExtremaStatsLabelIndex) {
     
     self.altitudeLabel.text = [WSFormatterUtils abbreviatedMeters:altitude];
     self.altitudeLabel.accessibilityValue = [WSFormatterUtils expandedMeters:altitude];
+    self.altitudeLabel.hidden = (stats.analysisDomain.altitude == nil);
     
     self.speedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:speed];
     self.speedLabel.accessibilityValue = [WSFormatterUtils expandedMetersPerSecond:speed];
+    self.speedLabel.hidden = (stats.analysisDomain.speed == nil);
     
     self.heartRateLabel.text = [[WSFormatterUtils beatsPerMinute:heartRate] stringByAppendingString:@" BPM"];
     self.heartRateLabel.accessibilityValue = [[WSFormatterUtils beatsPerMinute:heartRate] stringByAppendingString:@" BPM"];
+    self.heartRateLabel.hidden = (stats.analysisDomain.heartRate == nil);
 }
 
 - (void)_setGenericLabelProperties:(UILabel *)label {
