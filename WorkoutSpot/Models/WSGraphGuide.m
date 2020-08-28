@@ -56,8 +56,11 @@
             minValue = -1;
         } else if (fabs(maxValue - minValue) < DBL_EPSILON) {
             double const scale = 0.01;
-            maxValue *= (1 + scale);
-            minValue *= (1 - scale);
+            double const awayFromZero = (1 + scale);
+            double const closerToZero = (1 - scale);
+            
+            maxValue *= (maxValue > 0) ? awayFromZero : closerToZero;
+            minValue *= (minValue > 0) ? closerToZero : awayFromZero;
         }
         
         _minimumValue = minValue;
