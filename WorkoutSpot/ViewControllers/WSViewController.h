@@ -20,12 +20,15 @@
 
 + (instancetype)fromStoryboard;
 
-
+/// The workout analysis the receiver represents
 @property (strong, nonatomic) WSWorkoutAnalysis *workoutAnalysis;
+/// The domain being represented by the receiver
 @property (strong, nonatomic, readonly) WSAnalysisDomain *activeDomain;
-
+/// The map overlay that represents the entire route
 @property (strong, nonatomic, readonly) MKPolyline *routeOverlay;
-// on iOS 14 and later, the segment is a copy of the route
+/// The map overlay that represents the @c viewRange of the route
+/// @discussion On iOS 14 and later, this matches the entire route
+/// overlay, and the renderer is used to only render a portion of the route.
 @property (strong, nonatomic, readonly) MKPolyline *segmentOverlay;
 /// The range of @c activeDomain to view
 @property (nonatomic) NSRange viewRange;
@@ -36,6 +39,8 @@
 @property (strong, nonatomic) IBOutlet WSPointStatsView *pointStatsView;
 @property (strong, nonatomic) IBOutlet WSSegmentStatsView *segmentStatsView;
 
+/// @c YES shows point related elements.
+/// @c NO hides point related elements.
 @property (nonatomic, getter=isShowingPointStats) BOOL showPointStats;
 @property (strong, nonatomic) IBOutlet UIView *pointStatsEffectsView;
 
@@ -59,15 +64,9 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *previewSegmentLeading;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *previewSegmentTrailing;
 
+/// Zoom @c mapView in on @c routeOverlay
+/// @discussion Whether the zoom is animated
+/// is determined by the view controller state
 - (void)focusMapOnRoute;
-
-@end
-
-
-@interface WSGraphGuide (WSPointDrawing)
-
-/// Create a circle with radius @c radius around the
-/// point where @c index is represented on @c path
-- (UIBezierPath *)circleForIndex:(NSUInteger)index radius:(CGFloat)radius;
 
 @end

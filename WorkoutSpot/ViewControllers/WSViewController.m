@@ -9,7 +9,6 @@
 #import "WSViewController.h"
 #import "../Services/WSFormatterUtils.h"
 #import "../Models/UIColor+WSColors.h"
-#import "../Models/UIBezierPath+WSCenteredCircle.h"
 #import "../Models/WSPointStatistics.h"
 #import "../Models/WSSegmentStatistics.h"
 
@@ -218,7 +217,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     CGFloat const circleRadii = 4;
     WSGraphView *graphView = self.graphView;
     
-    _heartPointLayer.path = [[graphView.heartGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
+    _heartPointLayer.path = [[graphView.heartRateGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _speedPointLayer.path = [[graphView.speedGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _altitudePointLayer.path = [[graphView.altitudeGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     
@@ -359,6 +358,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         [self _setLayerColors];
     }
 }
+
 // MARK: - Public Methods
 
 - (void)focusMapOnRoute {
@@ -486,19 +486,6 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             self.workoutAnalysis, self.routeOverlay, self.segmentOverlay,
             NSStringFromRange(self.viewRange), self.pointIndex,
             self.graphScrollViewProxy, self.fakeScrollContent, self.graphPreview];
-}
-
-@end
-
-
-@implementation WSGraphGuide (WSPointDrawing)
-
-- (UIBezierPath *)circleForIndex:(NSUInteger)index radius:(CGFloat)radius {
-    if (NSLocationInRange(index, self.range)) {
-        CGPoint center = [self pointForIndex:index];
-        return [UIBezierPath bezierPathWithCircleCenter:center radius:radius];
-    }
-    return NULL;
 }
 
 @end

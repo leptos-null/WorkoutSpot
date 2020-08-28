@@ -12,7 +12,7 @@
 
 #import "WSAnalysisDomain.h"
 
-/// Typed accessors for an index in @c analysisDomain
+/// Typed accessors for @c index in @c analysisDomain
 @interface WSPointStatistics : NSObject
 
 - (instancetype)initWithAnalysis:(WSAnalysisDomain *)analysis index:(NSUInteger)idx;

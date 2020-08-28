@@ -14,7 +14,7 @@
 
 - (void)drawRect:(CGRect)rect {
     [UIColor.heartRateColor setStroke];
-    [self.heartGraph.path stroke];
+    [self.heartRateGraph.path stroke];
     
     [UIColor.speedColor setStroke];
     [self.speedGraph.path stroke];
@@ -47,7 +47,7 @@
     CGSize size = self.bounds.size;
     UIEdgeInsets insets = self.graphInsets;
     
-    _heartGraph = [analysisDomain.heartRate graphGuideForSize:size insets:insets range:range];
+    _heartRateGraph = [analysisDomain.heartRate graphGuideForSize:size insets:insets range:range];
     _speedGraph = [analysisDomain.speed graphGuideForSize:size insets:insets range:range];
     _altitudeGraph = [analysisDomain.altitude graphGuideForSize:size insets:insets range:range];
     
@@ -57,9 +57,9 @@
 - (NSString *)description {
     NSString *preDesc = [super description];
     NSString *desc = [NSString stringWithFormat:@"; segmentStats = %@; graphInsets = %@; "
-                      "heartGraph = %@; speedGraph = %@; altitudeGraph = %@>",
+                      "heartRateGraph = %@; speedGraph = %@; altitudeGraph = %@>",
                       self.segmentStats, NSStringFromUIEdgeInsets(self.graphInsets),
-                      self.heartGraph, self.speedGraph, self.altitudeGraph];
+                      self.heartRateGraph, self.speedGraph, self.altitudeGraph];
     
     return [preDesc stringByReplacingCharactersInRange:NSMakeRange(preDesc.length - 1, 1) withString:desc];
 }

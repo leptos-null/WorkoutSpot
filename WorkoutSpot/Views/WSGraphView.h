@@ -15,7 +15,7 @@
 @property (strong, nonatomic) WSSegmentStatistics *segmentStats;
 @property (nonatomic) UIEdgeInsets graphInsets;
 
-@property (strong, nonatomic, readonly) WSGraphGuide *heartGraph;
+@property (strong, nonatomic, readonly) WSGraphGuide *heartRateGraph;
 @property (strong, nonatomic, readonly) WSGraphGuide *speedGraph;
 @property (strong, nonatomic, readonly) WSGraphGuide *altitudeGraph;
 

@@ -34,6 +34,8 @@
     const SCNVector3 *vectors = _vectors;
     const NSUInteger length = _length;
     
+    // the below code is intended to work for n-dimensional space
+    //   by changing this variable
     vDSP_Length const dimensions = 3;
     
     float *strungSteps = malloc(dimensions * sizeof(float) * length);

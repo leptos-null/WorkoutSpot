@@ -10,6 +10,7 @@
 
 @interface HKObjectType (WSTypes)
 
+/// Returns the shared quantity type for heart rate
 + (HKQuantityType *)heartRateType;
 
 @end

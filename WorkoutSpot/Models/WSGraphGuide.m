@@ -7,6 +7,7 @@
 //
 
 #import "WSGraphGuide.h"
+#import "../Models/UIBezierPath+WSCenteredCircle.h"
 
 @implementation WSGraphGuide {
     const double *_decimatedData;
@@ -104,6 +105,14 @@
     index /= _decimationFactor;
     index = MIN(index, _decimatedLength - 1);
     return CGPointMake(index * _xScale + _insets.left, [self yValueForX:_decimatedData[index]]);
+}
+
+- (UIBezierPath *)circleForIndex:(NSUInteger)index radius:(CGFloat)radius {
+    if (NSLocationInRange(index, self.range)) {
+        CGPoint center = [self pointForIndex:index];
+        return [UIBezierPath bezierPathWithCircleCenter:center radius:radius];
+    }
+    return NULL;
 }
 
 - (id)debugQuickLookObject {

@@ -16,7 +16,7 @@
 
 @class WSWorkoutAnalysis;
 
-/// Typed accessors over a range in @c analysisDomain
+/// Typed accessors over @c range in @c analysisDomain
 /// @discussion @c workoutAnalysis is used to convert
 ///   between domains where necessary.
 @interface WSSegmentStatistics : NSObject

@@ -18,4 +18,9 @@
     return self;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p; quantity = %@; dateInterval = %@>",
+            [self class], self, self.quantity, self.dateInterval];
+}
+
 @end

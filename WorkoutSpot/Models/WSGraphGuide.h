@@ -12,14 +12,17 @@
 
 @interface WSGraphGuide : NSObject
 
-/// @param vector data to graph
-/// @param size complete size of the graph
-/// @param insets insets within @c size to draw
-/// @param range the portion of @c vector to graph
+/// @param vector Data to graph
+/// @param size Complete size of the graph
+/// @param insets Insets within @c size to draw
+/// @param range The portion of @c vector to graph
 - (instancetype)initWithVector:(double const *)vector size:(CGSize)size insets:(UIEdgeInsets)insets range:(NSRange)range;
 
+/// The size of the graph, including @c insets
 @property (nonatomic, readonly) CGSize size;
+/// The insets within @c size to draw
 @property (nonatomic, readonly) UIEdgeInsets insets;
+/// The range of the input data to draw
 @property (nonatomic, readonly) NSRange range;
 
 /// A path that represents the data
@@ -42,5 +45,9 @@
 - (CGFloat)xForIndex:(NSUInteger)index;
 /// The point on @c path where @c index is represented
 - (CGPoint)pointForIndex:(NSUInteger)index;
+
+/// Create a circle with radius @c radius around the
+/// point where @c index is represented on @c path
+- (UIBezierPath *)circleForIndex:(NSUInteger)index radius:(CGFloat)radius;
 
 @end
