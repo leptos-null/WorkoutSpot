@@ -1,4 +1,4 @@
-## iPhone SE (2nd generation) 14.0
+## iPhone 8 Plus 14.0
 
 ![0_home](0_home.png)
 

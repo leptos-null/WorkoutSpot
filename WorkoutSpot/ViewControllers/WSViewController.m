@@ -364,7 +364,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 - (void)focusMapOnRoute {
     id<MKOverlay> routeOverlay = self.routeOverlay;
     if (routeOverlay) {
-        UIEdgeInsets padding = UIEdgeInsetsMake(18, 18, 18, 18);
+        UIEdgeInsets padding = UIEdgeInsetsMake(32, 18, 32, 18);
         BOOL shouldAnimate = (self.navigationController != nil);
         [self.mapView setVisibleMapRect:routeOverlay.boundingMapRect edgePadding:padding animated:shouldAnimate];
     }
