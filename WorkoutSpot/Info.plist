@@ -18,6 +18,14 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.healthcare-fitness</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Workout data is used to create map overlays and graphs</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not write to HealthKit</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -45,10 +53,6 @@
 	<array>
 		<string>healthkit</string>
 	</array>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Workout data is used to create map overlays and graphs</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not write to HealthKit intentionally</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
