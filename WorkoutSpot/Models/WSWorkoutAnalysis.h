@@ -19,8 +19,6 @@ typedef void(^WSWorkoutAnalysisComplete)(WSWorkoutAnalysis *analysis, NSError *e
 - (instancetype)initWithWorkout:(HKWorkout *)workout store:(HKHealthStore *)store;
 
 @property (strong, nonatomic, readonly) HKWorkout *workout;
-/// The health store used to preform additional queries for @c workout
-@property (strong, nonatomic, readonly) HKHealthStore *healthStore;
 
 /// Analysis of @c workout in the time domain
 @property (strong, nonatomic, readonly) WSAnalysisDomain *timeDomain;

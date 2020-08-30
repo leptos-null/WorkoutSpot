@@ -38,7 +38,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
 // TODO: Consider os_signpost benchmarks
 
 - (instancetype)initTimeDomainWithLocations:(NSArray<CLLocation *> *)locations
-                               heartSamples:(NSArray<WSStampedQuantity *> *)quantities
+                               heartSamples:(NSArray<HKDiscreteQuantitySample *> *)quantities
                                   startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
     if (self = [super init]) {
         NSUInteger locationCount = locations.count;
@@ -88,9 +88,9 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         NSUInteger heartRateCount = quantities.count;
         double *heartRates = malloc(heartRateCount * sizeof(double));
         NSTimeInterval *heartStamps = malloc(heartRateCount * sizeof(NSTimeInterval));
-        [quantities enumerateObjectsUsingBlock:^(WSStampedQuantity *quantity, NSUInteger idx, BOOL *stop) {
+        [quantities enumerateObjectsUsingBlock:^(HKDiscreteQuantitySample *quantity, NSUInteger idx, BOOL *stop) {
             heartRates[idx] = [quantity.quantity doubleValueForUnit:heartRateUnit];
-            heartStamps[idx] = quantity.dateInterval.startDate.timeIntervalSinceReferenceDate;
+            heartStamps[idx] = quantity.startDate.timeIntervalSinceReferenceDate;
         }];
         
         NSTimeInterval *heartIndx = malloc(locationCount * sizeof(NSTimeInterval));

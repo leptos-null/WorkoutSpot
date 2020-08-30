@@ -25,7 +25,7 @@
 	<key>NSHealthShareUsageDescription</key>
 	<string>Workout data is used to create map overlays and graphs</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not write to HealthKit</string>
+	<string>Workout data may be added for demonstration purposes</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

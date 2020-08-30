@@ -33,7 +33,6 @@
 		FAABBED224EEE78100AF7A6C /* WSFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABBED124EEE78100AF7A6C /* WSFloatingView.m */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
-		FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */; };
 		FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */; };
 		FADB7E5724CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = FADB7E5624CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.m */; };
 		FAEABA062486B32E00481612 /* WSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEABA052486B32E00481612 /* WSAppDelegate.m */; };
@@ -44,6 +43,10 @@
 		FAEABA142486B32E00481612 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAEABA122486B32E00481612 /* LaunchScreen.storyboard */; };
 		FAEABA172486B32E00481612 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEABA162486B32E00481612 /* main.m */; };
 		FAEABA202486B34F00481612 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAEABA1F2486B34F00481612 /* HealthKit.framework */; };
+		FAF838B024FC06DF000F2B18 /* IL2AP.archive in Resources */ = {isa = PBXBuildFile; fileRef = FAF838AE24FC06DF000F2B18 /* IL2AP.archive */; };
+		FAF838B124FC06DF000F2B18 /* AP2IL.archive in Resources */ = {isa = PBXBuildFile; fileRef = FAF838AF24FC06DF000F2B18 /* AP2IL.archive */; };
+		FAF838B424FC1FF1000F2B18 /* WSWorkoutData.m in Sources */ = {isa = PBXBuildFile; fileRef = FAF838B324FC1FF1000F2B18 /* WSWorkoutData.m */; };
+		FAF838B724FC2066000F2B18 /* WSWorkoutFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = FAF838B624FC2066000F2B18 /* WSWorkoutFetch.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,8 +112,6 @@
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
 		FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSAnalysisDomain.m; sourceTree = "<group>"; };
-		FAD80E75249ECCDE0088FC4C /* WSStampedQuantity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSStampedQuantity.h; sourceTree = "<group>"; };
-		FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSStampedQuantity.m; sourceTree = "<group>"; };
 		FAD80E78249F06EF0088FC4C /* WSCoordinateAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSCoordinateAnalysis.h; sourceTree = "<group>"; };
 		FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSCoordinateAnalysis.m; sourceTree = "<group>"; };
 		FADB7E5524CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+WSCenteredCircle.h"; sourceTree = "<group>"; };
@@ -129,6 +130,12 @@
 		FAEABA162486B32E00481612 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FAEABA1D2486B34F00481612 /* WorkoutSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorkoutSpot.entitlements; sourceTree = "<group>"; };
 		FAEABA1F2486B34F00481612 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		FAF838AE24FC06DF000F2B18 /* IL2AP.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = IL2AP.archive; sourceTree = "<group>"; };
+		FAF838AF24FC06DF000F2B18 /* AP2IL.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = AP2IL.archive; sourceTree = "<group>"; };
+		FAF838B224FC1FF1000F2B18 /* WSWorkoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSWorkoutData.h; sourceTree = "<group>"; };
+		FAF838B324FC1FF1000F2B18 /* WSWorkoutData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSWorkoutData.m; sourceTree = "<group>"; };
+		FAF838B524FC2066000F2B18 /* WSWorkoutFetch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSWorkoutFetch.h; sourceTree = "<group>"; };
+		FAF838B624FC2066000F2B18 /* WSWorkoutFetch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSWorkoutFetch.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +245,8 @@
 		FA56B1BD2486C2CD00C659FC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FAF838AF24FC06DF000F2B18 /* AP2IL.archive */,
+				FAF838AE24FC06DF000F2B18 /* IL2AP.archive */,
 				FAEABA102486B32E00481612 /* Assets.xcassets */,
 				FAEABA1D2486B34F00481612 /* WorkoutSpot.entitlements */,
 				FAEABA152486B32E00481612 /* Info.plist */,
@@ -251,6 +260,8 @@
 			children = (
 				FA65E611248732FC00ABFEFA /* WSFormatterUtils.h */,
 				FA65E612248732FC00ABFEFA /* WSFormatterUtils.m */,
+				FAF838B524FC2066000F2B18 /* WSWorkoutFetch.h */,
+				FAF838B624FC2066000F2B18 /* WSWorkoutFetch.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -278,11 +289,11 @@
 				FA2CE7CB24B7F940004D6C4E /* NSRange+WSIndex.h */,
 				FA65E6192488262800ABFEFA /* WSWorkoutAnalysis.h */,
 				FA65E61A2488262800ABFEFA /* WSWorkoutAnalysis.m */,
+				FAF838B224FC1FF1000F2B18 /* WSWorkoutData.h */,
+				FAF838B324FC1FF1000F2B18 /* WSWorkoutData.m */,
 				FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */,
 				FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */,
 				FA46F28F24D5F82900D9C7F6 /* DataProcessing */,
-				FAD80E75249ECCDE0088FC4C /* WSStampedQuantity.h */,
-				FAD80E76249ECCDE0088FC4C /* WSStampedQuantity.m */,
 				FA65E63B2492E4BD00ABFEFA /* WSPointStatistics.h */,
 				FA65E63C2492E4BD00ABFEFA /* WSPointStatistics.m */,
 				FA65E63E2492E52700ABFEFA /* WSSegmentStatistics.h */,
@@ -482,6 +493,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */,
+				FAF838B024FC06DF000F2B18 /* IL2AP.archive in Resources */,
+				FAF838B124FC06DF000F2B18 /* AP2IL.archive in Resources */,
 				FA0B27B324955F9900A3D994 /* Workout.storyboard in Resources */,
 				FAEABA142486B32E00481612 /* LaunchScreen.storyboard in Resources */,
 				FAEABA112486B32E00481612 /* Assets.xcassets in Resources */,
@@ -519,9 +532,11 @@
 				FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */,
 				FAEABA0C2486B32E00481612 /* WSTableViewController.m in Sources */,
 				FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */,
+				FAF838B724FC2066000F2B18 /* WSWorkoutFetch.m in Sources */,
 				FA65E613248732FC00ABFEFA /* WSFormatterUtils.m in Sources */,
 				FADB7E5724CBF5C80005F921 /* UIBezierPath+WSCenteredCircle.m in Sources */,
 				FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */,
+				FAF838B424FC1FF1000F2B18 /* WSWorkoutData.m in Sources */,
 				FA65E633248BDF3700ABFEFA /* WSGraphGuide.m in Sources */,
 				FAEABA062486B32E00481612 /* WSAppDelegate.m in Sources */,
 				FA64BD9724EB05DD008F077D /* WSExtremaStatsView.m in Sources */,
@@ -537,7 +552,6 @@
 				FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */,
 				FA65E61E248859B400ABFEFA /* WSGraphView.m in Sources */,
 				FA65E61B2488262800ABFEFA /* WSWorkoutAnalysis.m in Sources */,
-				FAD80E77249ECCDE0088FC4C /* WSStampedQuantity.m in Sources */,
 				FA46F27F24CF97BC00D9C7F6 /* WSPointStatsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -802,7 +816,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WorkoutSpot/WorkoutSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 7P56K8K4MY;
 				INFOPLIST_FILE = WorkoutSpot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -821,7 +835,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WorkoutSpot/WorkoutSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 7P56K8K4MY;
 				INFOPLIST_FILE = WorkoutSpot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

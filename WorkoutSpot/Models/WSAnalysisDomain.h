@@ -11,7 +11,6 @@
 
 #import "WSDataAnalysis.h"
 #import "WSCoordinateAnalysis.h"
-#import "WSStampedQuantity.h"
 
 typedef NS_ENUM(NSUInteger, WSDomainKey) {
     WSDomainKeyTime,
@@ -32,7 +31,7 @@ typedef double WSHeartRate;
 
 /// Create a new analysis domain in @c WSDomainKeyTime
 - (instancetype)initTimeDomainWithLocations:(NSArray<CLLocation *> *)locations
-                               heartSamples:(NSArray<WSStampedQuantity *> *)quantities
+                               heartSamples:(NSArray<HKDiscreteQuantitySample *> *)quantities
                                   startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
 /// @param domain Existing data to create a new analysis from

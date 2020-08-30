@@ -10,7 +10,7 @@
 #import "WSViewController.h"
 #import "../Views/WSWorkoutViewCell.h"
 #import "../Views/WSEmptyListView.h"
-#import "../Models/HKObjectType+WSTypes.h"
+#import "../Services/WSWorkoutFetch.h"
 
 @implementation WSTableViewController {
     HKAnchoredObjectQuery *_workoutQuery;
@@ -23,13 +23,7 @@
     __weak __typeof(self) weakself = self;
     
     self.healthStore = [HKHealthStore new];
-    
-    NSArray<HKObjectType *> *types = @[
-        [HKWorkoutType workoutType],
-        [HKSeriesType workoutRouteType],
-        [HKQuantityType heartRateType],
-    ];
-    [self.healthStore requestAuthorizationToShareTypes:nil readTypes:[NSSet setWithArray:types] completion:^(BOOL success, NSError *error) {
+    [self.healthStore requestAuthorizationToShareTypes:nil readTypes:[WSWorkoutFetch sampleTypes] completion:^(BOOL success, NSError *error) {
         if (error) {
             NSLog(@"HKHealthStoreRequestAuthorizationCompleted: %@", error);
             return;
@@ -54,6 +48,10 @@
     emptyView.titleLabel.text = @"Loading...";
     emptyView.detailLabel.text = @"Querying HealthKit for workouts";
     listView.backgroundView = emptyView;
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(writeDemoHealthData:)];
+    longPress.minimumPressDuration = 2;
+    [emptyView addGestureRecognizer:longPress];
 }
 
 - (IBAction)refreshHealthData:(UIRefreshControl *)refreshControl {
@@ -184,6 +182,40 @@
     WSViewController *controller = [WSViewController fromStoryboard];
     controller.workoutAnalysis = [[WSWorkoutAnalysis alloc] initWithWorkout:workout store:self.healthStore];
     return controller;
+}
+
+- (IBAction)writeDemoHealthData:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
+        return;
+    }
+    HKHealthStore *healthStore = self.healthStore;
+    NSString *title = @"Add Demo Workouts";
+    NSString *message = @"Add workouts to HealthKit? This function is intended for demonstration purposes only. "
+    "This operation may interfere with existing workouts in HealthKit. "
+    "Workouts and associated data may be removed from within the Health app, if needed. ";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Add" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSBundle *bundle = NSBundle.mainBundle;
+        for (NSString *name in @[ @"AP2IL", @"IL2AP" ]) {
+            NSData *data = [NSData dataWithContentsOfFile:[bundle pathForResource:name ofType:@"archive"]];
+            NSError *unarchiveError = nil;
+            WSWorkoutData *workoutData = [WSWorkoutData workoutDataFromArchivedData:data error:&unarchiveError];
+            if (unarchiveError) {
+                NSLog(@"%@", unarchiveError);
+                continue;
+            }
+            [WSWorkoutFetch writeWorkoutData:workoutData toHealthStore:healthStore completion:^(BOOL success, NSError *error) {
+                if (error) {
+                    NSLog(@"%@", error);
+                    return;
+                }
+                NSAssert(success, @"WSWorkoutFetch.writeWorkoutData");
+            }];
+        }
+        [alert dismissViewControllerAnimated:YES completion:NULL];
+    }]];
+    [self presentViewController:alert animated:YES completion:NULL];
 }
 
 // MARK: - UITableViewDelegate
