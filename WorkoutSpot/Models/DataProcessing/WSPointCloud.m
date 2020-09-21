@@ -44,29 +44,28 @@
     for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
         const NSUInteger strungOffset = length * dimension;
         
+        // steps[0] = 0
         strungSteps[strungOffset] = 0;
+        // steps[n + 1] = vectors[n + 1] - vectors[n]
         vDSP_vsub(((float *)vectors) + dimension, dimensions,
                   ((float *)(vectors + 1)) + dimension, dimensions,
                   strungSteps + strungOffset + 1, 1, length - 1);
     }
     
-    vDSP_vsq(strungSteps, 1, strungSquares, 1, length * dimensions);
+    vDSP_vsq(strungSteps, 1, strungSquares, 1, length * dimensions); // squares = steps**2
     
-    float *squareSums = malloc(length * sizeof(float));
-    
-    const float zeroScalar = 0;
-    vDSP_vfill(&zeroScalar, squareSums, 1, length);
+    float *squareSums = calloc(length, sizeof(float));
     
     for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
         const NSUInteger strungOffset = length * dimension;
-        vDSP_vadd(strungSquares + strungOffset, 1, squareSums, 1, squareSums, 1, length);
+        vDSP_vadd(strungSquares + strungOffset, 1, squareSums, 1, squareSums, 1, length); // squareSums += squares[dimension]
     }
     
     NSAssert(length <= INT_MAX, @"vForce requires length to be represented by an int");
     int const len = (length & INT_MAX);
     
     float *squareRoots = malloc(length * sizeof(float));
-    vvsqrtf(squareRoots, squareSums, &len);
+    vvsqrtf(squareRoots, squareSums, &len); // squareRoots = sqrt(squareSums)
     
     double *distances = malloc(length * sizeof(double));
     vDSP_vspdp(squareRoots, 1, distances, 1, length);
