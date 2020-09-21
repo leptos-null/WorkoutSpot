@@ -164,7 +164,7 @@
                 
                 emptyView.titleLabel.text = snapshotIsEmpty ? @"No Workouts" : nil;
                 emptyView.detailLabel.text = snapshotIsEmpty ? @"Ensure that WorkoutSpot has permissions to view your workouts in HealthKit. "
-                "To add a workout to HealthKit, record or import a workout with an app that works with HealthKit." : nil;
+                "To add a workout to HealthKit, record or import a workout with an app that Works with Apple Health." : nil;
             }];
         }
     };
