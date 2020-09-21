@@ -10,13 +10,14 @@
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
 
+#import "WSGraphConfiguration.h"
+
 @interface WSGraphGuide : NSObject
 
-/// @param vector Data to graph
-/// @param size Complete size of the graph
-/// @param insets Insets within @c size to draw
-/// @param range The portion of @c vector to graph
-- (instancetype)initWithVector:(double const *)vector size:(CGSize)size insets:(UIEdgeInsets)insets range:(NSRange)range;
+/// @param vector Data to graph, represents the y-values
+/// @param config Configuration of the graph
+/// @discussion Mutating @c config after calling init does not affect the graph
+- (instancetype)initWithVector:(double const *)vector configuration:(WSGraphConfiguration *)config;
 
 /// The size of the graph, including @c insets
 @property (nonatomic, readonly) CGSize size;

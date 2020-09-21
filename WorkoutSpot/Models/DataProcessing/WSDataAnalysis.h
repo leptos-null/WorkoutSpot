@@ -103,7 +103,7 @@
 - (WSDataAnalysis *)convertToDomain:(WSDataAnalysis *)dataDomain;
 
 /// A graph guide that represents the data over @c range
-- (WSGraphGuide *)graphGuideForSize:(CGSize)size insets:(UIEdgeInsets)insets range:(NSRange)range;
+- (WSGraphGuide *)graphGuideForConfiguration:(WSGraphConfiguration *)configuration;
 
 @end
 

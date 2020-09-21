@@ -42,14 +42,13 @@
 
 - (void)_updateGraphs {
     WSSegmentStatistics *segmentStats = self.segmentStats;
-    WSAnalysisDomain *analysisDomain = segmentStats.analysisDomain;
-    NSRange range = segmentStats.range;
-    CGSize size = self.bounds.size;
-    UIEdgeInsets insets = self.graphInsets;
+    WSGraphConfiguration *graphConfig = [WSGraphConfiguration new];
+    graphConfig.size = self.bounds.size;
+    graphConfig.edgeInsets = self.graphInsets;
     
-    _heartRateGraph = [analysisDomain.heartRate graphGuideForSize:size insets:insets range:range];
-    _speedGraph = [analysisDomain.speed graphGuideForSize:size insets:insets range:range];
-    _altitudeGraph = [analysisDomain.altitude graphGuideForSize:size insets:insets range:range];
+    _heartRateGraph = [segmentStats heartRateGraphGuideWithConfiguration:graphConfig];
+    _speedGraph = [segmentStats speedGraphGuideWithConfiguration:graphConfig];
+    _altitudeGraph = [segmentStats altitudeGraphGuideWithConfiguration:graphConfig];
     
     [self setNeedsDisplay];
 }

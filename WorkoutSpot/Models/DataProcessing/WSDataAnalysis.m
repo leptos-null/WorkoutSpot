@@ -140,13 +140,17 @@
     return [[WSDataAnalysis alloc] initWithData:_data keys:domain domain:domain[length - 1] length:length];
 }
 
-- (WSGraphGuide *)graphGuideForSize:(CGSize)size insets:(UIEdgeInsets)insets range:(NSRange)range {
-    NSParameterAssert(NSRangeMaxIndex(range) < _length);
-    return [[WSGraphGuide alloc] initWithVector:_data size:size insets:insets range:range];
+- (WSGraphGuide *)graphGuideForConfiguration:(WSGraphConfiguration *)configuration {
+    NSParameterAssert(NSRangeMaxIndex(configuration.range) < _length);
+    return [[WSGraphGuide alloc] initWithVector:_data configuration:configuration];
 }
 
 - (id)debugQuickLookObject {
-    id graphGuide = [self graphGuideForSize:CGSizeMake(400, 400) insets:UIEdgeInsetsZero range:NSMakeRange(0, _length)];
+    WSGraphConfiguration *config = [WSGraphConfiguration new];
+    config.size = CGSizeMake(400, 400);
+    config.range = NSMakeRange(0, _length);
+    
+    id graphGuide = [self graphGuideForConfiguration:config];
     return [graphGuide debugQuickLookObject];
 }
 

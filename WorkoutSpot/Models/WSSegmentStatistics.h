@@ -49,4 +49,8 @@
 @property (nonatomic, readonly) WSHeartRate maximumHeartRate;
 @property (nonatomic, readonly) WSHeartRate minimumHeartRate;
 
+- (WSGraphGuide *)speedGraphGuideWithConfiguration:(WSGraphConfiguration *)config;
+- (WSGraphGuide *)altitudeGraphGuideWithConfiguration:(WSGraphConfiguration *)config;
+- (WSGraphGuide *)heartRateGraphGuideWithConfiguration:(WSGraphConfiguration *)config;
+
 @end

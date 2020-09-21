@@ -94,6 +94,22 @@
     return [self.analysisDomain.heartRate minimumOverRange:self.range];
 }
 
+- (WSGraphGuide *)speedGraphGuideWithConfiguration:(WSGraphConfiguration *)config {
+    config.range = self.range;
+    config.smoothingTechnique = WSGraphSmoothingTechniqueQuadratic;
+    return [self.analysisDomain.speed graphGuideForConfiguration:config];
+}
+- (WSGraphGuide *)altitudeGraphGuideWithConfiguration:(WSGraphConfiguration *)config {
+    config.range = self.range;
+    config.smoothingTechnique = WSGraphSmoothingTechniqueLinear;
+    return [self.analysisDomain.altitude graphGuideForConfiguration:config];
+}
+- (WSGraphGuide *)heartRateGraphGuideWithConfiguration:(WSGraphConfiguration *)config {
+    config.range = self.range;
+    config.smoothingTechnique = WSGraphSmoothingTechniqueQuadratic;
+    return [self.analysisDomain.heartRate graphGuideForConfiguration:config];
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p; analysisDomain = %@; range = %@; "
             "duration = %f; deltaDistance = %f; deltaAltitude = %f; "
