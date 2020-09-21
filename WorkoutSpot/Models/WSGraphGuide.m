@@ -268,7 +268,14 @@ static void ws_vSmoothstepD(double *const output, vDSP_Stride const stride, vDSP
      * * * * * * * * * * *         * * * * * * * * * * */
     
     UIBezierPath *pathCopy = [self.path copy];
-    CGAffineTransform flip = CGAffineTransformMakeTranslation(0, CGRectGetHeight(pathCopy.bounds));
+    // Xcode shades in the region. Close the path along the border to avoid a diagonal shade
+    CGFloat minY = [self yValueForX:self.minimumValue];
+    NSRange range = self.range;
+    [pathCopy addLineToPoint:CGPointMake([self xForIndex:NSRangeMaxIndex(range)], minY)];
+    [pathCopy addLineToPoint:CGPointMake([self xForIndex:range.location], minY)];
+    [pathCopy closePath];
+    
+    CGAffineTransform flip = CGAffineTransformMakeTranslation(0, CGRectGetMaxY(pathCopy.bounds));
     flip = CGAffineTransformScale(flip, 1, -1);
     /*
      * +1 +0 -0 -1
