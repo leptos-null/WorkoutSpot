@@ -64,7 +64,15 @@
     [healthStore stopQuery:_workoutQuery];
     
     HKQuantity *zeroDistance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:0];
-    NSPredicate *predicate = [HKQuery predicateForWorkoutsWithOperatorType:NSGreaterThanPredicateOperatorType totalDistance:zeroDistance];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[
+        [HKQuery predicateForWorkoutsWithOperatorType:NSGreaterThanPredicateOperatorType totalDistance:zeroDistance],
+        // the key isn't required, so use `!= YES` to behave as expected when the key is missing
+        //  predicate(isIndoor: NSNumber):
+        //    ![isIndoor isEqual:@(YES)]
+        [HKQuery predicateForObjectsWithMetadataKey:HKMetadataKeyIndoorWorkout operatorType:NSNotEqualToPredicateOperatorType value:@(YES)],
+        // mixed cardio workouts are not marked as indoors, and Workouts estimates distance
+        [NSCompoundPredicate notPredicateWithSubpredicate:[HKQuery predicateForWorkoutsWithWorkoutActivityType:HKWorkoutActivityTypeMixedCardio]]
+    ]];
     
     HKWorkoutType *sampleType = [HKWorkoutType workoutType];
     __weak __typeof(self) weakself = self;
