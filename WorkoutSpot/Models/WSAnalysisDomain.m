@@ -93,8 +93,8 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
             heartStamps[idx] = quantity.startDate.timeIntervalSinceReferenceDate;
         }];
         
-        NSTimeInterval *heartIndx = malloc(locationCount * sizeof(NSTimeInterval));
-        vDSP_vsaddD(heartStamps, 1, &timeOffset, heartIndx, 1, locationCount);
+        NSTimeInterval *heartIndx = malloc(heartRateCount * sizeof(NSTimeInterval));
+        vDSP_vsaddD(heartStamps, 1, &timeOffset, heartIndx, 1, heartRateCount);
         
         _heartRate = [[WSDataAnalysis alloc] initWithData:heartRates keys:heartIndx domain:timeDomainLength length:heartRateCount];
         
