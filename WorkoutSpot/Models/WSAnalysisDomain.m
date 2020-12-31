@@ -43,6 +43,22 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
     if (self = [super init]) {
         NSUInteger locationCount = locations.count;
         
+        // when `locations[0].timestamp < startDate`, then distance data
+        // starts with a non-zero value which is problematic.
+        // (only 0 distance should be traveled in 0 time)
+        NSTimeInterval const startIntervalSinceReferenceDate = startDate.timeIntervalSinceReferenceDate;
+        NSUInteger locationFirstIndex = [locations indexOfObjectPassingTest:^BOOL(CLLocation *location, NSUInteger idx, BOOL *stop) {
+            return (location.timestamp.timeIntervalSinceReferenceDate >= startIntervalSinceReferenceDate);
+        }];
+        
+        if (locationFirstIndex != 0) { // avoid copying if possible
+            locationCount -= locationFirstIndex;
+            // if this were a C array, we could just increment the pointer, and we'd be done
+            // this is essentially a copy operation- it accounts for about 2.5% of the executation time of this method
+            // the other option is to change every access of `locations` to add `locationFirstIndex` to the index
+            locations = [locations subarrayWithRange:NSMakeRange(locationFirstIndex, locationCount)];
+        }
+        
         NSTimeInterval timeOffset = startDate.timeIntervalSinceReferenceDate;
         timeOffset = -timeOffset; // we want to subtract, not add
         NSTimeInterval const timeDomainLength = endDate.timeIntervalSinceReferenceDate + timeOffset;
