@@ -37,6 +37,7 @@
 /// @param domain A value that descibes the magnitude
 ///   of the @c keys domain, such that the domain is @c [0, @c domain]
 /// @param length The length of each of the input arrays
+/// @note @c keys must increase monotonically
 - (instancetype)initWithData:(const double *)data keys:(const double *)keys domain:(double)domain length:(const vDSP_Length)length;
 
 /// The value at @c index

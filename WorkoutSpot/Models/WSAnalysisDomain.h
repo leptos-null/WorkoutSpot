@@ -30,6 +30,12 @@ typedef double WSHeartRate;
 @interface WSAnalysisDomain : NSObject
 
 /// Create a new analysis domain in @c WSDomainKeyTime
+/// @param locations The @c timestamp of the elements must increase monotonically
+/// @param quantities The @c startDate of each quantity must increase monotonically.
+///   Each element is treated as if it's a single data point.
+///   See @c HKQuantitySeriesSampleQuery to get individual quantities.
+/// @param startDate The start date for the workout
+/// @param endDate The end date for the workout
 - (instancetype)initTimeDomainWithLocations:(NSArray<CLLocation *> *)locations
                                heartSamples:(NSArray<HKDiscreteQuantitySample *> *)quantities
                                   startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
