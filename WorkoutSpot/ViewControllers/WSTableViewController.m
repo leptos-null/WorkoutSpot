@@ -13,7 +13,7 @@
 #import "../Services/WSWorkoutFetch.h"
 
 @implementation WSTableViewController {
-    HKAnchoredObjectQuery *_workoutQuery;
+    HKQuery *_workoutQuery;
     UITableViewDiffableDataSource<NSString *, HKWorkout *> *_dataSource;
 }
 
@@ -29,9 +29,10 @@
             return;
         }
         if (success) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            // load the first 20 workouts- this number is not particularly important
+            [weakself queryWorkoutsLimit:20 completion:^{
                 [weakself refreshHealthData:weakself.refreshControl];
-            });
+            }];
         }
     }];
     
@@ -58,10 +59,18 @@
     if (!refreshControl.refreshing) {
         [refreshControl beginRefreshing];
     }
-    
+    [self queryWorkoutsLimit:HKObjectQueryNoLimit completion:^{
+        [refreshControl endRefreshing];
+    }];
+}
+// may be called from any thread
+// completionBlock is guaranteed to be called on the main thread
+- (void)queryWorkoutsLimit:(NSUInteger)limit completion:(void(^)(void))completionBlock {
     HKHealthStore *healthStore = self.healthStore;
     
     [healthStore stopQuery:_workoutQuery];
+    
+    HKWorkoutType *sampleType = [HKWorkoutType workoutType];
     
     HKQuantity *zeroDistance = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:0];
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[
@@ -74,8 +83,9 @@
         [NSCompoundPredicate notPredicateWithSubpredicate:[HKQuery predicateForWorkoutsWithWorkoutActivityType:HKWorkoutActivityTypeMixedCardio]]
     ]];
     
-    HKWorkoutType *sampleType = [HKWorkoutType workoutType];
-    __weak __typeof(self) weakself = self;
+    NSArray<NSSortDescriptor *> *sortDescriptors = @[
+        [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
+    ];
     
     NSString *const sectionHeader = @"Workouts";
     NSDiffableDataSourceSnapshot<NSString *, HKWorkout *> *snapshot = [NSDiffableDataSourceSnapshot new];
@@ -83,10 +93,11 @@
     
     NSMutableDictionary<NSUUID *, HKWorkout *> *const workoutLookup = [NSMutableDictionary dictionary];
     
-    void(^updateHandler)(HKAnchoredObjectQuery *, NSArray<__kindof HKSample *> *, NSArray<HKDeletedObject *> *, HKQueryAnchor *, NSError *) =
-    ^(HKAnchoredObjectQuery *query, NSArray<HKWorkout *> *workouts, NSArray<HKDeletedObject *> *deletedObjects, HKQueryAnchor *newAnchor, NSError *error) {
+    __weak __typeof(self) weakself = self;
+    void(^updateHandler)(__kindof HKQuery *, NSArray<__kindof HKSample *> *, NSArray<HKDeletedObject *> *, HKQueryAnchor *, NSError *) =
+    ^(__kindof HKQuery *query, NSArray<HKWorkout *> *workouts, NSArray<HKDeletedObject *> *deletedObjects, HKQueryAnchor *newAnchor, NSError *error) {
         if (error) {
-            NSLog(@"HKAnchoredObjectQueryHandler: %@", error);
+            NSLog(@"%@Handler: %@", [query class], error);
             return;
         }
         
@@ -101,9 +112,7 @@
                 addingWorkouts[workoutCount - idx - 1] = workout;
                 workoutLookup[workout.UUID] = workout;
             }];
-            [addingWorkouts sortUsingDescriptors:@[
-                [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
-            ]];
+            [addingWorkouts sortUsingDescriptors:sortDescriptors];
             
             NSArray<HKWorkout *> *existingWorkouts = [snapshot itemIdentifiersInSectionWithIdentifier:sectionHeader];
             
@@ -127,9 +136,7 @@
                         [snapshot deleteItemsWithIdentifiers:existingWorkouts];
                         
                         [addingWorkouts addObjectsFromArray:existingWorkouts];
-                        [addingWorkouts sortUsingDescriptors:@[
-                            [NSSortDescriptor sortDescriptorWithKey:HKSampleSortIdentifierStartDate ascending:NO]
-                        ]];
+                        [addingWorkouts sortUsingDescriptors:sortDescriptors];
                         
                         [snapshot appendItemsWithIdentifiers:addingWorkouts intoSectionWithIdentifier:sectionHeader];
                     } else {
@@ -162,7 +169,7 @@
             
             BOOL const snapshotIsEmpty = (snapshot.numberOfItems == 0);
             [strongself->_dataSource applySnapshot:snapshot animatingDifferences:YES completion:^{
-                [refreshControl endRefreshing];
+                completionBlock();
                 
                 UITableView *tableView = weakself.tableView;
                 tableView.scrollEnabled = !snapshotIsEmpty;
@@ -177,10 +184,19 @@
         }
     };
     
-    HKAnchoredObjectQuery *workoutQuery = [[HKAnchoredObjectQuery alloc] initWithType:sampleType predicate:predicate anchor:HKAnchoredObjectQueryNoAnchor
-                                                                                limit:HKObjectQueryNoLimit resultsHandler:updateHandler];
-    workoutQuery.updateHandler = updateHandler;
-    
+    HKQuery *workoutQuery = nil;
+    if (limit == HKObjectQueryNoLimit) {
+        HKAnchoredObjectQuery *anchoredQuery = [[HKAnchoredObjectQuery alloc] initWithType:sampleType predicate:predicate anchor:HKAnchoredObjectQueryNoAnchor
+                                                                                     limit:limit resultsHandler:updateHandler];
+        anchoredQuery.updateHandler = updateHandler;
+        
+        workoutQuery = anchoredQuery;
+    } else {
+        workoutQuery = [[HKSampleQuery alloc] initWithSampleType:sampleType predicate:predicate limit:limit sortDescriptors:sortDescriptors
+                                                  resultsHandler:^(HKSampleQuery *query, NSArray<HKWorkout *> *workouts, NSError *error) {
+            updateHandler(query, workouts, nil, nil, error);
+        }];
+    }
     _workoutQuery = workoutQuery;
     [healthStore executeQuery:workoutQuery];
 }
