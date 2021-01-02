@@ -47,6 +47,8 @@
 }
 
 - (WSPointCloud *)globeMapForAltitudes:(WSDataAnalysis *)altitudes {
+    // the input to this method is double precision, and the output is single precision
+    // somewhere, the format must change, so for performance, do it at the beginning
     NSUInteger const length = _length;
     NSParameterAssert(length == altitudes.length);
     NSAssert(length <= INT_MAX, @"vForce requires length to be represented by an int");
@@ -58,8 +60,6 @@
     
     float *radii = malloc(length * sizeof(float));
     vDSP_vdpsp(altitudes.data, 1, radii, 1, length);
-    float radius = 6378137; // https://en.wikipedia.org/wiki/Earth_radius#Geocentric_radius
-    vDSP_vsadd(radii, 1, &radius, radii, 1, length); // radii += radius
     
     // https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
     float *latRad = malloc(length * sizeof(float)); // theta
@@ -70,6 +70,45 @@
     float degToRad = M_PI / 180.0;
     vDSP_vsmul(floatCoords + 0, 2, &degToRad, latRad, 1, length);
     vDSP_vsmul(floatCoords + 1, 2, &degToRad, lngRad, 1, length);
+    
+    // https://en.wikipedia.org/wiki/Earth_radius#Geocentric_radius
+    float *spheroidRadii = malloc(length * sizeof(float));
+    float *geoSquaredSum = malloc(length * sizeof(float));
+    
+    float *geoLatSin = malloc(length * sizeof(float));
+    float *geoLatCos = malloc(length * sizeof(float));
+    
+    float const alpha = 6378137; // meters ("semi-major axis")
+    float const beta  = 6356752; // meters ("semi-minor axis")
+    
+    float const alphaSquared = alpha*alpha;
+    float const betaSquared = beta*beta;
+    
+    vvsincosf(geoLatSin, geoLatCos, latRad, &len); // geoLatSin = sin(latRad), geoLatCos = cos(latRad)
+    
+    vDSP_vmul(geoLatSin, 1, geoLatSin, 1, geoLatSin, 1, length); // geoLatSin *= geoLatSin
+    vDSP_vmul(geoLatCos, 1, geoLatCos, 1, geoLatCos, 1, length); // geoLatCos *= geoLatCos
+    
+    vDSP_vsmul(geoLatCos, 1, &alphaSquared, geoLatCos, 1, length); // geoLatCos *= alphaSquared
+    vDSP_vsmul(geoLatSin, 1, &betaSquared, geoLatSin, 1, length); // geoLatSin *= betaSquared
+    
+    vDSP_vadd(geoLatCos, 1, geoLatSin, 1, spheroidRadii, 1, length); // adjustedRadii = geoLatCos + geoLatSin
+    
+    vDSP_vsmul(geoLatCos, 1, &alphaSquared, geoLatCos, 1, length); // geoLatCos *= alphaSquared
+    vDSP_vsmul(geoLatSin, 1, &betaSquared, geoLatSin, 1, length); // geoLatSin *= betaSquared
+    
+    vDSP_vadd(geoLatCos, 1, geoLatSin, 1, geoSquaredSum, 1, length); // geoSquaredSum = geoLatCos + geoLatSin
+    
+    vvdivf(spheroidRadii, geoSquaredSum, spheroidRadii, &len); // adjustedRadii = geoSquaredSum/adjustedRadii
+    
+    vvsqrtf(spheroidRadii, spheroidRadii, &len); // adjustedRadii = sqrt(adjustedRadii)
+    
+    vDSP_vadd(radii, 1, spheroidRadii, 1, radii, 1, length); // radii += adjustedRadii
+    
+    free(geoLatCos);
+    free(geoLatSin);
+    free(geoSquaredSum);
+    free(spheroidRadii);
     
     // Earth coordinates use 0 latitude to refer to the equator,
     //   to convert to cartesian coordinates, 0 should refer to the poles
