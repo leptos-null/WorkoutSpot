@@ -31,6 +31,8 @@
 }
 
 - (WSDataAnalysis *)stepSpace {
+    // the input to this method is single precision, and the output is double precision
+    // somewhere, the format must change, so for performance, do it at the end
     const SCNVector3 *vectors = _vectors;
     const NSUInteger length = _length;
     
@@ -38,8 +40,7 @@
     //   by changing this variable
     vDSP_Length const dimensions = 3;
     
-    float *strungSteps = malloc(dimensions * sizeof(float) * length);
-    float *strungSquares = malloc(dimensions * sizeof(float) * length);
+    float *strungSteps = malloc(dimensions * length * sizeof(float));
     
     for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
         const NSUInteger strungOffset = length * dimension;
@@ -50,15 +51,20 @@
         vDSP_vsub(((float *)vectors) + dimension, dimensions,
                   ((float *)(vectors + 1)) + dimension, dimensions,
                   strungSteps + strungOffset + 1, 1, length - 1);
+        // note that we're reading from interleaved data, but writing serial
+        // vectors is
+        //   (x1, y1, z1), (x2, y2, z2), ...
+        // strungSteps is
+        //   [0, Δx12, Δx23, ...], [0, Δy12, Δy23, ...], [0, Δz12, Δz23, ...]
     }
     
-    vDSP_vsq(strungSteps, 1, strungSquares, 1, length * dimensions); // squares = steps**2
+    vDSP_vsq(strungSteps, 1, strungSteps, 1, length * dimensions); // steps = steps**2
     
     float *squareSums = calloc(length, sizeof(float));
     
     for (NSUInteger dimension = 0; dimension < dimensions; dimension++) {
         const NSUInteger strungOffset = length * dimension;
-        vDSP_vadd(strungSquares + strungOffset, 1, squareSums, 1, squareSums, 1, length); // squareSums += squares[dimension]
+        vDSP_vadd(strungSteps + strungOffset, 1, squareSums, 1, squareSums, 1, length); // squareSums += steps[dimension]
     }
     
     NSAssert(length <= INT_MAX, @"vForce requires length to be represented by an int");
@@ -72,7 +78,6 @@
     
     free(squareRoots);
     free(squareSums);
-    free(strungSquares);
     free(strungSteps);
     
     return [[WSDataAnalysis alloc] initWithInterpolatedData:distances length:length];
