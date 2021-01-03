@@ -33,6 +33,113 @@
     NSParameterAssert(index < _length);
     return _coordinates[index];
 }
+
+- (WSDataAnalysis *)stepSpace {
+    NSUInteger const length = _length;
+    const CLLocationCoordinate2D *coordinates = _coordinates;
+    NSAssert(length <= INT_MAX, @"vForce requires length to be represented by an int");
+    
+    int const len = (length & INT_MAX);
+    
+    double *latRad = malloc(length * sizeof(double)); // latitude in radians
+    double *lngRad = malloc(length * sizeof(double)); // longitude in radians
+    
+    // convert from degrees to radians,
+    //   and seperate latitudes and longitudes
+    double const degToRad = M_PI / 180.0;
+    vDSP_vsmulD((const double *)coordinates + 0, 2, &degToRad, latRad, 1, length);
+    vDSP_vsmulD((const double *)coordinates + 1, 2, &degToRad, lngRad, 1, length);
+    
+    // https://en.wikipedia.org/wiki/Earth_radius#Fixed_radius
+    double const alpha = 6378137; // meters ("semi-major axis")
+    double const beta  = 6356752; // meters ("semi-minor axis")
+    
+    double const alphaSquared = alpha * alpha;
+    double const betaSquared = beta * beta;
+    
+    // https://en.wikipedia.org/wiki/Earth_radius#Geocentric_radius
+    double *spheroidRadii = malloc(length * sizeof(double));
+    double *geoSquaredSum = malloc(length * sizeof(double));
+    
+    double *latSin = malloc(length * sizeof(double));
+    double *latCos = malloc(length * sizeof(double));
+    
+    vvsincos(latSin, latCos, latRad, &len); // latSin = sin(latRad), latCos = cos(latRad)
+    
+    double *geoSinBuild = malloc(length * sizeof(double));
+    double *geoCosBuild = malloc(length * sizeof(double));
+    
+    vDSP_vsqD(latSin, 1, geoSinBuild, 1, length); // geoSinBuild = latSin**2
+    vDSP_vsqD(latCos, 1, geoCosBuild, 1, length); // geoCosBuild = latCos**2
+    
+    vDSP_vsmulD(geoCosBuild, 1, &alphaSquared, geoCosBuild, 1, length); // geoCosBuild *= alphaSquared
+    vDSP_vsmulD(geoSinBuild, 1, &betaSquared, geoSinBuild, 1, length); // geoSinBuild *= betaSquared
+    
+    vDSP_vaddD(geoCosBuild, 1, geoSinBuild, 1, spheroidRadii, 1, length); // spheroidRadii = geoCosBuild + geoSinBuild
+    
+    vDSP_vsmulD(geoCosBuild, 1, &alphaSquared, geoCosBuild, 1, length); // geoCosBuild *= alphaSquared
+    vDSP_vsmulD(geoSinBuild, 1, &betaSquared, geoSinBuild, 1, length); // geoSinBuild *= betaSquared
+    
+    vDSP_vaddD(geoCosBuild, 1, geoSinBuild, 1, geoSquaredSum, 1, length); // geoSquaredSum = geoCosBuild + geoSinBuild
+    
+    vvdiv(spheroidRadii, geoSquaredSum, spheroidRadii, &len); // spheroidRadii = geoSquaredSum/spheroidRadii
+    
+    vvsqrt(spheroidRadii, spheroidRadii, &len); // spheroidRadii = sqrt(adjustedRadii)
+    
+    free(geoSquaredSum);
+    
+    // https://en.wikipedia.org/wiki/Haversine_formula#Formulation
+    NSUInteger const deltasLength = (length - 1);
+    int const deltasLen = (len - 1);
+    // these stepped vectors should have the relation `step[n] = op(vec[n + 1], vec[n])`
+    double *deltaLat = malloc(deltasLength * sizeof(double));
+    double *deltaLng = malloc(deltasLength * sizeof(double));
+    vDSP_vsubD(latRad, 1, latRad + 1, 1, deltaLat, 1, deltasLength); // deltaLat[n] = latRad[n + 1] - latRad[n]
+    vDSP_vsubD(lngRad, 1, lngRad + 1, 1, deltaLng, 1, deltasLength); // deltaLng[n] = lngRad[n + 1] - lngRad[n]
+    double const halfValue = 0.5;
+    vDSP_vsmulD(deltaLat, 1, &halfValue, deltaLat, 1, deltasLength); // deltaLat *= halfValue
+    vDSP_vsmulD(deltaLng, 1, &halfValue, deltaLng, 1, deltasLength); // deltaLng *= halfValue
+    
+    vvsin(deltaLat, deltaLat, &len); // deltaLat = sin(deltaLat)
+    vvsin(deltaLng, deltaLng, &len); // deltaLng = sin(deltaLng)
+    
+    vDSP_vsqD(deltaLat, 1, deltaLat, 1, deltasLength); // deltaLat = deltaLat**2
+    vDSP_vsqD(deltaLng, 1, deltaLng, 1, deltasLength); // deltaLng = deltaLng**2
+    
+    double *innerWorking = malloc(deltasLength * sizeof(double));
+    vDSP_vmulD(latCos, 1, latCos + 1, 1, innerWorking, 1, deltasLength); // innerWorking[n] = latCos[n + 1] * latCos[n]
+    vDSP_vmulD(innerWorking, 1, deltaLng, 1, innerWorking, 1, deltasLength); // innerWorking *= deltaLng
+    vDSP_vaddD(innerWorking, 1, deltaLat, 1, innerWorking, 1, deltasLength); // innerWorking += deltaLat
+    vvsqrt(innerWorking, innerWorking, &deltasLen); // innerWorking = sqrt(innerWorking)
+    vvasin(innerWorking, innerWorking, &deltasLen); // innerWorking = asin(innerWorking)
+    
+    double *radiusSum = malloc(deltasLength * sizeof(double));
+    vDSP_vaddD(spheroidRadii + 1, 1, spheroidRadii, 1, radiusSum, 1, deltasLength); // radiusSum[n] = spheroidRadii[n + 1] + spheroidRadii[n]
+    
+    double *distances = malloc(length * sizeof(double));
+    distances[0] = 0;
+    vDSP_vmulD(radiusSum, 1, innerWorking, 1, distances + 1, 1, deltasLength);
+    
+    free(radiusSum);
+    free(innerWorking);
+    
+    free(spheroidRadii);
+    
+    free(geoCosBuild);
+    free(geoSinBuild);
+    
+    free(deltaLng);
+    free(deltaLat);
+    
+    free(latCos);
+    free(latSin);
+    
+    free(lngRad);
+    free(latRad);
+    
+    return [[WSDataAnalysis alloc] initWithInterpolatedData:distances length:length];
+}
+
 - (WSCoordinateAnalysis *)convertToDomain:(WSDataAnalysis *)dataDomain {
     const double *domain = dataDomain.data;
     const vDSP_Length length = dataDomain.length;

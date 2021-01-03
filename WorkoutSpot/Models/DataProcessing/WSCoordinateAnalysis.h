@@ -18,6 +18,11 @@
                              domain:(double)domain length:(const vDSP_Length)length;
 /// The coordinate at @c index
 - (CLLocationCoordinate2D)coordinateAtIndex:(NSUInteger)index;
+/// Computes the @c CLLocationDistance between @c coordinates on Earth
+/// @code
+/// spacing[n] = distance(coordinates[n], coordinates[n - 1])
+/// @endcode
+- (WSDataAnalysis *)stepSpace;
 /// The data of the receiver converted into the domain of @c dataDomain data.
 /// @discussion
 /// The domain of the receiver and @c dataDomain must be the same.
