@@ -186,13 +186,13 @@
     
     float *primeVertical = malloc(length * sizeof(float)); // "prime vertical radius of curvature" N(latitude)
     
-    vDSP_vsq(latSin, 1, primeVertical, 1, length); // primeVertical = latSin**2
+    vDSP_vsq(latCos, 1, primeVertical, 1, length); // primeVertical = latCos**2
     float const negateFirstEccSqr = -firstEccentricitySqr;
     vDSP_vsmul(primeVertical, 1, &negateFirstEccSqr, primeVertical, 1, length); // primeVertical *= -firstEccentricitySqr
     float const floatingUnit = 1;
     vDSP_vsadd(primeVertical, 1, &floatingUnit, primeVertical, 1, length); // primeVertical += 1
     vvsqrtf(primeVertical, primeVertical, &len); // primeVertical = sqrt(primeVertical)
-    vDSP_svdiv(&alpha, primeVertical, 1, primeVertical, 1, length); // primeVertical = a/primeVertical
+    vDSP_svdiv(&beta, primeVertical, 1, primeVertical, 1, length); // primeVertical = beta/primeVertical
     
     vDSP_Length const xOffset = offsetof(SCNVector3, x)/sizeof(float);
     vDSP_Length const yOffset = offsetof(SCNVector3, y)/sizeof(float);
