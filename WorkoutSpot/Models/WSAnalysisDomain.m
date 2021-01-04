@@ -41,42 +41,20 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
                                heartSamples:(NSArray<HKDiscreteQuantitySample *> *)quantities
                                   startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
     if (self = [super init]) {
-        NSUInteger locationCount = locations.count;
+        NSUInteger const locationCount = locations.count;
         
-        // when `locations[0].timestamp < startDate`, then distance data
-        // starts with a non-zero value which is problematic.
-        // (only 0 distance should be traveled in 0 time)
-        NSTimeInterval const startIntervalSinceReferenceDate = startDate.timeIntervalSinceReferenceDate;
-        NSUInteger locationFirstIndex = [locations indexOfObjectPassingTest:^BOOL(CLLocation *location, NSUInteger idx, BOOL *stop) {
-            return (location.timestamp.timeIntervalSinceReferenceDate >= startIntervalSinceReferenceDate);
-        }];
-        
-        if (locationFirstIndex != 0) { // avoid copying if possible
-            locationCount -= locationFirstIndex;
-            // if this were a C array, we could just increment the pointer, and we'd be done
-            // this is essentially a copy operation- it accounts for about 2.5% of the executation time of this method
-            // the other option is to change every access of `locations` to add `locationFirstIndex` to the index
-            locations = [locations subarrayWithRange:NSMakeRange(locationFirstIndex, locationCount)];
-        }
-        
-        NSTimeInterval timeOffset = startDate.timeIntervalSinceReferenceDate;
-        timeOffset = -timeOffset; // we want to subtract, not add
+        // Accelerate doesn't have a scalar subtract function, so negate the scalar
+        NSTimeInterval const timeOffset = -startDate.timeIntervalSinceReferenceDate;
         NSTimeInterval const timeDomainLength = endDate.timeIntervalSinceReferenceDate + timeOffset;
         
-        CLLocationDistance *distances = malloc(locationCount * sizeof(CLLocationDistance));
         CLLocationDistance *altitudes = malloc(locationCount * sizeof(CLLocationDistance));
         CLLocationCoordinate2D *coordinates = malloc(locationCount * sizeof(CLLocationCoordinate2D));
         NSTimeInterval *locationStamps = malloc(locationCount * sizeof(NSTimeInterval));
         
-        distances[0] = 0;
         [locations enumerateObjectsUsingBlock:^(CLLocation *location, NSUInteger idx, BOOL *stop) {
             altitudes[idx] = location.altitude;
             coordinates[idx] = location.coordinate;
             locationStamps[idx] = location.timestamp.timeIntervalSinceReferenceDate;
-            
-            if (idx != 0) {
-                distances[idx] = distances[idx - 1] + [location distanceFromLocation:locations[idx - 1]];
-            }
         }];
         
         NSTimeInterval *locationIndx = malloc(locationCount * sizeof(NSTimeInterval));
@@ -87,11 +65,11 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         
         _time = [[WSDataAnalysis alloc] initWithData:locationStamps keys:locationIndx domain:timeDomainLength length:locationCount];
         
-        _distance = [[WSDataAnalysis alloc] initWithData:distances keys:locationIndx domain:timeDomainLength length:locationCount];
-        
         _altitude = [[WSDataAnalysis alloc] initWithData:altitudes keys:locationIndx domain:timeDomainLength length:locationCount];
         _coordinate = [[WSCoordinateAnalysis alloc] initWithCoordinates:coordinates keys:locationIndx domain:timeDomainLength length:locationCount];
+        
         _globeMap = [_coordinate globeMapForAltitudes:_altitude];
+        _distance = [[_coordinate stepSpace] stairCase];
         
         _speed = [_distance derivative];
         _grade = [_altitude derivativeInDomain:_distance];
@@ -114,7 +92,6 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         
         _heartRate = [[WSDataAnalysis alloc] initWithData:heartRates keys:heartIndx domain:timeDomainLength length:heartRateCount];
         
-        free(distances);
         free(altitudes);
         free(coordinates);
         free(locationStamps);
