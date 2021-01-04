@@ -156,66 +156,18 @@
     float *floatCoords = malloc(length * 2 * sizeof(float)); // lat-lng interleaved
     vDSP_vdpsp((const double *)_coordinates, 1, floatCoords, 1, length * 2);
     
-    float *radii = malloc(length * sizeof(float));
-    vDSP_vdpsp(altitudes.data, 1, radii, 1, length);
+    float *height = malloc(length * sizeof(float));
+    vDSP_vdpsp(altitudes.data, 1, height, 1, length);
     
-    // https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
-    float *latRad = malloc(length * sizeof(float)); // theta
-    float *lngRad = malloc(length * sizeof(float)); // phi
+    // https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_geodetic_to_ECEF_coordinates
+    float *latRad = malloc(length * sizeof(float)); // latitude in radians
+    float *lngRad = malloc(length * sizeof(float)); // longitude in radians
     
     // convert from degrees to radians,
     //   and seperate latitudes and longitudes
     float degToRad = M_PI / 180.0;
     vDSP_vsmul(floatCoords + 0, 2, &degToRad, latRad, 1, length);
     vDSP_vsmul(floatCoords + 1, 2, &degToRad, lngRad, 1, length);
-    
-    // https://en.wikipedia.org/wiki/Earth_radius#Geocentric_radius
-    float *spheroidRadii = malloc(length * sizeof(float));
-    float *geoSquaredSum = malloc(length * sizeof(float));
-    
-    float *geoLatSin = malloc(length * sizeof(float));
-    float *geoLatCos = malloc(length * sizeof(float));
-    
-    float const alpha = 6378137; // meters ("semi-major axis")
-    float const beta  = 6356752; // meters ("semi-minor axis")
-    
-    float const alphaSquared = alpha*alpha;
-    float const betaSquared = beta*beta;
-    
-    vvsincosf(geoLatSin, geoLatCos, latRad, &len); // geoLatSin = sin(latRad), geoLatCos = cos(latRad)
-    
-    vDSP_vmul(geoLatSin, 1, geoLatSin, 1, geoLatSin, 1, length); // geoLatSin *= geoLatSin
-    vDSP_vmul(geoLatCos, 1, geoLatCos, 1, geoLatCos, 1, length); // geoLatCos *= geoLatCos
-    
-    vDSP_vsmul(geoLatCos, 1, &alphaSquared, geoLatCos, 1, length); // geoLatCos *= alphaSquared
-    vDSP_vsmul(geoLatSin, 1, &betaSquared, geoLatSin, 1, length); // geoLatSin *= betaSquared
-    
-    vDSP_vadd(geoLatCos, 1, geoLatSin, 1, spheroidRadii, 1, length); // adjustedRadii = geoLatCos + geoLatSin
-    
-    vDSP_vsmul(geoLatCos, 1, &alphaSquared, geoLatCos, 1, length); // geoLatCos *= alphaSquared
-    vDSP_vsmul(geoLatSin, 1, &betaSquared, geoLatSin, 1, length); // geoLatSin *= betaSquared
-    
-    vDSP_vadd(geoLatCos, 1, geoLatSin, 1, geoSquaredSum, 1, length); // geoSquaredSum = geoLatCos + geoLatSin
-    
-    vvdivf(spheroidRadii, geoSquaredSum, spheroidRadii, &len); // adjustedRadii = geoSquaredSum/adjustedRadii
-    
-    vvsqrtf(spheroidRadii, spheroidRadii, &len); // adjustedRadii = sqrt(adjustedRadii)
-    
-    vDSP_vadd(radii, 1, spheroidRadii, 1, radii, 1, length); // radii += adjustedRadii
-    
-    free(geoLatCos);
-    free(geoLatSin);
-    free(geoSquaredSum);
-    free(spheroidRadii);
-    
-    // Earth coordinates use 0 latitude to refer to the equator,
-    //   to convert to cartesian coordinates, 0 should refer to the poles
-    float *absLat = malloc(length * sizeof(float));
-    vvfabsf(absLat, latRad, &len);                       // absLat = abs(latRad)
-    float const halfPi = M_PI_2;
-    vDSP_vsub(absLat, 1, &halfPi, 0, absLat, 1, length); // absLat = M_PI_2 - absLat
-    vvcopysignf(latRad, absLat, latRad, &len);           // latRad = copysign(absLat, latRad)
-    free(absLat);
     
     float *latSin = malloc(length * sizeof(float));
     float *latCos = malloc(length * sizeof(float));
@@ -225,21 +177,42 @@
     float *lngCos = malloc(length * sizeof(float));
     vvsincosf(lngSin, lngCos, lngRad, &len);
     
+    // https://en.wikipedia.org/wiki/Earth_radius#Fixed_radius
+    float const alpha = 6378137; // meters ("semi-major axis")
+    float const beta  = 6356752; // meters ("semi-minor axis")
+    
+    float const betaAlphaSqrRatio = (beta * beta)/(alpha * alpha);
+    float const firstEccentricitySqr = 1 - betaAlphaSqrRatio;
+    
+    float *primeVertical = malloc(length * sizeof(float)); // "prime vertical radius of curvature" N(latitude)
+    
+    vDSP_vsq(latSin, 1, primeVertical, 1, length); // primeVertical = latSin**2
+    float const negateFirstEccSqr = -firstEccentricitySqr;
+    vDSP_vsmul(primeVertical, 1, &negateFirstEccSqr, primeVertical, 1, length); // primeVertical *= -firstEccentricitySqr
+    float const floatingUnit = 1;
+    vDSP_vsadd(primeVertical, 1, &floatingUnit, primeVertical, 1, length); // primeVertical += 1
+    vvsqrtf(primeVertical, primeVertical, &len); // primeVertical = sqrt(primeVertical)
+    vDSP_svdiv(&alpha, primeVertical, 1, primeVertical, 1, length); // primeVertical = a/primeVertical
     
     vDSP_Length const xOffset = offsetof(SCNVector3, x)/sizeof(float);
     vDSP_Length const yOffset = offsetof(SCNVector3, y)/sizeof(float);
     vDSP_Length const zOffset = offsetof(SCNVector3, z)/sizeof(float);
     vDSP_Length const dimensions = 3;
     
-    float *latSinRadii = malloc(length * sizeof(float));
-    vDSP_vmul(latSin, 1, radii, 1, latSinRadii, 1, length); // latSinRadii = latSin * radii
+    float *latCosRadii = malloc(length * sizeof(float));
+    vDSP_vadd(primeVertical, 1, height, 1, latCosRadii, 1, length); // latCosRadii = primeVertical + height
+    vDSP_vmul(latCosRadii, 1, latCos, 1, latCosRadii, 1, length); // latCosRadii *= latCos
+    
+    vDSP_vsmul(primeVertical, 1, &betaAlphaSqrRatio, primeVertical, 1, length); // primeVertical *= betaAlphaSqrRatio
+    vDSP_vadd(primeVertical, 1, height, 1, primeVertical, 1, length); // primeVertical += height
     
     SCNVector3 *cartesian = malloc(length * sizeof(SCNVector3));
-    vDSP_vmul(latSinRadii, 1, lngCos, 1, ((float *)cartesian) + xOffset, dimensions, length); // cartesian.x = latSinRadii * lngCos
-    vDSP_vmul(latSinRadii, 1, lngSin, 1, ((float *)cartesian) + yOffset, dimensions, length); // cartesian.y = latSinRadii * lngSin
-    vDSP_vmul(      radii, 1, latCos, 1, ((float *)cartesian) + zOffset, dimensions, length); // cartesian.z = radii * latCos
+    vDSP_vmul(latCosRadii, 1, lngCos, 1, ((float *)cartesian) + xOffset, dimensions, length); // cartesian.x = latCosRadii * lngCos
+    vDSP_vmul(latCosRadii, 1, lngSin, 1, ((float *)cartesian) + yOffset, dimensions, length); // cartesian.y = latCosRadii * lngSin
+    vDSP_vmul(primeVertical, 1, latSin, 1, ((float *)cartesian) + zOffset, dimensions, length); // cartesian.z = primeVertical * latSin
     
-    free(latSinRadii);
+    free(latCosRadii);
+    free(primeVertical);
     
     free(lngCos);
     free(latCos);
@@ -250,7 +223,7 @@
     free(lngRad);
     free(latRad);
     
-    free(radii);
+    free(height);
     free(floatCoords);
     
     WSPointCloud *ret = [[WSPointCloud alloc] initWithPoints:cartesian length:length];
