@@ -188,9 +188,9 @@
     
     vDSP_vsq(latCos, 1, primeVertical, 1, length); // primeVertical = latCos**2
     float const negateFirstEccSqr = -firstEccentricitySqr;
-    vDSP_vsmul(primeVertical, 1, &negateFirstEccSqr, primeVertical, 1, length); // primeVertical *= -firstEccentricitySqr
     float const floatingUnit = 1;
-    vDSP_vsadd(primeVertical, 1, &floatingUnit, primeVertical, 1, length); // primeVertical += 1
+    // primeVertical = primeVertical*negateFirstEccSqr + floatingUnit
+    vDSP_vsmsa(primeVertical, 1, &negateFirstEccSqr, &floatingUnit, primeVertical, 1, length);
     vvsqrtf(primeVertical, primeVertical, &len); // primeVertical = sqrt(primeVertical)
     vDSP_svdiv(&beta, primeVertical, 1, primeVertical, 1, length); // primeVertical = beta/primeVertical
     
@@ -200,11 +200,9 @@
     vDSP_Length const dimensions = 3;
     
     float *latCosRadii = malloc(length * sizeof(float));
-    vDSP_vadd(primeVertical, 1, height, 1, latCosRadii, 1, length); // latCosRadii = primeVertical + height
-    vDSP_vmul(latCosRadii, 1, latCos, 1, latCosRadii, 1, length); // latCosRadii *= latCos
-    
-    vDSP_vsmul(primeVertical, 1, &betaAlphaSqrRatio, primeVertical, 1, length); // primeVertical *= betaAlphaSqrRatio
-    vDSP_vadd(primeVertical, 1, height, 1, primeVertical, 1, length); // primeVertical += height
+    vDSP_vam(primeVertical, 1, height, 1, latCos, 1, latCosRadii, 1, length); // latCosRadii = (primeVertical + height) * latCos
+    // primeVertical = primeVertical * betaAlphaSqrRatio + height
+    vDSP_vsma(primeVertical, 1, &betaAlphaSqrRatio, height, 1, primeVertical, 1, length);
     
     SCNVector3 *cartesian = malloc(length * sizeof(SCNVector3));
     vDSP_vmul(latCosRadii, 1, lngCos, 1, ((float *)cartesian) + xOffset, dimensions, length); // cartesian.x = latCosRadii * lngCos
