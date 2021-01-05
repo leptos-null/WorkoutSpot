@@ -184,15 +184,16 @@
     float const betaAlphaSqrRatio = (beta * beta)/(alpha * alpha);
     float const firstEccentricitySqr = 1 - betaAlphaSqrRatio;
     
-    float *primeVertical = malloc(length * sizeof(float)); // "prime vertical radius of curvature" N(latitude)
+    // http://clynchg3c.com/Technote/geodesy/radiigeo.pdf
+    float *primeVertical = malloc(length * sizeof(float)); // "prime vertical radius of curvature"
     
-    vDSP_vsq(latCos, 1, primeVertical, 1, length); // primeVertical = latCos**2
+    vDSP_vsq(latSin, 1, primeVertical, 1, length); // primeVertical = latSin**2
     float const negateFirstEccSqr = -firstEccentricitySqr;
     float const floatingUnit = 1;
-    // primeVertical = primeVertical*negateFirstEccSqr + floatingUnit
+    // primeVertical = primeVertical * negateFirstEccSqr + floatingUnit
     vDSP_vsmsa(primeVertical, 1, &negateFirstEccSqr, &floatingUnit, primeVertical, 1, length);
     vvsqrtf(primeVertical, primeVertical, &len); // primeVertical = sqrt(primeVertical)
-    vDSP_svdiv(&beta, primeVertical, 1, primeVertical, 1, length); // primeVertical = beta/primeVertical
+    vDSP_svdiv(&alpha, primeVertical, 1, primeVertical, 1, length); // primeVertical = alpha/primeVertical
     
     vDSP_Length const xOffset = offsetof(SCNVector3, x)/sizeof(float);
     vDSP_Length const yOffset = offsetof(SCNVector3, y)/sizeof(float);
