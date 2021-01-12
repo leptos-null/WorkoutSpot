@@ -53,10 +53,11 @@
 
 @property (strong, nonatomic) IBOutlet WSExtremaStatsView *maximaStatsView;
 @property (strong, nonatomic) IBOutlet WSExtremaStatsView *minimaStatsView;
-
+/// The label that indicates the minimum value of the domain
 @property (strong, nonatomic) IBOutlet UILabel *leftDomainLabel;
+/// The label that indicates the maximum value of the domain
 @property (strong, nonatomic) IBOutlet UILabel *rightDomainLabel;
-
+/// Each segment has an index reflecting a @c WSDomainKey
 @property (strong, nonatomic) IBOutlet UISegmentedControl *domainControl;
 
 @property (strong, nonatomic) IBOutlet WSGraphView *graphPreview;

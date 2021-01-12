@@ -10,6 +10,7 @@
 #import "../Services/WSWorkoutFetch.h"
 
 @implementation WSWorkoutAnalysis {
+    BOOL _isFinished;
     WSWorkoutData *_workoutData;
     NSError *_queuedError;
     WSWorkoutAnalysisComplete _handler;
@@ -28,7 +29,20 @@
     return self;
 }
 
+- (WSAnalysisDomain *)domainForKey:(WSDomainKey)key {
+    switch (key) {
+        case WSDomainKeyTime:
+            return self.timeDomain;
+        case WSDomainKeyDistance:
+            return self.distanceDomain;
+        default:
+            return nil;
+    }
+}
+
 - (void)_coalesceDispatchGuaranteedMain {
+    dispatch_assert_queue(dispatch_get_main_queue());
+    
     if (_handler != NULL) {
         WSWorkoutData *workoutData = _workoutData;
         if (workoutData != nil) {
@@ -39,9 +53,10 @@
             _distanceDomain = [[WSAnalysisDomain alloc] initWithDomain:_timeDomain key:WSDomainKeyDistance];
             
             _workoutData = nil;
+            _isFinished = YES;
         }
         
-        if (self.timeDomain != nil && self.distanceDomain != nil) {
+        if (_isFinished) {
             _handler(self, nil);
             _handler = nil;
         } else if (_queuedError != nil) {

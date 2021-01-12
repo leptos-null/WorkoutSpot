@@ -25,11 +25,14 @@ typedef void(^WSWorkoutAnalysisComplete)(WSWorkoutAnalysis *analysis, NSError *e
 /// Analysis of @c workout in the distance domain
 @property (strong, nonatomic, readonly) WSAnalysisDomain *distanceDomain;
 
+- (WSAnalysisDomain *)domainForKey:(WSDomainKey)key;
+
 /// The handler called upon completion
 ///   of @c timeDomain and @c distanceDomain
 ///   being calculated. The handler may be set
 ///   multiple times. Each time the handler is
-///   called, the handler may be called once.
+///   set, the handler may be called once. The
+///   handler will be called on the main thread.
 - (void)setHandler:(WSWorkoutAnalysisComplete)handler;
 
 @end

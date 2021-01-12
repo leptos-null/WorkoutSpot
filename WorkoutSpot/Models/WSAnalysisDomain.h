@@ -88,6 +88,8 @@ typedef double WSHeartRate;
 /// @param percent A value [0, 1] that
 /// represents a portion of the domain
 - (NSUInteger)indexForPercent:(double)percent;
+/// The data analysis corresponding to the given @c key
+- (WSDataAnalysis *)dataForDomainKey:(WSDomainKey)key;
 /// Finds the index of @c domain[index] for the receiver
 - (NSUInteger)indexFromIndex:(NSUInteger)index inDomain:(WSAnalysisDomain *)domain;
 - (NSRange)rangeFromRange:(NSRange)range inDomain:(WSAnalysisDomain *)domain;

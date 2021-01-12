@@ -22,7 +22,7 @@
         _range = range;
         
         _timeRange = [analysis.timeDomain rangeFromRange:range inDomain:domain];
-        _distanceRange = [analysis.timeDomain rangeFromRange:range inDomain:domain];
+        _distanceRange = [analysis.distanceDomain rangeFromRange:range inDomain:domain];
     }
     return self;
 }
@@ -92,6 +92,15 @@
 }
 - (WSHeartRate)minimumHeartRate {
     return [self.analysisDomain.heartRate minimumOverRange:self.range];
+}
+
+- (WSGraphGuide *)domainGraphGuideWithConfiguration:(WSGraphConfiguration *)config {
+    WSAnalysisDomain *analysisDomain = self.analysisDomain;
+    WSDataAnalysis *domainData = [analysisDomain dataForDomainKey:analysisDomain.domainKey];
+    
+    config.range = self.range;
+    config.smoothingTechnique = WSGraphSmoothingTechniqueNone;
+    return [domainData graphGuideForConfiguration:config];
 }
 
 - (WSGraphGuide *)speedGraphGuideWithConfiguration:(WSGraphConfiguration *)config {

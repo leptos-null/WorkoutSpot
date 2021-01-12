@@ -68,6 +68,11 @@
         __block NSUInteger completeCount = 0;
         NSUInteger const routeCount = workoutRoutes.count;
         NSMutableArray<NSArray<CLLocation *> *> *routeLocations = [NSMutableArray arrayWithCapacity:routeCount];
+        if (routeCount == 0) {
+            locationsDone = YES;
+            dispatch_async(dispatch_get_main_queue(), callHandlerIfDone);
+            return;
+        }
         // fill the array so we can write to any index later
         for (NSUInteger routeIdx = 0; routeIdx < routeCount; routeIdx++) {
             routeLocations[routeIdx] = @[];

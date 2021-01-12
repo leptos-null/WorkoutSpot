@@ -86,10 +86,13 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             NSLog(@"WSWorkoutAnalysisCompleted: %@", error);
             return;
         }
-        // first set the active domain normally so `sameWorkout = NO`
-        // then use the segment control to ensure the model and UI match
         weakself.activeDomain = analysis.timeDomain;
-        [weakself domainSegmentDidChange:weakself.domainControl];
+        
+        UISegmentedControl *domainControl = weakself.domainControl;
+        for (WSDomainKey key = 0; key < domainControl.numberOfSegments; key++) {
+            WSAnalysisDomain *keyedDomain = [analysis domainForKey:key];
+            [domainControl setEnabled:(keyedDomain != nil) forSegmentAtIndex:key];
+        }
     }];
     
     double meters = [workoutAnalysis.workout.totalDistance doubleValueForUnit:[HKUnit meterUnit]];
@@ -130,6 +133,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         [self focusMapOnRoute];
     }
     
+    [self _setDomainSegmentIndexForActiveDomain];
     // this denominator is not particullarly meaningful
     self.graphScrollViewProxy.maximumZoomScale = MAX(1, activeDomain.fullRange.length / 24.0);
 }
@@ -187,7 +191,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingStats.date];
             self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
         } break;
-        case WSDomainKeyDistance :{
+        case WSDomainKeyDistance: {
             self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.distance];
             self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.distance];
         } break;
@@ -221,7 +225,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     _speedPointLayer.path = [[graphView.speedGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     _altitudePointLayer.path = [[graphView.altitudeGraph circleForIndex:pointIndex radius:circleRadii] CGPath];
     
-    self.pointSlideLineCenter.constant = [graphView.speedGraph xForIndex:pointIndex];
+    self.pointSlideLineCenter.constant = [graphView.domainGuide xForIndex:pointIndex];
     
     self.pointStatsView.stats = pointStats;
 }
@@ -318,7 +322,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 - (void)setDomainControl:(UISegmentedControl *)domainControl {
     _domainControl = domainControl;
     
-    [self domainSegmentDidChange:domainControl];
+    [self _setDomainSegmentIndexForActiveDomain];
 }
 
 - (void)setMaximaStatsView:(WSExtremaStatsView *)maximaStatsView {
@@ -389,17 +393,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 
 - (IBAction)domainSegmentDidChange:(UISegmentedControl *)segmentControl {
     WSWorkoutAnalysis *workoutAnalysis = self.workoutAnalysis;
-    WSAnalysisDomain *domain = nil;
-    switch (segmentControl.selectedSegmentIndex) {
-        case 0: {
-            domain = workoutAnalysis.timeDomain;
-        } break;
-        case 1: {
-            domain = workoutAnalysis.distanceDomain;
-        } break;
-        default:
-            break;
-    }
+    WSAnalysisDomain *domain = [workoutAnalysis domainForKey:segmentControl.selectedSegmentIndex];
     [self setActiveDomain:domain sameWorkout:YES];
 }
 
@@ -440,6 +434,12 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     }
     scrollView.zoomScale = (CGFloat)fullRange.length / range.length;
     scrollView.contentOffset = CGPointMake(scrollView.contentSize.width * range.location / fullRange.length, 0);
+}
+
+- (void)_setDomainSegmentIndexForActiveDomain {
+    WSAnalysisDomain *activeDomain = self.activeDomain;
+    NSInteger segmentIndex = activeDomain ? activeDomain.domainKey : UISegmentedControlNoSegment;
+    self.domainControl.selectedSegmentIndex = segmentIndex;
 }
 
 - (void)_setLayerColors {

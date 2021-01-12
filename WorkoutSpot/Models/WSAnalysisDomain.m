@@ -60,10 +60,16 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         NSTimeInterval *locationIndx = malloc(locationCount * sizeof(NSTimeInterval));
         vDSP_vsaddD(locationStamps, 1, &timeOffset, locationIndx, 1, locationCount);
         
+        NSUInteger const domainLength = ceil(timeDomainLength);
         _domainKey = WSDomainKeyTime;
-        _fullRange = NSMakeRange(0, ceil(timeDomainLength));
+        _fullRange = NSMakeRange(0, domainLength);
         
-        _time = [[WSDataAnalysis alloc] initWithData:locationStamps keys:locationIndx domain:timeDomainLength length:locationCount];
+        double *linearTime = malloc(domainLength * sizeof(double));
+        double const zeroOffset = 0;
+        double const identityScale = 1;
+        vDSP_vrampD(&zeroOffset, &identityScale, linearTime, 1, domainLength);
+        
+        _time = [[WSDataAnalysis alloc] initWithInterpolatedData:linearTime length:domainLength];
         
         _altitude = [[WSDataAnalysis alloc] initWithData:altitudes keys:locationIndx domain:timeDomainLength length:locationCount];
         _coordinate = [[WSCoordinateAnalysis alloc] initWithCoordinates:coordinates keys:locationIndx domain:timeDomainLength length:locationCount];
@@ -79,7 +85,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         _descending = [[climbing clippingToLower:(-INFINITY) upper:0] stairCase];
         
         HKUnit *heartRateUnit = [self _heartRateUnit];
-        NSUInteger heartRateCount = quantities.count;
+        NSUInteger const heartRateCount = quantities.count;
         double *heartRates = malloc(heartRateCount * sizeof(double));
         NSTimeInterval *heartStamps = malloc(heartRateCount * sizeof(NSTimeInterval));
         [quantities enumerateObjectsUsingBlock:^(HKDiscreteQuantitySample *quantity, NSUInteger idx, BOOL *stop) {
@@ -105,7 +111,10 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
 
 - (instancetype)initWithDomain:(WSAnalysisDomain *)domain key:(WSDomainKey)key {
     if (self = [super init]) {
-        WSDataAnalysis *domainData = [domain dataForKey:key];
+        WSDataAnalysis *domainData = [domain dataForDomainKey:key];
+        if (domainData == nil) {
+            return nil;
+        }
         
         double domainLength = [domainData deltaOverRange:domain.fullRange];
         
@@ -143,7 +152,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
     return maxIndx * percent;
 }
 
-- (WSDataAnalysis *)dataForKey:(WSDomainKey)key {
+- (WSDataAnalysis *)dataForDomainKey:(WSDomainKey)key {
     switch (key) {
         case WSDomainKeyTime:
             return self.time;
@@ -159,8 +168,8 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
 - (NSUInteger)indexFromIndex:(NSUInteger)index inDomain:(WSAnalysisDomain *)domain {
     WSDomainKey const domainKey = self.domainKey;
     
-    WSDataAnalysis *receiverInDomain = [self dataForKey:domainKey];
-    WSDataAnalysis *parameterInDomain = [domain dataForKey:domainKey];
+    WSDataAnalysis *receiverInDomain = [self dataForDomainKey:domainKey];
+    WSDataAnalysis *parameterInDomain = [domain dataForDomainKey:domainKey];
     
     double offset = [parameterInDomain datumAtIndex:index];
     double base = [receiverInDomain datumAtIndex:0];

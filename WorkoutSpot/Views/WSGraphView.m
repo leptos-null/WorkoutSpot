@@ -46,6 +46,8 @@
     graphConfig.size = self.bounds.size;
     graphConfig.edgeInsets = self.graphInsets;
     
+    _domainGuide = [segmentStats domainGraphGuideWithConfiguration:graphConfig];
+    
     _heartRateGraph = [segmentStats heartRateGraphGuideWithConfiguration:graphConfig];
     _speedGraph = [segmentStats speedGraphGuideWithConfiguration:graphConfig];
     _altitudeGraph = [segmentStats altitudeGraphGuideWithConfiguration:graphConfig];
