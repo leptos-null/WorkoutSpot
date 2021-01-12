@@ -66,8 +66,10 @@
     
     double const offset = 0.5;
     double const identityScale = 1;
+    // derivativeIndicies[n] = offset + n*identityScale
     vDSP_vrampD(&offset, &identityScale, derivativeIndicies, 1, derivativeLen);
-    vDSP_vsubD(data, 1, data + 1, 1, derivatives, 1, derivativeLen); // assume dx == 1
+    vDSP_vsubD(data, 1, data + 1, 1, derivatives, 1, derivativeLen); // derivatives[n] = data[n + 1] - data[n]
+    // assume dx == 1
     
     WSDataAnalysis *ret = [[WSDataAnalysis alloc] initWithData:derivatives keys:derivativeIndicies domain:length length:derivativeLen];
     free(derivativeIndicies);
@@ -81,7 +83,7 @@
     
     double *stepSpaces = malloc(length * sizeof(double));
     stepSpaces[0] = 0;
-    vDSP_vsubD(data, 1, data + 1, 1, stepSpaces + 1, 1, length - 1);
+    vDSP_vsubD(data, 1, data + 1, 1, stepSpaces + 1, 1, length - 1); // stepSpaces[n + 1] = data[n + 1] - data[n]
     
     WSDataAnalysis *ret = [[WSDataAnalysis alloc] initWithInterpolatedData:stepSpaces length:length];
     return ret;
@@ -92,6 +94,7 @@
     
     double *stairs = malloc(length * sizeof(double));
     double const identityScale = 1;
+    // stairs[n] = identityScale * sum(A[0:n])
     vDSP_vrsumD(data, 1, &identityScale, stairs, 1, length);
     
     WSDataAnalysis *ret = [[WSDataAnalysis alloc] initWithInterpolatedData:stairs length:length];

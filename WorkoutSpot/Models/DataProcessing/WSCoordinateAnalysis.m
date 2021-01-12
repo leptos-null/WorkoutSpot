@@ -47,8 +47,8 @@
     // convert from degrees to radians,
     //   and seperate latitudes and longitudes
     double const degToRad = M_PI / 180.0;
-    vDSP_vsmulD((const double *)coordinates + 0, 2, &degToRad, latRad, 1, length);
-    vDSP_vsmulD((const double *)coordinates + 1, 2, &degToRad, lngRad, 1, length);
+    vDSP_vsmulD(&(coordinates->latitude), 2, &degToRad, latRad, 1, length); // latRad = coordinates.latitude * degToRad
+    vDSP_vsmulD(&(coordinates->longitude), 2, &degToRad, lngRad, 1, length); // lngRad = coordinates.longitude * degToRad
     
     // https://en.wikipedia.org/wiki/Earth_radius#Fixed_radius
     double const alpha = 6378137; // meters ("semi-major axis")
@@ -171,11 +171,11 @@
     
     float *latSin = malloc(length * sizeof(float));
     float *latCos = malloc(length * sizeof(float));
-    vvsincosf(latSin, latCos, latRad, &len);
+    vvsincosf(latSin, latCos, latRad, &len); // latSin = sin(latRad), latCos = cos(latRad)
     
     float *lngSin = malloc(length * sizeof(float));
     float *lngCos = malloc(length * sizeof(float));
-    vvsincosf(lngSin, lngCos, lngRad, &len);
+    vvsincosf(lngSin, lngCos, lngRad, &len); // lngSin = sin(lngRad), lngCos = cos(lngRad)
     
     // https://en.wikipedia.org/wiki/Earth_radius#Fixed_radius
     float const alpha = 6378137; // meters ("semi-major axis")
@@ -195,20 +195,16 @@
     vvsqrtf(primeVertical, primeVertical, &len); // primeVertical = sqrt(primeVertical)
     vDSP_svdiv(&alpha, primeVertical, 1, primeVertical, 1, length); // primeVertical = alpha/primeVertical
     
-    vDSP_Length const xOffset = offsetof(SCNVector3, x)/sizeof(float);
-    vDSP_Length const yOffset = offsetof(SCNVector3, y)/sizeof(float);
-    vDSP_Length const zOffset = offsetof(SCNVector3, z)/sizeof(float);
-    vDSP_Length const dimensions = 3;
-    
     float *latCosRadii = malloc(length * sizeof(float));
     vDSP_vam(primeVertical, 1, height, 1, latCos, 1, latCosRadii, 1, length); // latCosRadii = (primeVertical + height) * latCos
     // primeVertical = primeVertical * betaAlphaSqrRatio + height
     vDSP_vsma(primeVertical, 1, &betaAlphaSqrRatio, height, 1, primeVertical, 1, length);
     
+    vDSP_Length const dimensions = sizeof(SCNVector3)/sizeof(float);
     SCNVector3 *cartesian = malloc(length * sizeof(SCNVector3));
-    vDSP_vmul(latCosRadii, 1, lngCos, 1, ((float *)cartesian) + xOffset, dimensions, length); // cartesian.x = latCosRadii * lngCos
-    vDSP_vmul(latCosRadii, 1, lngSin, 1, ((float *)cartesian) + yOffset, dimensions, length); // cartesian.y = latCosRadii * lngSin
-    vDSP_vmul(primeVertical, 1, latSin, 1, ((float *)cartesian) + zOffset, dimensions, length); // cartesian.z = primeVertical * latSin
+    vDSP_vmul(latCosRadii,   1, lngCos, 1, &(cartesian->x), dimensions, length); // cartesian.x = latCosRadii * lngCos
+    vDSP_vmul(latCosRadii,   1, lngSin, 1, &(cartesian->y), dimensions, length); // cartesian.y = latCosRadii * lngSin
+    vDSP_vmul(primeVertical, 1, latSin, 1, &(cartesian->z), dimensions, length); // cartesian.z = primeVertical * latSin
     
     free(latCosRadii);
     free(primeVertical);

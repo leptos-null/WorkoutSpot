@@ -58,7 +58,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         }];
         
         NSTimeInterval *locationIndx = malloc(locationCount * sizeof(NSTimeInterval));
-        vDSP_vsaddD(locationStamps, 1, &timeOffset, locationIndx, 1, locationCount);
+        vDSP_vsaddD(locationStamps, 1, &timeOffset, locationIndx, 1, locationCount); // locationIndx = locationStamps + timeOffset
         
         NSUInteger const domainLength = ceil(timeDomainLength);
         _domainKey = WSDomainKeyTime;
@@ -67,7 +67,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         double *linearTime = malloc(domainLength * sizeof(double));
         double const zeroOffset = 0;
         double const identityScale = 1;
-        vDSP_vrampD(&zeroOffset, &identityScale, linearTime, 1, domainLength);
+        vDSP_vrampD(&zeroOffset, &identityScale, linearTime, 1, domainLength); // linearTime[n] = zeroOffset + n * identityScale
         
         _time = [[WSDataAnalysis alloc] initWithInterpolatedData:linearTime length:domainLength];
         
@@ -94,7 +94,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         }];
         
         NSTimeInterval *heartIndx = malloc(heartRateCount * sizeof(NSTimeInterval));
-        vDSP_vsaddD(heartStamps, 1, &timeOffset, heartIndx, 1, heartRateCount);
+        vDSP_vsaddD(heartStamps, 1, &timeOffset, heartIndx, 1, heartRateCount); // heartIndx = heartStamps + timeOffset
         
         _heartRate = [[WSDataAnalysis alloc] initWithData:heartRates keys:heartIndx domain:timeDomainLength length:heartRateCount];
         
