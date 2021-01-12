@@ -7,7 +7,7 @@
 //
 
 #import "WSGraphGuide.h"
-#import "../Models/UIBezierPath+WSCenteredCircle.h"
+#import "UIBezierPath+WSCenteredCircle.h"
 #import "NSRange+WSIndex.h"
 
 @implementation WSGraphGuide {
@@ -79,7 +79,7 @@
         for (vDSP_Length idx = 0; idx < decimateLen; idx++) {
             CGPoint point;
             point.x = [self _xForInternalIndex:idx];
-            point.y = [self yValueForX:decimated[idx]];
+            point.y = [self yForDatum:decimated[idx]];
             if (idx == 0) {
                 [path moveToPoint:point];
             } else {
@@ -91,7 +91,7 @@
     return self;
 }
 
-- (CGFloat)yValueForX:(double)x {
+- (CGFloat)yForDatum:(double)x {
     x = MIN(x, self.maximumValue);
     x -= self.minimumValue;
     x = MAX(0, x);
@@ -118,7 +118,7 @@
     index -= range.location;
     index /= (NSInteger)_decimationFactor;
     index = MIN(index, _decimatedLength - 1);
-    return CGPointMake([self _xForInternalIndex:index], [self yValueForX:_decimatedData[index]]);
+    return CGPointMake([self _xForInternalIndex:index], [self yForDatum:_decimatedData[index]]);
 }
 
 - (UIBezierPath *)circleForIndex:(NSUInteger)index radius:(CGFloat)radius {
@@ -130,6 +130,14 @@
 }
 
 - (id)debugQuickLookObject {
+    UIBezierPath *pathCopy = [self.path copy];
+    // Xcode shades in the region. Close the path along the border to avoid a diagonal shade
+    CGFloat minY = [self yForDatum:self.minimumValue];
+    NSRange range = self.range;
+    [pathCopy addLineToPoint:CGPointMake([self xForIndex:NSRangeMaxIndex(range)], minY)];
+    [pathCopy addLineToPoint:CGPointMake([self xForIndex:range.location], minY)];
+    [pathCopy closePath];
+    
 #if TARGET_OS_IPHONE
     // path is in iOS coordinates. the result from
     // this method is sent to the connected Xcode
@@ -148,14 +156,6 @@
      *                   *         * (0, 0)            *
      * * * * * * * * * * *         * * * * * * * * * * */
     
-    UIBezierPath *pathCopy = [self.path copy];
-    // Xcode shades in the region. Close the path along the border to avoid a diagonal shade
-    CGFloat minY = [self yValueForX:self.minimumValue];
-    NSRange range = self.range;
-    [pathCopy addLineToPoint:CGPointMake([self xForIndex:NSRangeMaxIndex(range)], minY)];
-    [pathCopy addLineToPoint:CGPointMake([self xForIndex:range.location], minY)];
-    [pathCopy closePath];
-    
     CGAffineTransform flip = CGAffineTransformMakeTranslation(0, CGRectGetMaxY(pathCopy.bounds));
     flip = CGAffineTransformScale(flip, 1, -1);
     /*
@@ -163,10 +163,8 @@
      * 0 height
      */
     [pathCopy applyTransform:flip];
-    return pathCopy;
-#else
-    return self.path;
 #endif
+    return pathCopy;
 }
 
 - (NSString *)description {

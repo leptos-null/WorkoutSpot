@@ -37,10 +37,10 @@
 ///   from the maximum value of the original input data
 @property (nonatomic, readonly) double maximumValue;
 
-/// The place on the y-axis an x value would be plotted
-- (CGFloat)yValueForX:(double)x;
+/// The @c y component of the point where @c datum would be plotted
+- (CGFloat)yForDatum:(double)datum;
 /// The @c x component of @c pointForIndex:
-/// @discussion Unlike @c pointForIndex: (which does perform range validation),
+/// @discussion Unlike @c pointForIndex: (which performs range validation),
 ///   this method does not perform range validation,
 ///   and may return a value outside @c path.bounds
 - (CGFloat)xForIndex:(NSUInteger)index;
