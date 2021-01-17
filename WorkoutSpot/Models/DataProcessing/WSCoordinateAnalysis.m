@@ -20,8 +20,54 @@
     if (self = [super init]) {
         vDSP_Length intropLen = ceil(domain);
         CLLocationCoordinate2D *intropData = malloc(intropLen * sizeof(CLLocationCoordinate2D));
-        vDSP_vgenpD(((const double *)coordinates) + 0, 2, keys, 1, ((double *)intropData) + 0, 2, intropLen, length);
-        vDSP_vgenpD(((const double *)coordinates) + 1, 2, keys, 1, ((double *)intropData) + 1, 2, intropLen, length);
+        // latitude and longitude represent angles.
+        // `vDSP_vgenp` perform linear interpolation, and should generally take distances.
+        // the two options I came up with to appropriately interpolate from coordinates:
+        //   Cartesian: convert to cartesian coordinates, interpolate there, and convert back
+        //   Great-Circle: interpolate along each great circle constructed from each neighboring coordinate pair
+        // The `globeMapForAltitudes:` method in this class is intended to convert from geodetic coordinates to
+        //   cartesian coordinates, however the method hasn't yielded significantly accurate values, and the
+        //   process of converting cartesian coordinates back to geodetic coordinates is quite difficult.
+        // https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_ECEF_to_geodetic_coordinates
+        // Interpolating along a great-circle constructed from two points involves computing a particular
+        //   angular distance based on the two points, and constructing the interpolated point requires
+        //   this angular distance and the initial point. let's take a look at `vDSP_vgenp` pseudocode:
+        //   (this pseudocode has been modified slightly from Apple's `vDSP_vgenp` documentation)
+        //
+        //     vDSP_vgenp(const float *A, const float *B, float *C, vDSP_Length N, vDSP_Length M) {
+        //         for (vDSP_Length n = 0; n < N; ++n) {
+        //             if (n <= B[0]) {
+        //                 C[n] = A[0];
+        //             } else if (B[M-1] < n) {
+        //                 C[n] = A[M-1];
+        //             } else {
+        //                 vDSP_Length m; // let m be such that `B[m] < n <= B[m+1]`
+        //                 float t = (n - B[m]) / (B[m+1] - B[m]);
+        //                 C[n] = A[m] + (A[m+1] - A[m]) * t;
+        //             }
+        //         }
+        //     }
+        //
+        //   I don't know how to find `m` effectively [1] to implement this myself. the angular distance
+        //   can be passed directly to `vDSP_vgenp` however we won't know which initial point the result
+        //   corresponds with.
+        //     [1] the best I could come up with was:
+        //           while (keys[m+1] <= n) m++;
+        // I decided not to persue this further, because these coordinates should be relatively
+        //   close together, and linear interpolation on the angles didn't incur much of an error.
+        // the cases where the error is noticable:
+        //   Poles: as you travel closer to the poles, the radius of a latitude-slice approaches 0
+        //   Anti-meridian: a line runs down Earth where longitude switch from +180º to -180º
+        // if you were to run across the anti-meridian, there would be a pair of coordinates
+        //   that looked something like (0, -179.85) and (0, +179.92) - let's interpolate using
+        //   `t = 0.4`: `-179.85 + (+179.92 - -179.85) * 0.4 = -35.942`
+        //   (0, -179.85) and (0, +179.92) are near Fiji in the Pacific Ocean,
+        //   while (0, -35.942) is off the coast of South America in the Atlantic Ocean.
+        // in conclusion, I believe interpolating along each respective great circle is the most accurate
+        //   implementation, however the performance trade-offs would be significant, even if I were able
+        //   to use Accelerate, which I'm not sure I would be able to.
+        vDSP_vgenpD(&(coordinates->latitude),  2, keys, 1, &(intropData->latitude),  2, intropLen, length);
+        vDSP_vgenpD(&(coordinates->longitude), 2, keys, 1, &(intropData->longitude), 2, intropLen, length);
         
         _coordinates = intropData;
         _length = intropLen;
