@@ -7,7 +7,7 @@
 //
 
 #import "WSWorkoutViewCell.h"
-#import "../Services/WSFormatterUtils.h"
+#import "../Services/WSUnitPreferences.h"
 
 @implementation WSWorkoutViewCell
 
@@ -44,8 +44,8 @@
     self.durationLabel.text = [WSFormatterUtils contractedSeconds:duration];
     self.durationLabel.accessibilityLabel = [WSFormatterUtils expandedSeconds:duration];
     
-    self.distanceLabel.text = [WSFormatterUtils abbreviatedMeters:meters];
-    self.distanceLabel.accessibilityLabel = [WSFormatterUtils expandedMeters:meters];
+    self.distanceLabel.text = [WSFormatterUtils abbreviatedDistance:meters];
+    self.distanceLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:meters];
 }
 
 // MARK: - Description

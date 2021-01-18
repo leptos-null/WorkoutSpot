@@ -32,6 +32,7 @@
 		FAAB3CA924E5DA3000B184C7 /* WSEmptyListView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAB3CA824E5DA3000B184C7 /* WSEmptyListView.m */; };
 		FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */; };
 		FAABBED224EEE78100AF7A6C /* WSFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABBED124EEE78100AF7A6C /* WSFloatingView.m */; };
+		FAD74EBE25B6276A005D404F /* WSUnitPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */; };
@@ -111,6 +112,8 @@
 		FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyList.xib; sourceTree = "<group>"; };
 		FAABBED024EEE78100AF7A6C /* WSFloatingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSFloatingView.h; sourceTree = "<group>"; };
 		FAABBED124EEE78100AF7A6C /* WSFloatingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSFloatingView.m; sourceTree = "<group>"; };
+		FAD74EBC25B6276A005D404F /* WSUnitPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSUnitPreferences.h; sourceTree = "<group>"; };
+		FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSUnitPreferences.m; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -265,6 +268,8 @@
 				FA65E612248732FC00ABFEFA /* WSFormatterUtils.m */,
 				FAF838B524FC2066000F2B18 /* WSWorkoutFetch.h */,
 				FAF838B624FC2066000F2B18 /* WSWorkoutFetch.m */,
+				FAD74EBC25B6276A005D404F /* WSUnitPreferences.h */,
+				FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -551,6 +556,7 @@
 				FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */,
 				FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */,
 				FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */,
+				FAD74EBE25B6276A005D404F /* WSUnitPreferences.m in Sources */,
 				FAEABA092486B32E00481612 /* WSSceneDelegate.m in Sources */,
 				FA65E60F2486E54C00ABFEFA /* WSViewController.m in Sources */,
 				FA65E63D2492E4BD00ABFEFA /* WSPointStatistics.m in Sources */,

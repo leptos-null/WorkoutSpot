@@ -8,7 +8,7 @@
 
 #import "WSExtremaStatsView.h"
 #import "../../Models/UIColor+WSColors.h"
-#import "../../Services/WSFormatterUtils.h"
+#import "../../Services/WSUnitPreferences.h"
 
 typedef NS_ENUM(NSUInteger, WSExtremaStatsLabelIndex) {
     WSExtremaStatsLabelIndexAltitude,
@@ -87,12 +87,12 @@ typedef NS_ENUM(NSUInteger, WSExtremaStatsLabelIndex) {
             break;
     }
     
-    self.altitudeLabel.text = [WSFormatterUtils abbreviatedMeters:altitude];
-    self.altitudeLabel.accessibilityValue = [WSFormatterUtils expandedMeters:altitude];
+    self.altitudeLabel.text = [WSFormatterUtils abbreviatedAltitude:altitude];
+    self.altitudeLabel.accessibilityValue = [WSFormatterUtils expandedAltitude:altitude];
     self.altitudeLabel.hidden = (stats.analysisDomain.altitude == nil);
     
-    self.speedLabel.text = [WSFormatterUtils abbreviatedMetersPerSecond:speed];
-    self.speedLabel.accessibilityValue = [WSFormatterUtils expandedMetersPerSecond:speed];
+    self.speedLabel.text = [WSFormatterUtils abbreviatedSpeed:speed];
+    self.speedLabel.accessibilityValue = [WSFormatterUtils expandedSpeed:speed];
     self.speedLabel.hidden = (stats.analysisDomain.speed == nil);
     
     self.heartRateLabel.text = [[WSFormatterUtils beatsPerMinute:heartRate] stringByAppendingString:@" BPM"];

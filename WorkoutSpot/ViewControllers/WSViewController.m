@@ -7,7 +7,7 @@
 //
 
 #import "WSViewController.h"
-#import "../Services/WSFormatterUtils.h"
+#import "../Services/WSUnitPreferences.h"
 #import "../Models/UIColor+WSColors.h"
 #import "../Models/WSPointStatistics.h"
 #import "../Models/WSSegmentStatistics.h"
@@ -96,7 +96,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     }];
     
     double meters = [workoutAnalysis.workout.totalDistance doubleValueForUnit:[HKUnit meterUnit]];
-    self.title = [WSFormatterUtils abbreviatedMeters:meters];
+    self.title = [WSFormatterUtils abbreviatedDistance:meters];
 }
 
 - (void)setActiveDomain:(WSAnalysisDomain *)activeDomain {
@@ -192,12 +192,12 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
         } break;
         case WSDomainKeyDistance: {
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.distance];
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.distance];
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedDistance:leadingStats.distance];
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedDistance:trailingStats.distance];
         } break;
         case WSDomainKeyClimbing: {
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedMeters:leadingStats.ascending];
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedMeters:trailingStats.ascending];
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:leadingStats.ascending];
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:trailingStats.ascending];
         } break;
         default: {
             self.leftDomainLabel.text = nil;

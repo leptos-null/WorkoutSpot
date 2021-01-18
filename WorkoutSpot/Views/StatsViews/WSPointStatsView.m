@@ -8,7 +8,7 @@
 
 #import "WSPointStatsView.h"
 #import "../../Models/UIColor+WSColors.h"
-#import "../../Services/WSFormatterUtils.h"
+#import "../../Services/WSUnitPreferences.h"
 
 typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
     WSPointStatsLabelIndexTime,
@@ -49,13 +49,13 @@ typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
     self.timeLabel.hidden = (stats.analysisDomain.time == nil);
     
     CLLocationDistance dist = stats.distance;
-    self.distanceLabel.text = [@"Distance: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:dist]];
-    self.distanceLabel.accessibilityLabel = [@"Distance: " stringByAppendingString:[WSFormatterUtils expandedMeters:dist]];
+    self.distanceLabel.text = [@"Distance: " stringByAppendingString:[WSFormatterUtils abbreviatedDistance:dist]];
+    self.distanceLabel.accessibilityLabel = [@"Distance: " stringByAppendingString:[WSFormatterUtils expandedDistance:dist]];
     self.distanceLabel.hidden = (stats.analysisDomain.distance == nil);
     
     CLLocationDistance altitude = stats.altitude;
-    self.altitudeLabel.text = [@"Altitude: " stringByAppendingString:[WSFormatterUtils abbreviatedMeters:altitude]];
-    self.altitudeLabel.accessibilityLabel = [@"Altitude: " stringByAppendingString:[WSFormatterUtils expandedMeters:altitude]];
+    self.altitudeLabel.text = [@"Altitude: " stringByAppendingString:[WSFormatterUtils abbreviatedAltitude:altitude]];
+    self.altitudeLabel.accessibilityLabel = [@"Altitude: " stringByAppendingString:[WSFormatterUtils expandedAltitude:altitude]];
     self.altitudeLabel.hidden = (stats.analysisDomain.altitude == nil);
     
     double grade = stats.grade;
@@ -64,8 +64,8 @@ typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
     self.gradeLabel.hidden = (stats.analysisDomain.grade == nil);
     
     CLLocationSpeed speed = stats.speed;
-    self.speedLabel.text = [@"Speed: " stringByAppendingString:[WSFormatterUtils abbreviatedMetersPerSecond:speed]];
-    self.speedLabel.accessibilityLabel = [@"Speed: " stringByAppendingString:[WSFormatterUtils expandedMetersPerSecond:speed]];
+    self.speedLabel.text = [@"Speed: " stringByAppendingString:[WSFormatterUtils abbreviatedSpeed:speed]];
+    self.speedLabel.accessibilityLabel = [@"Speed: " stringByAppendingString:[WSFormatterUtils expandedSpeed:speed]];
     self.speedLabel.hidden = (stats.analysisDomain.speed == nil);
     
     WSHeartRate heartRate = stats.heartRate;

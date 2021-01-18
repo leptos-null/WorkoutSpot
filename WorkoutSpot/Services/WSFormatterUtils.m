@@ -33,22 +33,24 @@
         formatter = [NSMeasurementFormatter new];
         formatter.locale = NSLocale.autoupdatingCurrentLocale;
         formatter.unitStyle = NSFormattingUnitStyleMedium;
-        formatter.unitOptions = NSMeasurementFormatterUnitOptionsNaturalScale;
+        formatter.unitOptions = NSMeasurementFormatterUnitOptionsProvidedUnit;
         formatter.numberFormatter.maximumFractionDigits = 2;
         formatter.numberFormatter.minimumFractionDigits = 2;
     });
     return formatter;
 }
 
-+ (NSString *)abbreviatedMeters:(double)meters {
++ (NSString *)abbreviatedMeters:(double)meters unit:(NSUnitLength *)unit {
     NSMeasurementFormatter *formatter = [self _cachedLengthSpeedAbbreviatedFormatter];
     NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:meters unit:[NSUnitLength meters]];
+    measurement = [measurement measurementByConvertingToUnit:unit];
     return [formatter stringFromMeasurement:measurement];
 }
 
-+ (NSString *)abbreviatedMetersPerSecond:(double)mps {
++ (NSString *)abbreviatedMetersPerSecond:(double)mps unit:(NSUnitSpeed *)unit {
     NSMeasurementFormatter *formatter = [self _cachedLengthSpeedAbbreviatedFormatter];
     NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:mps unit:[NSUnitSpeed metersPerSecond]];
+    measurement = [measurement measurementByConvertingToUnit:unit];
     return [formatter stringFromMeasurement:measurement];
 }
 
@@ -72,7 +74,7 @@
     dispatch_once(&onceToken, ^{
         formatter = [NSMeasurementFormatter new];
         formatter.locale = NSLocale.autoupdatingCurrentLocale;
-        formatter.unitOptions = NSMeasurementFormatterUnitOptionsNaturalScale;
+        formatter.unitOptions = NSMeasurementFormatterUnitOptionsProvidedUnit;
         formatter.unitStyle = NSFormattingUnitStyleLong;
         formatter.numberFormatter.maximumFractionDigits = 2;
         formatter.numberFormatter.minimumFractionDigits = 2;
@@ -80,15 +82,17 @@
     return formatter;
 }
 
-+ (NSString *)expandedMeters:(double)meters {
++ (NSString *)expandedMeters:(double)meters unit:(NSUnitLength *)unit {
     NSMeasurementFormatter *formatter = [self _cachedLengthSpeedExpandedFormatter];
     NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:meters unit:[NSUnitLength meters]];
+    measurement = [measurement measurementByConvertingToUnit:unit];
     return [formatter stringFromMeasurement:measurement];
 }
 
-+ (NSString *)expandedMetersPerSecond:(double)mps {
++ (NSString *)expandedMetersPerSecond:(double)mps unit:(NSUnitSpeed *)unit {
     NSMeasurementFormatter *formatter = [self _cachedLengthSpeedExpandedFormatter];
     NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:mps unit:[NSUnitSpeed metersPerSecond]];
+    measurement = [measurement measurementByConvertingToUnit:unit];
     return [formatter stringFromMeasurement:measurement];
 }
 
