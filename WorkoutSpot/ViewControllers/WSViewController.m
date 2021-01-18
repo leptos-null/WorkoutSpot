@@ -188,20 +188,38 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     WSPointStatistics *trailingStats = analysis[maxViewIdx];
     switch (analysis.domainKey) {
         case WSDomainKeyTime: {
-            self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingStats.date];
-            self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingStats.date];
+            NSDate *leadingDate = leadingStats.date;
+            self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingDate];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:leadingDate];
+            
+            NSDate *trailingDate = trailingStats.date;
+            self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingDate];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:trailingDate];
         } break;
         case WSDomainKeyDistance: {
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedDistance:leadingStats.distance];
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedDistance:trailingStats.distance];
+            CLLocationDistance leadingDistance = leadingStats.distance;
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedDistance:leadingDistance];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:leadingDistance];
+            
+            CLLocationDistance trailingDistance = trailingStats.distance;
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedDistance:trailingDistance];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:trailingDistance];
         } break;
         case WSDomainKeyClimbing: {
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:leadingStats.ascending];
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:trailingStats.ascending];
+            CLLocationDistance leadingAltitude = leadingStats.ascending;
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:leadingAltitude];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:leadingAltitude];
+            
+            CLLocationDistance trailingAltitude = trailingStats.ascending;
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:trailingAltitude];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:trailingAltitude];
         } break;
         default: {
             self.leftDomainLabel.text = nil;
+            self.leftDomainLabel.accessibilityLabel = nil;
+            
             self.rightDomainLabel.text = nil;
+            self.rightDomainLabel.accessibilityLabel = nil;
         } break;
     }
 }
