@@ -18,7 +18,7 @@
 - (instancetype)initWithCoder:(NSCoder *)coder {
     if (self = [super initWithCoder:coder]) {
         NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
-        [defaultCenter addObserver:self selector:@selector(_updateLabelsForWorkout) name:NSCurrentLocaleDidChangeNotification object:nil];
+        [defaultCenter addObserver:self selector:@selector(_updateLabelsForWorkout) name:WSUnitPreferencesDidChangeNotification object:nil];
     }
     return self;
 }

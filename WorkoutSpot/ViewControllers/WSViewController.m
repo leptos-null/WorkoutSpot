@@ -35,6 +35,14 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     return [storyboard instantiateInitialViewController];
 }
 
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    if (self = [super initWithCoder:coder]) {
+        NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
+        [defaultCenter addObserver:self selector:@selector(_updateDomainLabels) name:WSUnitPreferencesDidChangeNotification object:nil];
+    }
+    return self;
+}
+
 // MARK: - Properties
 
 - (void)setRouteOverlay:(MKPolyline *)routeOverlay {
@@ -94,7 +102,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             [domainControl setEnabled:(keyedDomain != nil) forSegmentAtIndex:key];
         }
     }];
-    
+    // TODO: Use a different title
     double meters = [workoutAnalysis.workout.totalDistance doubleValueForUnit:[HKUnit meterUnit]];
     self.title = [WSFormatterUtils abbreviatedDistance:meters];
 }
@@ -184,44 +192,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     self.minimaStatsView.stats = segmentStats;
     self.maximaStatsView.stats = segmentStats;
     
-    WSPointStatistics *leadingStats = analysis[viewRange.location];
-    WSPointStatistics *trailingStats = analysis[maxViewIdx];
-    switch (analysis.domainKey) {
-        case WSDomainKeyTime: {
-            NSDate *leadingDate = leadingStats.date;
-            self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingDate];
-            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:leadingDate];
-            
-            NSDate *trailingDate = trailingStats.date;
-            self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingDate];
-            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:trailingDate];
-        } break;
-        case WSDomainKeyDistance: {
-            CLLocationDistance leadingDistance = leadingStats.distance;
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedDistance:leadingDistance];
-            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:leadingDistance];
-            
-            CLLocationDistance trailingDistance = trailingStats.distance;
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedDistance:trailingDistance];
-            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:trailingDistance];
-        } break;
-        case WSDomainKeyClimbing: {
-            CLLocationDistance leadingAltitude = leadingStats.ascending;
-            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:leadingAltitude];
-            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:leadingAltitude];
-            
-            CLLocationDistance trailingAltitude = trailingStats.ascending;
-            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:trailingAltitude];
-            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:trailingAltitude];
-        } break;
-        default: {
-            self.leftDomainLabel.text = nil;
-            self.leftDomainLabel.accessibilityLabel = nil;
-            
-            self.rightDomainLabel.text = nil;
-            self.rightDomainLabel.accessibilityLabel = nil;
-        } break;
-    }
+    [self _updateDomainLabels];
 }
 
 - (void)setPointIndex:(NSUInteger)pointIndex {
@@ -458,6 +429,51 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     WSAnalysisDomain *activeDomain = self.activeDomain;
     NSInteger segmentIndex = activeDomain ? activeDomain.domainKey : UISegmentedControlNoSegment;
     self.domainControl.selectedSegmentIndex = segmentIndex;
+}
+
+- (void)_updateDomainLabels {
+    WSAnalysisDomain *analysis = self.activeDomain;
+    NSRange viewRange = self.viewRange;
+    NSUInteger maxViewIdx = NSRangeMaxIndex(viewRange);
+    
+    WSPointStatistics *leadingStats = analysis[viewRange.location];
+    WSPointStatistics *trailingStats = analysis[maxViewIdx];
+    switch (analysis.domainKey) {
+        case WSDomainKeyTime: {
+            NSDate *leadingDate = leadingStats.date;
+            self.leftDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:leadingDate];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:leadingDate];
+            
+            NSDate *trailingDate = trailingStats.date;
+            self.rightDomainLabel.text = [WSFormatterUtils timeOnlyFromDate:trailingDate];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils timeOnlyFromDate:trailingDate];
+        } break;
+        case WSDomainKeyDistance: {
+            CLLocationDistance leadingDistance = leadingStats.distance;
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedDistance:leadingDistance];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:leadingDistance];
+            
+            CLLocationDistance trailingDistance = trailingStats.distance;
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedDistance:trailingDistance];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedDistance:trailingDistance];
+        } break;
+        case WSDomainKeyClimbing: {
+            CLLocationDistance leadingAltitude = leadingStats.ascending;
+            self.leftDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:leadingAltitude];
+            self.leftDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:leadingAltitude];
+            
+            CLLocationDistance trailingAltitude = trailingStats.ascending;
+            self.rightDomainLabel.text = [WSFormatterUtils abbreviatedAltitude:trailingAltitude];
+            self.rightDomainLabel.accessibilityLabel = [WSFormatterUtils expandedAltitude:trailingAltitude];
+        } break;
+        default: {
+            self.leftDomainLabel.text = nil;
+            self.leftDomainLabel.accessibilityLabel = nil;
+            
+            self.rightDomainLabel.text = nil;
+            self.rightDomainLabel.accessibilityLabel = nil;
+        } break;
+    }
 }
 
 - (void)_setLayerColors {

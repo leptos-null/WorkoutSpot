@@ -30,6 +30,9 @@ typedef NS_ENUM(NSUInteger, WSExtremaStatsLabelIndex) {
         self.altitudeLabel = [UILabel new];
         self.speedLabel = [UILabel new];
         self.heartRateLabel = [UILabel new];
+        
+        NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
+        [defaultCenter addObserver:self selector:@selector(_updateLabelValues) name:WSUnitPreferencesDidChangeNotification object:nil];
     }
     return self;
 }

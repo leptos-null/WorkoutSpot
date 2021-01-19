@@ -36,12 +36,21 @@ typedef NS_ENUM(NSUInteger, WSPointStatsLabelIndex) {
         self.gradeLabel = [UILabel new];
         self.speedLabel = [UILabel new];
         self.heartRateLabel = [UILabel new];
+        
+        NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
+        [defaultCenter addObserver:self selector:@selector(_updateStatsLabels) name:WSUnitPreferencesDidChangeNotification object:nil];
     }
     return self;
 }
 
 - (void)setStats:(WSPointStatistics *)stats {
     _stats = stats;
+    
+    [self _updateStatsLabels];
+}
+
+- (void)_updateStatsLabels {
+    WSPointStatistics *stats = self.stats;
     
     NSDate *date = stats.date;
     self.timeLabel.text = [@"Time: " stringByAppendingString:[WSFormatterUtils timeOnlyFromDate:date]];

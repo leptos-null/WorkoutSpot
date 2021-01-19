@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "WSFormatterUtils.h"
 
+OBJC_EXPORT NSNotificationName const WSUnitPreferencesDidChangeNotification;
+
 @interface WSUnitPreferences : NSObject
 
 @property (class, strong, nonatomic, readonly) WSUnitPreferences *shared;

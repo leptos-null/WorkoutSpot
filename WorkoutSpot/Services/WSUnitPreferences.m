@@ -8,6 +8,8 @@
 
 #import "WSUnitPreferences.h"
 
+NSNotificationName const WSUnitPreferencesDidChangeNotification = @"WSUnitPreferencesDidChangeNotification";
+
 NSString *const WSUnitPreferencesDistanceKey = @"WSUnitPreferencesDistanceKey";
 NSString *const WSUnitPreferencesAltitudeKey = @"WSUnitPreferencesAltitudeKey";
 NSString *const WSUnitPreferencesSpeedKey = @"WSUnitPreferencesSpeedKey";
@@ -65,20 +67,27 @@ NSString *const WSUnitPreferencesSpeedKey = @"WSUnitPreferencesSpeedKey";
     }
 }
 
+- (void)_postDidChangeNotification {
+    [NSNotificationCenter.defaultCenter postNotificationName:WSUnitPreferencesDidChangeNotification object:self];
+}
+
 - (void)setDistanceUnit:(NSUnitLength *)distanceUnit {
     _distanceUnit = distanceUnit;
     
     [self _storeArchivedObject:distanceUnit forKey:WSUnitPreferencesDistanceKey];
+    [self _postDidChangeNotification];
 }
 - (void)setAltitudeUnit:(NSUnitLength *)altitudeUnit {
     _altitudeUnit = altitudeUnit;
     
     [self _storeArchivedObject:altitudeUnit forKey:WSUnitPreferencesAltitudeKey];
+    [self _postDidChangeNotification];
 }
 - (void)setSpeedUnit:(NSUnitSpeed *)speedUnit {
     _speedUnit = speedUnit;
     
     [self _storeArchivedObject:speedUnit forKey:WSUnitPreferencesSpeedKey];
+    [self _postDidChangeNotification];
 }
 
 @end

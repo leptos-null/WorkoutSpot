@@ -36,12 +36,21 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
         self.gradeLabel = [UILabel new];
         self.speedLabel = [UILabel new];
         self.heartRateLabel = [UILabel new];
+        
+        NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
+        [defaultCenter addObserver:self selector:@selector(_updateStatsLabels) name:WSUnitPreferencesDidChangeNotification object:nil];
     }
     return self;
 }
 
 - (void)setStats:(WSSegmentStatistics *)stats {
     _stats = stats;
+    
+    [self _updateStatsLabels];
+}
+
+- (void)_updateStatsLabels {
+    WSSegmentStatistics *stats = self.stats;
     
     NSTimeInterval deltaTime = stats.duration;
     self.durationLabel.text = [@"Duration: " stringByAppendingString:[WSFormatterUtils abbreviatedSeconds:deltaTime]];
