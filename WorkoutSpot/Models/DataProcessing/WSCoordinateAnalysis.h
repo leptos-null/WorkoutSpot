@@ -14,6 +14,16 @@
 ///   and work with coordinates.
 @interface WSCoordinateAnalysis : NSObject
 
+/// @discussion
+/// The @c coordinates and @c keys arrays should be related
+///   such that @c coordinates[n] corresponds to @c keys[n]
+///   in the domain of @c keys
+/// @param coordinates An array of coordinates of @c length
+/// @param keys An array of keys of @c length
+/// @param domain A value that descibes the magnitude
+///   of the @c keys domain, such that the domain is @c [0, @c domain]
+/// @param length The length of each of the input arrays
+/// @note @c keys must increase monotonically
 - (instancetype)initWithCoordinates:(const CLLocationCoordinate2D *)coordinates keys:(const double *)keys
                              domain:(double)domain length:(const vDSP_Length)length;
 /// The coordinate at @c index

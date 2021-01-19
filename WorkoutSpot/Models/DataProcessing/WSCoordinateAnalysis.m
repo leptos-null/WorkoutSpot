@@ -21,7 +21,7 @@
         vDSP_Length intropLen = ceil(domain);
         CLLocationCoordinate2D *intropData = malloc(intropLen * sizeof(CLLocationCoordinate2D));
         // latitude and longitude represent angles.
-        // `vDSP_vgenp` perform linear interpolation, and should generally take distances.
+        // `vDSP_vgenp` performs linear interpolation, and should generally take distances.
         // the two options I came up with to appropriately interpolate from coordinates:
         //   Cartesian: convert to cartesian coordinates, interpolate there, and convert back
         //   Great-Circle: interpolate along each great circle constructed from each neighboring coordinate pair
@@ -53,9 +53,9 @@
         //   corresponds with.
         //     [1] the best I could come up with was:
         //           while (keys[m+1] <= n) m++;
-        // I decided not to persue this further, because these coordinates should be relatively
+        // I decided not to pursue this further, because these coordinates should be relatively
         //   close together, and linear interpolation on the angles didn't incur much of an error.
-        // the cases where the error is noticable:
+        // the cases where the error is noticeable:
         //   Poles: as you travel closer to the poles, the radius of a latitude-slice approaches 0
         //   Anti-meridian: a line runs down Earth where longitude switch from +180º to -180º
         // if you were to run across the anti-meridian, there would be a pair of coordinates
