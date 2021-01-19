@@ -66,6 +66,11 @@
     return [formatter stringFromTimeInterval:seconds];
 }
 
++ (NSString *)abbreviatedUnit:(NSUnit *)unit {
+    NSMeasurementFormatter *formatter = [self _cachedLengthSpeedAbbreviatedFormatter];
+    return [formatter stringFromUnit:unit];
+}
+
 // MARK: - Expanded formatters
 
 + (NSMeasurementFormatter *)_cachedLengthSpeedExpandedFormatter {
@@ -108,6 +113,10 @@
     return [formatter stringFromTimeInterval:seconds];
 }
 
++ (NSString *)expandedUnit:(NSUnit *)unit {
+    NSMeasurementFormatter *formatter = [self _cachedLengthSpeedExpandedFormatter];
+    return [formatter stringFromUnit:unit];
+}
 
 // MARK: - Number formatters
 

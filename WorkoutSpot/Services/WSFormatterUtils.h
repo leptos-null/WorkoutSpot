@@ -24,6 +24,9 @@
 /// @param seconds Time interval in seconds
 /// @returns A string such as "8 min, 39 sec"
 + (NSString *)abbreviatedSeconds:(NSTimeInterval)seconds;
+/// @param unit A unit
+/// @returns A string such as "km", "miles/hour", etc.
++ (NSString *)abbreviatedUnit:(NSUnit *)unit;
 
 /// @param meters Distance in meters
 /// @returns A string such as "5,49 kilometers", "3.41 miles", etc.
@@ -34,6 +37,9 @@
 /// @param seconds Time interval in seconds
 /// @returns A string such as "8 minutes, 39 seconds"
 + (NSString *)expandedSeconds:(NSTimeInterval)seconds;
+/// @param unit A unit
+/// @returns A string such as "kilometers", "miles per hour", etc.
++ (NSString *)expandedUnit:(NSUnit *)unit;
 
 /// @param bps Heart rate in beats per second
 /// @returns A string such as "93" in beats per minute

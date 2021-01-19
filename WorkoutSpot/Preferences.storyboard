@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R67-9C-qfa">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Preferences-->
+        <scene sceneID="YNg-Ug-lEN">
+            <objects>
+                <tableViewController title="Preferences" id="R67-9C-qfa" customClass="WSPrefsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="wyB-TP-7na">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="UnitSelectCell" id="Loa-UB-RaJ" customClass="WSUnitSelectViewCell">
+                                <rect key="frame" x="20" y="55.5" width="374" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Loa-UB-RaJ" id="nOC-l7-ZSw">
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dimension" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikh-vT-udt" userLabel="Dimension Label">
+                                            <rect key="frame" x="20" y="11" width="81" height="21.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="URu-XN-oZ9" userLabel="Unit Segment">
+                                            <rect key="frame" x="249" y="6.5" width="109" height="32"/>
+                                            <segments>
+                                                <segment title="Unit"/>
+                                                <segment title="Name"/>
+                                            </segments>
+                                            <connections>
+                                                <action selector="unitSegmentDidChange:" destination="Loa-UB-RaJ" eventType="valueChanged" id="ash-Zq-cRE"/>
+                                            </connections>
+                                        </segmentedControl>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ikh-vT-udt" firstAttribute="leading" secondItem="nOC-l7-ZSw" secondAttribute="leadingMargin" id="P8j-Yi-Yrg"/>
+                                        <constraint firstItem="URu-XN-oZ9" firstAttribute="centerY" secondItem="nOC-l7-ZSw" secondAttribute="centerY" id="SqZ-LL-eea"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ikh-vT-udt" secondAttribute="bottom" id="WAe-kc-IV3"/>
+                                        <constraint firstItem="URu-XN-oZ9" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ikh-vT-udt" secondAttribute="trailing" constant="8" id="ZF4-SJ-EJN"/>
+                                        <constraint firstAttribute="trailing" secondItem="URu-XN-oZ9" secondAttribute="trailing" constant="16" id="sNf-Kk-N8Y"/>
+                                        <constraint firstItem="ikh-vT-udt" firstAttribute="top" secondItem="nOC-l7-ZSw" secondAttribute="topMargin" id="vv4-Cn-Cak"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dimensionLabel" destination="ikh-vT-udt" id="5Rn-UU-hhU"/>
+                                    <outlet property="unitSegment" destination="URu-XN-oZ9" id="8bJ-gf-r93"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="R67-9C-qfa" id="a4x-ec-SDA"/>
+                            <outlet property="delegate" destination="R67-9C-qfa" id="Uoh-Un-pIq"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xMV-Ua-Ny4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1343" y="127"/>
+        </scene>
+    </scenes>
+</document>

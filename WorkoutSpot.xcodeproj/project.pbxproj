@@ -33,6 +33,9 @@
 		FAAB3CAB24E5DA4200B184C7 /* EmptyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */; };
 		FAABBED224EEE78100AF7A6C /* WSFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABBED124EEE78100AF7A6C /* WSFloatingView.m */; };
 		FAD74EBE25B6276A005D404F /* WSUnitPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */; };
+		FAD74ED925B66813005D404F /* WSPrefsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74ED825B66813005D404F /* WSPrefsViewController.m */; };
+		FAD74EDF25B6808A005D404F /* WSUnitSelectViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74EDE25B6808A005D404F /* WSUnitSelectViewCell.m */; };
+		FAD74EE425B7440D005D404F /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD74EE325B7440D005D404F /* Preferences.storyboard */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */; };
@@ -114,6 +117,11 @@
 		FAABBED124EEE78100AF7A6C /* WSFloatingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSFloatingView.m; sourceTree = "<group>"; };
 		FAD74EBC25B6276A005D404F /* WSUnitPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSUnitPreferences.h; sourceTree = "<group>"; };
 		FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSUnitPreferences.m; sourceTree = "<group>"; };
+		FAD74ED725B66813005D404F /* WSPrefsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSPrefsViewController.h; sourceTree = "<group>"; };
+		FAD74ED825B66813005D404F /* WSPrefsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPrefsViewController.m; sourceTree = "<group>"; };
+		FAD74EDD25B6808A005D404F /* WSUnitSelectViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSUnitSelectViewCell.h; sourceTree = "<group>"; };
+		FAD74EDE25B6808A005D404F /* WSUnitSelectViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSUnitSelectViewCell.m; sourceTree = "<group>"; };
+		FAD74EE325B7440D005D404F /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Preferences.storyboard; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -244,6 +252,8 @@
 				FAEABA0B2486B32E00481612 /* WSTableViewController.m */,
 				FA65E60D2486E54C00ABFEFA /* WSViewController.h */,
 				FA65E60E2486E54C00ABFEFA /* WSViewController.m */,
+				FAD74ED725B66813005D404F /* WSPrefsViewController.h */,
+				FAD74ED825B66813005D404F /* WSPrefsViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -282,6 +292,8 @@
 				FAAB3CAA24E5DA4200B184C7 /* EmptyList.xib */,
 				FA65E61524875D5500ABFEFA /* WSWorkoutViewCell.h */,
 				FA65E61624875D5500ABFEFA /* WSWorkoutViewCell.m */,
+				FAD74EDD25B6808A005D404F /* WSUnitSelectViewCell.h */,
+				FAD74EDE25B6808A005D404F /* WSUnitSelectViewCell.m */,
 				FA65E61C248859B400ABFEFA /* WSGraphView.h */,
 				FA65E61D248859B400ABFEFA /* WSGraphView.m */,
 				FAABBED024EEE78100AF7A6C /* WSFloatingView.h */,
@@ -351,6 +363,7 @@
 				FA56B1BC2486B6A500C659FC /* ViewControllers */,
 				FA65E61424875D3000ABFEFA /* Views */,
 				FAEABA0D2486B32E00481612 /* Main.storyboard */,
+				FAD74EE325B7440D005D404F /* Preferences.storyboard */,
 				FA0B27B124955F9900A3D994 /* Workout.storyboard */,
 				FAEABA122486B32E00481612 /* LaunchScreen.storyboard */,
 				FA56B1BD2486C2CD00C659FC /* Resources */,
@@ -509,6 +522,7 @@
 				FAEABA142486B32E00481612 /* LaunchScreen.storyboard in Resources */,
 				FAEABA112486B32E00481612 /* Assets.xcassets in Resources */,
 				FAEABA0F2486B32E00481612 /* Main.storyboard in Resources */,
+				FAD74EE425B7440D005D404F /* Preferences.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +567,8 @@
 				FA65E62D248AD4A300ABFEFA /* UIColor+WSColors.m in Sources */,
 				FAEABA172486B32E00481612 /* main.m in Sources */,
 				FA65E61724875D5500ABFEFA /* WSWorkoutViewCell.m in Sources */,
+				FAD74EDF25B6808A005D404F /* WSUnitSelectViewCell.m in Sources */,
+				FAD74ED925B66813005D404F /* WSPrefsViewController.m in Sources */,
 				FA8243C824B381E60024B460 /* WSPointCloud.m in Sources */,
 				FAAB3CA624E4B41B00B184C7 /* HKObjectType+WSTypes.m in Sources */,
 				FA65E6402492E52700ABFEFA /* WSSegmentStatistics.m in Sources */,
