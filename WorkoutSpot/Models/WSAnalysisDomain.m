@@ -43,8 +43,9 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
     if (self = [super init]) {
         NSUInteger const locationCount = locations.count;
         
+        NSTimeInterval const timeBaseStart = startDate.timeIntervalSinceReferenceDate;
         // Accelerate doesn't have a scalar subtract function, so negate the scalar
-        NSTimeInterval const timeOffset = -startDate.timeIntervalSinceReferenceDate;
+        NSTimeInterval const timeOffset = -timeBaseStart;
         NSTimeInterval const timeDomainLength = endDate.timeIntervalSinceReferenceDate + timeOffset;
         
         CLLocationDistance *altitudes = malloc(locationCount * sizeof(CLLocationDistance));
@@ -65,9 +66,8 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         _fullRange = NSMakeRange(0, domainLength);
         
         double *linearTime = malloc(domainLength * sizeof(double));
-        double const zeroOffset = 0;
         double const identityScale = 1;
-        vDSP_vrampD(&zeroOffset, &identityScale, linearTime, 1, domainLength); // linearTime[n] = zeroOffset + n * identityScale
+        vDSP_vrampD(&timeBaseStart, &identityScale, linearTime, 1, domainLength); // linearTime[n] = timeBaseStart + n * identityScale
         
         _time = [[WSDataAnalysis alloc] initWithInterpolatedData:linearTime length:domainLength];
         
