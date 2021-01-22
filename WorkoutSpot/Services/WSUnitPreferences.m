@@ -90,6 +90,34 @@ NSString *const WSUnitPreferencesSpeedKey = @"WSUnitPreferencesSpeedKey";
     [self _postDidChangeNotification];
 }
 
+- (__kindof NSUnit *)unitForType:(WSMeasurementType)type {
+    switch (type) {
+        case WSMeasurementTypeDistance:
+            return self.distanceUnit;
+        case WSMeasurementTypeAltitude:
+            return self.altitudeUnit;
+        case WSMeasurementTypeSpeed:
+            return self.speedUnit;
+        default:
+            return nil;
+    }
+}
+- (void)setUnit:(__kindof NSUnit *)unit forType:(WSMeasurementType)type {
+    switch (type) {
+        case WSMeasurementTypeDistance:
+            self.distanceUnit = unit;
+            break;
+        case WSMeasurementTypeAltitude:
+            self.altitudeUnit = unit;
+            break;
+        case WSMeasurementTypeSpeed:
+            self.speedUnit = unit;
+            break;
+        default:
+            break;
+    }
+}
+
 @end
 
 

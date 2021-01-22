@@ -11,6 +11,14 @@
 
 OBJC_EXPORT NSNotificationName const WSUnitPreferencesDidChangeNotification;
 
+typedef NS_ENUM(NSUInteger, WSMeasurementType) {
+    WSMeasurementTypeDistance,
+    WSMeasurementTypeAltitude,
+    WSMeasurementTypeSpeed,
+    
+    WSMeasurementTypeCaseCount
+};
+
 @interface WSUnitPreferences : NSObject
 
 @property (class, strong, nonatomic, readonly) WSUnitPreferences *shared;
@@ -21,6 +29,9 @@ OBJC_EXPORT NSNotificationName const WSUnitPreferencesDidChangeNotification;
 @property (strong, nonatomic) NSUnitLength *altitudeUnit;
 /// Speed unit
 @property (strong, nonatomic) NSUnitSpeed *speedUnit;
+
+- (__kindof NSUnit *)unitForType:(WSMeasurementType)type;
+- (void)setUnit:(__kindof NSUnit *)unit forType:(WSMeasurementType)type;
 
 @end
 
