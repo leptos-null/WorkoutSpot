@@ -39,6 +39,10 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     if (self = [super initWithCoder:coder]) {
         NSNotificationCenter *defaultCenter = NSNotificationCenter.defaultCenter;
         [defaultCenter addObserver:self selector:@selector(_updateDomainLabels) name:WSUnitPreferencesDidChangeNotification object:nil];
+        
+        if (@available(iOS 14.0, *)) {
+            [defaultCenter addObserver:self selector:@selector(_updateBarItemUnitsMenu) name:WSUnitPreferencesDidChangeNotification object:nil];
+        }
     }
     return self;
 }
@@ -327,6 +331,15 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 
 // MARK: - View Controller overrides
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    if (@available(iOS 14.0, *)) {
+        UIMenu *menu = [self _unitsMenu];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Units" menu:menu];
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
@@ -474,6 +487,73 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             self.rightDomainLabel.accessibilityLabel = nil;
         } break;
     }
+}
+
+- (UIMenu *)_unitsMenu API_AVAILABLE(ios(14.0)) {
+    WSUnitPreferences *unitPreferences = WSUnitPreferences.shared;
+    
+    NSMutableArray<UIMenuElement *> *topLevel = [NSMutableArray arrayWithCapacity:WSMeasurementTypeCaseCount];
+    for (WSMeasurementType type = 0; type < WSMeasurementTypeCaseCount; type++) {
+        NSString *measurementTitle;
+        UIImage *measurementImage;
+        NSArray<NSUnit *> *units;
+        switch (type) {
+            case WSMeasurementTypeDistance:
+                measurementTitle = @"Distance";
+                measurementImage = [UIImage systemImageNamed:@"ruler"];
+                
+                units = @[
+                    NSUnitLength.kilometers,
+                    NSUnitLength.miles,
+                ];
+                break;
+            case WSMeasurementTypeAltitude:
+                measurementTitle = @"Altitude";
+                measurementImage = [UIImage systemImageNamed:@"barometer"];
+                
+                units = @[
+                    NSUnitLength.meters,
+                    NSUnitLength.feet,
+                    NSUnitLength.yards,
+                ];
+                break;
+            case WSMeasurementTypeSpeed:
+                measurementTitle = @"Speed";
+                measurementImage = [UIImage systemImageNamed:@"speedometer"];
+                
+                units = @[
+                    NSUnitSpeed.kilometersPerHour,
+                    NSUnitSpeed.milesPerHour,
+                ];
+                break;
+            default:
+                measurementTitle = nil;
+                measurementImage = nil;
+                units = nil;
+                break;
+        }
+        
+        NSUnit *selectedUnit = [unitPreferences unitForType:type];
+        
+        NSMutableArray<UIMenuElement *> *children = [NSMutableArray arrayWithCapacity:units.count];
+        for (NSUnit *unit in units) {
+            NSString *title = [WSFormatterUtils abbreviatedUnit:unit];
+            UIAction *action = [UIAction actionWithTitle:title image:nil identifier:nil handler:^(UIAction *menuAction) {
+                [unitPreferences setUnit:unit forType:type];
+            }];
+            action.state = [unit isEqual:selectedUnit] ? UIMenuElementStateOn : UIMenuElementStateOff;
+            
+            [children addObject:action];
+        }
+        topLevel[type] = [UIMenu menuWithTitle:measurementTitle image:measurementImage identifier:nil
+                                       options:UIMenuOptionsDisplayInline children:children];
+    }
+    
+    return [UIMenu menuWithChildren:topLevel];
+}
+
+- (void)_updateBarItemUnitsMenu API_AVAILABLE(ios(14.0)) {
+    self.navigationItem.rightBarButtonItem.menu = [self _unitsMenu];
 }
 
 - (void)_setLayerColors {
