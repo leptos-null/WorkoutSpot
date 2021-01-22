@@ -7,18 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSUInteger, WSUnitSelectType) {
-    WSUnitSelectTypeDistance,
-    WSUnitSelectTypeAltitude,
-    WSUnitSelectTypeSpeed,
-};
+#import "../Services/WSUnitPreferences.h"
 
 @interface WSUnitSelectViewCell : UITableViewCell
 
 @property (class, strong, nonatomic, readonly) NSString *reusableIdentifier;
 
-@property (nonatomic) WSUnitSelectType type;
+@property (nonatomic) WSMeasurementType type;
 
 @property (strong, nonatomic) IBOutlet UILabel *dimensionLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *unitSegment;

@@ -7,7 +7,6 @@
 //
 
 #import "WSUnitSelectViewCell.h"
-#import "../Services/WSUnitPreferences.h"
 
 @implementation WSUnitSelectViewCell {
     NSArray<NSUnit *> *_units;
@@ -17,44 +16,45 @@
     return @"UnitSelectCell";
 }
 
-- (void)setType:(WSUnitSelectType)type {
+- (void)setType:(WSMeasurementType)type {
     _type = type;
-    
-    WSUnitPreferences *unitPreferences = WSUnitPreferences.shared;
     
     NSString *dimensionTitle;
     NSArray<NSUnit *> *units;
-    NSUnit *selectedUnit;
     switch (type) {
-        case WSUnitSelectTypeDistance:
+        case WSMeasurementTypeDistance:
             dimensionTitle = @"Distance";
             units = @[
                 NSUnitLength.kilometers,
                 NSUnitLength.miles,
             ];
-            selectedUnit = unitPreferences.distanceUnit;
             break;
-        case WSUnitSelectTypeAltitude:
+        case WSMeasurementTypeAltitude:
             dimensionTitle = @"Altitude";
             units = @[
                 NSUnitLength.meters,
                 NSUnitLength.feet,
                 NSUnitLength.yards,
             ];
-            selectedUnit = unitPreferences.altitudeUnit;
             break;
-        case WSUnitSelectTypeSpeed:
+        case WSMeasurementTypeSpeed:
             dimensionTitle = @"Speed";
             units = @[
                 NSUnitSpeed.kilometersPerHour,
                 NSUnitSpeed.milesPerHour,
             ];
-            selectedUnit = unitPreferences.speedUnit;
+            break;
+        default:
+            dimensionTitle = nil;
+            units = nil;
             break;
     }
     
     _units = units;
     self.dimensionLabel.text = dimensionTitle;
+    
+    WSUnitPreferences *unitPreferences = WSUnitPreferences.shared;
+    NSUnit *selectedUnit = [unitPreferences unitForType:type];
     
     UISegmentedControl *segmentControl = self.unitSegment;
     
@@ -70,17 +70,7 @@
 - (IBAction)unitSegmentDidChange:(UISegmentedControl *)segmentControl {
     WSUnitPreferences *unitPreferences = WSUnitPreferences.shared;
     NSUnit *selectedUnit = _units[segmentControl.selectedSegmentIndex];
-    switch (self.type) {
-        case WSUnitSelectTypeDistance:
-            unitPreferences.distanceUnit = (NSUnitLength *)selectedUnit;
-            break;
-        case WSUnitSelectTypeAltitude:
-            unitPreferences.altitudeUnit = (NSUnitLength *)selectedUnit;
-            break;
-        case WSUnitSelectTypeSpeed:
-            unitPreferences.speedUnit = (NSUnitSpeed *)selectedUnit;
-            break;
-    }
+    [unitPreferences setUnit:selectedUnit forType:self.type];
 }
 
 @end
