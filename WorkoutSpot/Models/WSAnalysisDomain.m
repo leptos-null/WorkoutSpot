@@ -43,36 +43,49 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
     if (self = [super init]) {
         NSUInteger const locationCount = locations.count;
         
-        NSTimeInterval const timeBaseStart = startDate.timeIntervalSinceReferenceDate;
-        // Accelerate doesn't have a scalar subtract function, so negate the scalar
-        NSTimeInterval const timeOffset = -timeBaseStart;
-        NSTimeInterval const timeDomainLength = endDate.timeIntervalSinceReferenceDate + timeOffset;
+        NSTimeInterval const timeStartOffset = startDate.timeIntervalSinceReferenceDate;
+        NSTimeInterval const timeDomainLength = endDate.timeIntervalSinceReferenceDate - timeStartOffset;
         
         CLLocationDistance *altitudes = malloc(locationCount * sizeof(CLLocationDistance));
         CLLocationCoordinate2D *coordinates = malloc(locationCount * sizeof(CLLocationCoordinate2D));
-        NSTimeInterval *locationStamps = malloc(locationCount * sizeof(NSTimeInterval));
         
-        [locations enumerateObjectsUsingBlock:^(CLLocation *location, NSUInteger idx, BOOL *stop) {
-            altitudes[idx] = location.altitude;
-            coordinates[idx] = location.coordinate;
-            locationStamps[idx] = location.timestamp.timeIntervalSinceReferenceDate;
-        }];
+        vDSP_Length altitudeLength = 0;
+        vDSP_Length coordinateLength = 0;
+        NSTimeInterval *altitudeIndx = malloc(locationCount * sizeof(NSTimeInterval));
+        NSTimeInterval *coordinateIndx = malloc(locationCount * sizeof(NSTimeInterval));
         
-        NSTimeInterval *locationIndx = malloc(locationCount * sizeof(NSTimeInterval));
-        vDSP_vsaddD(locationStamps, 1, &timeOffset, locationIndx, 1, locationCount); // locationIndx = locationStamps + timeOffset
+        for (CLLocation *location in locations) {
+            NSTimeInterval timeIndx = location.timestamp.timeIntervalSinceReferenceDate - timeStartOffset;
+            
+            CLLocationDistance altitude = location.altitude;
+            CLLocationCoordinate2D coordinate = location.coordinate;
+            
+            // it wasn't clear if isfinite or !isnan should be used here
+            if (location.verticalAccuracy >= 0 && isfinite(altitude)) {
+                altitudes[altitudeLength] = altitude;
+                altitudeIndx[altitudeLength] = timeIndx;
+                altitudeLength++;
+            }
+            
+            if (location.horizontalAccuracy >= 0 && CLLocationCoordinate2DIsValid(coordinate)) {
+                coordinates[coordinateLength] = coordinate;
+                coordinateIndx[coordinateLength] = timeIndx;
+                coordinateLength++;
+            }
+        }
         
-        NSUInteger const domainLength = ceil(timeDomainLength);
+        NSUInteger const timeDomainRange = ceil(timeDomainLength);
         _domainKey = WSDomainKeyTime;
-        _fullRange = NSMakeRange(0, domainLength);
+        _fullRange = NSMakeRange(0, timeDomainRange);
         
-        double *linearTime = malloc(domainLength * sizeof(double));
+        double *linearTime = malloc(timeDomainRange * sizeof(double));
         double const identityScale = 1;
-        vDSP_vrampD(&timeBaseStart, &identityScale, linearTime, 1, domainLength); // linearTime[n] = timeBaseStart + n * identityScale
+        vDSP_vrampD(&timeStartOffset, &identityScale, linearTime, 1, timeDomainRange); // linearTime[n] = timeStartOffset + n * identityScale
         
-        _time = [[WSDataAnalysis alloc] initWithInterpolatedData:linearTime length:domainLength];
+        _time = [[WSDataAnalysis alloc] initWithInterpolatedData:linearTime length:timeDomainRange];
         
-        _altitude = [[WSDataAnalysis alloc] initWithData:altitudes keys:locationIndx domain:timeDomainLength length:locationCount];
-        _coordinate = [[WSCoordinateAnalysis alloc] initWithCoordinates:coordinates keys:locationIndx domain:timeDomainLength length:locationCount];
+        _altitude = [[WSDataAnalysis alloc] initWithData:altitudes keys:altitudeIndx domain:timeDomainLength length:altitudeLength];
+        _coordinate = [[WSCoordinateAnalysis alloc] initWithCoordinates:coordinates keys:coordinateIndx domain:timeDomainLength length:coordinateLength];
         
         _globeMap = [_coordinate globeMapForAltitudes:_altitude];
         _distance = [[_coordinate stepSpace] stairCase];
@@ -85,25 +98,23 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
         _descending = [[climbing clippingToLower:(-INFINITY) upper:0] stairCase];
         
         HKUnit *heartRateUnit = [self _heartRateUnit];
+        
         NSUInteger const heartRateCount = quantities.count;
         double *heartRates = malloc(heartRateCount * sizeof(double));
-        NSTimeInterval *heartStamps = malloc(heartRateCount * sizeof(NSTimeInterval));
+        NSTimeInterval *heartIndx = malloc(heartRateCount * sizeof(NSTimeInterval));
+        
         [quantities enumerateObjectsUsingBlock:^(HKDiscreteQuantitySample *quantity, NSUInteger idx, BOOL *stop) {
             heartRates[idx] = [quantity.quantity doubleValueForUnit:heartRateUnit];
-            heartStamps[idx] = quantity.startDate.timeIntervalSinceReferenceDate;
+            heartIndx[idx] = quantity.startDate.timeIntervalSinceReferenceDate - timeStartOffset;
         }];
-        
-        NSTimeInterval *heartIndx = malloc(heartRateCount * sizeof(NSTimeInterval));
-        vDSP_vsaddD(heartStamps, 1, &timeOffset, heartIndx, 1, heartRateCount); // heartIndx = heartStamps + timeOffset
         
         _heartRate = [[WSDataAnalysis alloc] initWithData:heartRates keys:heartIndx domain:timeDomainLength length:heartRateCount];
         
         free(altitudes);
         free(coordinates);
-        free(locationStamps);
-        free(locationIndx);
+        free(altitudeIndx);
+        free(coordinateIndx);
         free(heartRates);
-        free(heartStamps);
         free(heartIndx);
     }
     return self;
