@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "../../Models/WSSegmentStatistics.h"
 
-@interface WSSegmentStatsView : UIStackView
+@interface WSSegmentStatsView : UIStackView <UIContextMenuInteractionDelegate>
 
 @property (strong, nonatomic) WSSegmentStatistics *stats;
 

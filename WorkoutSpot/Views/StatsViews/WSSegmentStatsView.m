@@ -88,6 +88,11 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     label.adjustsFontForContentSizeCategory = YES;
     label.lineBreakMode = NSLineBreakByWordWrapping;
 }
+- (void)_addContextMenuInteraction:(UILabel *)label {
+    UIContextMenuInteraction *contextMenuInteraction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+    [label addInteraction:contextMenuInteraction];
+    label.userInteractionEnabled = YES;
+}
 
 // MARK: - UI Setters
 
@@ -106,6 +111,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     _distanceLabel = distanceLabel;
     distanceLabel.textColor = UIColor.segmentColor;
     [self _setGenericLabelProperties:distanceLabel];
+    [self _addContextMenuInteraction:distanceLabel];
     
     [self insertArrangedSubview:distanceLabel atIndex:WSSegmentStatsLabelIndexDistance];
 }
@@ -115,6 +121,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     _climbedLabel = climbedLabel;
     climbedLabel.textColor = UIColor.altitudeColor;
     [self _setGenericLabelProperties:climbedLabel];
+    [self _addContextMenuInteraction:climbedLabel];
     
     [self insertArrangedSubview:climbedLabel atIndex:WSSegmentStatsLabelIndexClimbed];
 }
@@ -133,6 +140,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     _speedLabel = speedLabel;
     speedLabel.textColor = UIColor.speedColor;
     [self _setGenericLabelProperties:speedLabel];
+    [self _addContextMenuInteraction:speedLabel];
     
     [self insertArrangedSubview:speedLabel atIndex:WSSegmentStatsLabelIndexSpeed];
 }
@@ -144,6 +152,56 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     [self _setGenericLabelProperties:heartRateLabel];
     
     [self insertArrangedSubview:heartRateLabel atIndex:WSSegmentStatsLabelIndexHeartRate];
+}
+
+// MARK: - UIContextMenuInteractionDelegate
+
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location {
+    UILabel *label = interaction.view;
+    
+    WSMeasurementType type;
+    NSArray<NSUnit *> *units;
+    if (label == self.distanceLabel) {
+        type = WSMeasurementTypeDistance;
+        units = @[
+            NSUnitLength.kilometers,
+            NSUnitLength.miles,
+        ];
+    } else if (label == self.climbedLabel) {
+        type = WSMeasurementTypeAltitude;
+        units = @[
+            NSUnitLength.meters,
+            NSUnitLength.feet,
+            NSUnitLength.yards,
+        ];
+    } else if (label == self.speedLabel) {
+        type = WSMeasurementTypeSpeed;
+        units = @[
+            NSUnitSpeed.kilometersPerHour,
+            NSUnitSpeed.milesPerHour,
+        ];
+    } else {
+        return nil;
+    }
+    
+    return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil
+                                                    actionProvider:^UIMenu *(NSArray<UIMenuElement *> *suggestedActions) {
+        WSUnitPreferences *unitPreferences = WSUnitPreferences.shared;
+        NSUnit *selectedUnit = [unitPreferences unitForType:type];
+        
+        NSMutableArray<UIMenuElement *> *children = [NSMutableArray arrayWithCapacity:units.count];
+        for (NSUnit *unit in units) {
+            NSString *title = [WSFormatterUtils abbreviatedUnit:unit];
+            UIAction *action = [UIAction actionWithTitle:title image:nil identifier:nil handler:^(__kindof UIAction *menuAction) {
+                [unitPreferences setUnit:unit forType:type];
+            }];
+            action.state = [unit isEqual:selectedUnit] ? UIMenuElementStateOn : UIMenuElementStateOff;
+            
+            [children addObject:action];
+        }
+        
+        return [UIMenu menuWithTitle:@"Unit" children:children];
+    }];
 }
 
 @end
