@@ -38,7 +38,7 @@
         [fileManager createDirectoryAtPath:pathHead withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     _pathHead = pathHead;
-    _screenshotPaths = [NSMutableArray arrayWithCapacity:6];
+    _screenshotPaths = [NSMutableArray arrayWithCapacity:7];
 }
 
 - (void)tearDown {
@@ -65,24 +65,31 @@
     
     [self _writeScreenshot:app.screenshot name:@"0_home"];
     
-    XCUIElementQuery *appleParkCell = [app.tables.cells containingType:XCUIElementTypeStaticText identifier:@"10 minutes, 23 seconds"];
-    [appleParkCell.element pressForDuration:2];
-    [self _writeScreenshot:app.screenshot name:@"1_preview"];
+    [app.navigationBars[@"Workouts"].buttons[@"Preferences"] tap];
+    // tap on something, otherwise this screen goes away really fast
+    [app.tables.cells.staticTexts[@"Distance"] tap];
+    [self _writeScreenshot:app.screenshot name:@"1_preferences"];
+    
+    [app.navigationBars[@"Preferences"].buttons[@"Workouts"] tap]; // back to main screen
+    
+    [app.tables.cells.staticTexts[@"10 minutes, 23 seconds"] pressForDuration:2];
+    [self _writeScreenshot:app.screenshot name:@"2_preview"];
     
     [app.otherElements[@"Preview"] tap];
     
     XCUIElement *graphScrollView = app.scrollViews[@"Graph"];
     [graphScrollView pinchWithScale:2 velocity:2];
-    [self _writeScreenshot:app.screenshot name:@"2_time_segment"];
+    [self _writeScreenshot:app.screenshot name:@"3_time_segment"];
+    
     [graphScrollView swipeLeft]; // effectively pick a random spot
-    [self _writeScreenshot:app.screenshot name:@"3_time_point"];
+    [self _writeScreenshot:app.screenshot name:@"4_time_point"];
     
     [app.segmentedControls.buttons[@"Distance"] tap];
     [graphScrollView swipeRight]; // effectively pick another spot
-    [self _writeScreenshot:app.screenshot name:@"4_distance_point"];
+    [self _writeScreenshot:app.screenshot name:@"5_distance_point"];
     
-    [graphScrollView tap]; // effectively pick another spot
-    [self _writeScreenshot:app.screenshot name:@"5_distance_segment"];
+    [graphScrollView tap]; // hide point stats view
+    [self _writeScreenshot:app.screenshot name:@"6_distance_segment"];
 }
 
 @end
