@@ -9,18 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "WSFormatterUtils.h"
 
+/// A notification that indicates a unit preference has changed.
 OBJC_EXPORT NSNotificationName const WSUnitPreferencesDidChangeNotification;
 
 typedef NS_ENUM(NSUInteger, WSMeasurementType) {
+    /// Corresponds with the @c distanceUnit of @c WSUnitPreferences
     WSMeasurementTypeDistance,
+    /// Corresponds with the @c altitudeUnit of @c WSUnitPreferences
     WSMeasurementTypeAltitude,
+    /// Corresponds with the @c speedUnit of @c WSUnitPreferences
     WSMeasurementTypeSpeed,
-    
+    /// The count of @c WSMeasurementType cases; not a valid case
     WSMeasurementTypeCaseCount
 };
 
 @interface WSUnitPreferences : NSObject
-
+/// The shared Unit Preferences instance.
+/// Another instance should not be created.
 @property (class, strong, nonatomic, readonly) WSUnitPreferences *shared;
 
 /// Lateral distance unit

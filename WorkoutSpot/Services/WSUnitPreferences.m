@@ -45,6 +45,7 @@ NSString *const WSUnitPreferencesSpeedKey = @"WSUnitPreferencesSpeedKey";
 }
 
 - (id)_loadArchivedClass:(Class)class forKey:(NSString *)key {
+    // `dataForKey:` checks that the object is NSData before returning it, returns nil otherwise
     NSData *data = [_userDefaults dataForKey:key];
     if (data == nil) {
         return nil;
@@ -72,18 +73,21 @@ NSString *const WSUnitPreferencesSpeedKey = @"WSUnitPreferencesSpeedKey";
 }
 
 - (void)setDistanceUnit:(NSUnitLength *)distanceUnit {
+    NSParameterAssert([distanceUnit isKindOfClass:[NSUnitLength class]]);
     _distanceUnit = distanceUnit;
     
     [self _storeArchivedObject:distanceUnit forKey:WSUnitPreferencesDistanceKey];
     [self _postDidChangeNotification];
 }
 - (void)setAltitudeUnit:(NSUnitLength *)altitudeUnit {
+    NSParameterAssert([altitudeUnit isKindOfClass:[NSUnitLength class]]);
     _altitudeUnit = altitudeUnit;
     
     [self _storeArchivedObject:altitudeUnit forKey:WSUnitPreferencesAltitudeKey];
     [self _postDidChangeNotification];
 }
 - (void)setSpeedUnit:(NSUnitSpeed *)speedUnit {
+    NSParameterAssert([speedUnit isKindOfClass:[NSUnitSpeed class]]);
     _speedUnit = speedUnit;
     
     [self _storeArchivedObject:speedUnit forKey:WSUnitPreferencesSpeedKey];
