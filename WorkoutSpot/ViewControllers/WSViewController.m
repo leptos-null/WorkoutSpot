@@ -106,9 +106,7 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
             [domainControl setEnabled:(keyedDomain != nil) forSegmentAtIndex:key];
         }
     }];
-    // TODO: Use a different title
-    double meters = [workoutAnalysis.workout.totalDistance doubleValueForUnit:[HKUnit meterUnit]];
-    self.title = [WSFormatterUtils abbreviatedDistance:meters];
+    self.title = [WSFormatterUtils dateOnlyFromDate:workoutAnalysis.workout.startDate];
 }
 
 - (void)setActiveDomain:(WSAnalysisDomain *)activeDomain {
