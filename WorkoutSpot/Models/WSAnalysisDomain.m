@@ -192,7 +192,7 @@ NSString *NSStringFromWSDomainKey(WSDomainKey key) {
 }
 
 - (NSRange)rangeFromRange:(NSRange)range inDomain:(WSAnalysisDomain *)domain {
-    return NSRangeMakeInclusive([self indexFromIndex:range.location inDomain:domain],
+    return NSRangeMakeInclusive([self indexFromIndex:NSRangeMinIndex(range) inDomain:domain],
                                 [self indexFromIndex:NSRangeMaxIndex(range) inDomain:domain]);
 }
 

@@ -135,7 +135,7 @@
     CGFloat minY = [self yForDatum:self.minimumValue];
     NSRange range = self.range;
     [pathCopy addLineToPoint:CGPointMake([self xForIndex:NSRangeMaxIndex(range)], minY)];
-    [pathCopy addLineToPoint:CGPointMake([self xForIndex:range.location], minY)];
+    [pathCopy addLineToPoint:CGPointMake([self xForIndex:NSRangeMinIndex(range)], minY)];
     [pathCopy closePath];
     
 #if TARGET_OS_IPHONE

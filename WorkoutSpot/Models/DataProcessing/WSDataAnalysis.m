@@ -53,7 +53,7 @@
     if (range.length == 0) {
         return NAN;
     }
-    return _data[NSRangeMaxIndex(range)] - _data[range.location];
+    return _data[NSRangeMaxIndex(range)] - _data[NSRangeMinIndex(range)];
 }
 
 - (WSDataAnalysis *)derivative {

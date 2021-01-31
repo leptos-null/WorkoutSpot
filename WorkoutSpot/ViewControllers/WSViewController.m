@@ -167,8 +167,9 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     self.segmentStatsView.stats = segmentStats;
     
     NSUInteger maxRangeIdx = NSRangeMaxIndex(fullRange);
+    NSUInteger minViewIdx = NSRangeMinIndex(viewRange);
     NSUInteger maxViewIdx = NSRangeMaxIndex(viewRange);
-    CGFloat startPercent = (CGFloat)viewRange.location/maxRangeIdx;
+    CGFloat startPercent = (CGFloat)minViewIdx/maxRangeIdx;
     CGFloat endPercent = (CGFloat)maxViewIdx/maxRangeIdx;
     
     CGFloat containerWidth = CGRectGetWidth(self.graphPreview.bounds);
@@ -180,9 +181,10 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         
         NSRange distRange = [distDomain rangeFromRange:viewRange inDomain:analysis];
         NSUInteger maxDistanceIdx = NSRangeMaxIndex(distDomain.fullRange);
+        NSUInteger startIdx = NSRangeMinIndex(distRange);
         NSUInteger endIdx = NSRangeMaxIndex(distRange);
         
-        startPercent = (CGFloat)distRange.location/maxDistanceIdx;
+        startPercent = (CGFloat)startIdx/maxDistanceIdx;
         endPercent = (CGFloat)endIdx/maxDistanceIdx;
         
         _segmentRenderer.strokeStart = startPercent;
@@ -447,9 +449,10 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 - (void)_updateDomainLabels {
     WSAnalysisDomain *analysis = self.activeDomain;
     NSRange viewRange = self.viewRange;
+    NSUInteger minViewIdx = NSRangeMinIndex(viewRange);
     NSUInteger maxViewIdx = NSRangeMaxIndex(viewRange);
     
-    WSPointStatistics *leadingStats = analysis[viewRange.location];
+    WSPointStatistics *leadingStats = analysis[minViewIdx];
     WSPointStatistics *trailingStats = analysis[maxViewIdx];
     switch (analysis.domainKey) {
         case WSDomainKeyTime: {
