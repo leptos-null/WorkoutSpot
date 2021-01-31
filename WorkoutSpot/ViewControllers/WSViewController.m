@@ -387,7 +387,9 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
         CGPoint touch = [gesture locationOfTouch:0 inView:scrollView];
         
         CGFloat percent = touch.x / scrollView.contentSize.width;
-        self.pointIndex = [self.activeDomain indexForPercent:percent];
+        
+        NSUInteger pointIndex = [self.activeDomain indexForPercent:percent];
+        self.pointIndex = NSRangeClampIndex(pointIndex, self.viewRange);
     }
 }
 
