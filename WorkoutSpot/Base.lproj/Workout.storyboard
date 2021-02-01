@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Qx-RQ-bgH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Qx-RQ-bgH">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17124"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -177,6 +177,10 @@
                                     <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCR-Hx-vxt">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="Jid-Ma-Als" appends="YES" id="Qs2-SP-cTk"/>
+                                        </connections>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -253,16 +257,21 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R5u-hV-QgT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="gQr-d7-Uay">
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="gQr-d7-Uay" userLabel="Graph Pan Gesture">
                     <connections>
                         <action selector="graphPanGesture:" destination="6Qx-RQ-bgH" id="VLQ-35-I0i"/>
                     </connections>
                 </panGestureRecognizer>
-                <tapGestureRecognizer id="mQT-ae-RdP">
+                <tapGestureRecognizer id="mQT-ae-RdP" userLabel="Dismiss Tap Gesture">
                     <connections>
                         <action selector="tapDismissGesture:" destination="6Qx-RQ-bgH" id="Gjk-yg-82Y"/>
                     </connections>
                 </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Jid-Ma-Als" userLabel="Preview Pan Gesture">
+                    <connections>
+                        <action selector="previewPanGesture:" destination="6Qx-RQ-bgH" id="yNx-CE-rgt"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1264" y="135"/>
         </scene>

@@ -28,6 +28,8 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     CAShapeLayer *_heartPointLayer;
     CAShapeLayer *_speedPointLayer;
     CAShapeLayer *_altitudePointLayer;
+    
+    NSRange _previewPanGestureReference;
 }
 
 + (instancetype)fromStoryboard {
@@ -405,6 +407,28 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     if (tapGesture.state == UIGestureRecognizerStateEnded) {
         self.showPointStats = NO;
     }
+}
+
+- (IBAction)previewPanGesture:(UIPanGestureRecognizer *)gesture {
+    NSRange viewRange = self.viewRange;
+    NSRange fullRange = self.activeDomain.fullRange;
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        _previewPanGestureReference = viewRange;
+    }
+    
+    UIView *referenceView = self.graphPreview;
+    CGPoint translation = [gesture translationInView:referenceView];
+    CGFloat movePercent = translation.x / CGRectGetWidth(referenceView.frame); // should be [-1, +1]
+    
+    NSInteger moveUnits = fullRange.length * movePercent;
+    NSInteger baseLocation = _previewPanGestureReference.location;
+    // note that these are signed operations (assigning to unsigned)
+    NSUInteger proposed = MAX(0, baseLocation + moveUnits);
+    viewRange.location = MIN(proposed, fullRange.length - viewRange.length);
+    
+    self.viewRange = viewRange;
+    [self _setScrollProxyPropertiesForGraphRange:viewRange];
 }
 
 - (UIBezierPath *)_circleAtPoint:(CGPoint)point radius:(CGFloat)radius {
