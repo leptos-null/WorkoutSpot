@@ -24,7 +24,7 @@
 /// @param seconds Time interval in seconds
 /// @returns A string such as "8 min, 39 sec"
 + (NSString *)abbreviatedSeconds:(NSTimeInterval)seconds;
-/// @param unit A unit
+/// @param unit A unit to represent
 /// @returns A string such as "km", "miles/hour", etc.
 + (NSString *)abbreviatedUnit:(NSUnit *)unit;
 
@@ -37,7 +37,7 @@
 /// @param seconds Time interval in seconds
 /// @returns A string such as "8 minutes, 39 seconds"
 + (NSString *)expandedSeconds:(NSTimeInterval)seconds;
-/// @param unit A unit
+/// @param unit A unit to represent
 /// @returns A string such as "kilometers", "miles per hour", etc.
 + (NSString *)expandedUnit:(NSUnit *)unit;
 
@@ -46,7 +46,7 @@
 + (NSString *)beatsPerMinute:(double)bps;
 
 /// @param percentage A value in [0, 1] range
-/// @returns A string such as "8%"
+/// @returns A string such as "8.00%"
 + (NSString *)percentage:(double)percentage;
 
 /// @param date A date to represent
