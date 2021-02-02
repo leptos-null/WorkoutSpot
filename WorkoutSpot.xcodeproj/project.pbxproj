@@ -35,7 +35,7 @@
 		FAD74EBE25B6276A005D404F /* WSUnitPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74EBD25B6276A005D404F /* WSUnitPreferences.m */; };
 		FAD74ED925B66813005D404F /* WSPrefsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74ED825B66813005D404F /* WSPrefsViewController.m */; };
 		FAD74EDF25B6808A005D404F /* WSUnitSelectViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD74EDE25B6808A005D404F /* WSUnitSelectViewCell.m */; };
-		FAD74EE425B7440D005D404F /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD74EE325B7440D005D404F /* Preferences.storyboard */; };
+		FAD74EE425B7440D005D404F /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAC989B125C8C1AD00407BF1 /* Preferences.storyboard */; };
 		FAD80E6E249C61D10088FC4C /* WSDataAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */; };
 		FAD80E74249ECA840088FC4C /* WSAnalysisDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E73249ECA840088FC4C /* WSAnalysisDomain.m */; };
 		FAD80E7A249F06EF0088FC4C /* WSCoordinateAnalysis.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD80E79249F06EF0088FC4C /* WSCoordinateAnalysis.m */; };
@@ -121,7 +121,7 @@
 		FAD74ED825B66813005D404F /* WSPrefsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSPrefsViewController.m; sourceTree = "<group>"; };
 		FAD74EDD25B6808A005D404F /* WSUnitSelectViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSUnitSelectViewCell.h; sourceTree = "<group>"; };
 		FAD74EDE25B6808A005D404F /* WSUnitSelectViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSUnitSelectViewCell.m; sourceTree = "<group>"; };
-		FAD74EE325B7440D005D404F /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Preferences.storyboard; sourceTree = "<group>"; };
+		FAD74EE325B7440D005D404F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
 		FAD80E6C249C61D10088FC4C /* WSDataAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSDataAnalysis.h; sourceTree = "<group>"; };
 		FAD80E6D249C61D10088FC4C /* WSDataAnalysis.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WSDataAnalysis.m; sourceTree = "<group>"; };
 		FAD80E72249ECA840088FC4C /* WSAnalysisDomain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WSAnalysisDomain.h; sourceTree = "<group>"; };
@@ -363,7 +363,7 @@
 				FA56B1BC2486B6A500C659FC /* ViewControllers */,
 				FA65E61424875D3000ABFEFA /* Views */,
 				FAEABA0D2486B32E00481612 /* Main.storyboard */,
-				FAD74EE325B7440D005D404F /* Preferences.storyboard */,
+				FAC989B125C8C1AD00407BF1 /* Preferences.storyboard */,
 				FA0B27B124955F9900A3D994 /* Workout.storyboard */,
 				FAEABA122486B32E00481612 /* LaunchScreen.storyboard */,
 				FA56B1BD2486C2CD00C659FC /* Resources */,
@@ -459,7 +459,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = WS;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = Leptos;
 				TargetAttributes = {
 					FA03990D24D8ED6F001EB526 = {
@@ -617,6 +617,14 @@
 				FA0B27B224955F9900A3D994 /* Base */,
 			);
 			name = Workout.storyboard;
+			sourceTree = "<group>";
+		};
+		FAC989B125C8C1AD00407BF1 /* Preferences.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FAD74EE325B7440D005D404F /* Base */,
+			);
+			name = Preferences.storyboard;
 			sourceTree = "<group>";
 		};
 		FAEABA0D2486B32E00481612 /* Main.storyboard */ = {
@@ -844,14 +852,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WorkoutSpot/WorkoutSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 7P56K8K4MY;
 				INFOPLIST_FILE = WorkoutSpot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WorkoutSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -865,14 +873,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WorkoutSpot/WorkoutSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 7P56K8K4MY;
 				INFOPLIST_FILE = WorkoutSpot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WorkoutSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
