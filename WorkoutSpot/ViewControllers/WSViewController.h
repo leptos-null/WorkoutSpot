@@ -16,7 +16,7 @@
 #import "../Views/StatsViews/WSSegmentStatsView.h"
 #import "../Views/StatsViews/WSExtremaStatsView.h"
 
-@interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate>
+@interface WSViewController : UIViewController <MKMapViewDelegate, UIScrollViewDelegate, UIContextMenuInteractionDelegate>
 
 + (instancetype)fromStoryboard;
 

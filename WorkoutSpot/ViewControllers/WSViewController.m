@@ -260,16 +260,8 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     
     [self focusMapOnRoute];
     
-    // MKMapTypeStandard         (no imagery, yes 3D, yes road names)
-    // MKMapTypeSatellite        (real imagery, no 3D, no road names)
-    // MKMapTypeHybrid           (real imagery, no 3D, no road names)
-    // MKMapTypeSatelliteFlyover (composite imagery, yes 3D, no road names)
-    // MKMapTypeHybridFlyover    (composite imagery, yes 3D, yes road names)
-    // MKMapTypeMutedStandard    (no imagery, yes 3D, yes road names)
-    
-    // in both of the Flyovers, the polyline could be rendered
-    //  inside the Earth if the camera was at a shallow angle
-    // Muted results in less prominent street names
+    UIContextMenuInteraction *contextMenuInteraction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+    [mapView addInteraction:contextMenuInteraction];
 }
 
 - (void)setGraphScrollViewProxy:(UIScrollView *)graphScrollViewProxy {
@@ -614,6 +606,62 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self _setGraphRangeForScrollProxy:scrollView];
+}
+
+// MARK: - UIContextMenuInteractionDelegate
+
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location {
+    MKMapView *mapView = interaction.view;
+    NSParameterAssert(mapView == self.mapView);
+    
+    return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil
+                                                    actionProvider:^UIMenu *(NSArray<UIMenuElement *> *suggestedActions) {
+        
+        // in both of the Flyovers, the polyline could be rendered
+        //  inside the Earth if the camera is at a shallow angle
+        // Muted results in less prominent street names
+        
+        MKMapType const mapTypes[] = {
+            MKMapTypeStandard,         // (no imagery, yes 3D, yes road names)
+            MKMapTypeSatellite,        // (real imagery, no 3D, no road names)
+            MKMapTypeHybrid,           // (real imagery, no 3D, no road names)
+            MKMapTypeSatelliteFlyover, // (composite imagery, yes 3D, no road names)
+            MKMapTypeHybridFlyover,    // (composite imagery, yes 3D, yes road names)
+            MKMapTypeMutedStandard,    // (no imagery, yes 3D, yes road names)
+        };
+        NSUInteger mapTypeCount = sizeof(mapTypes)/sizeof(mapTypes[0]);
+        NSMutableArray<UIMenuElement *> *children = [NSMutableArray arrayWithCapacity:mapTypeCount];
+        for (NSUInteger mapTypeIndex = 0; mapTypeIndex < mapTypeCount; mapTypeIndex++) {
+            MKMapType mapType = mapTypes[mapTypeIndex];
+            NSString *title = nil;
+            switch (mapType) {
+                case MKMapTypeStandard:
+                    title = @"Standard";
+                    break;
+                case MKMapTypeSatellite:
+                    title = @"Satellite";
+                    break;
+                case MKMapTypeHybrid:
+                    title = @"Hybrid";
+                    break;
+                case MKMapTypeSatelliteFlyover:
+                    title = @"Satellite Flyover";
+                    break;
+                case MKMapTypeHybridFlyover:
+                    title = @"Hybrid Flyover";
+                    break;
+                case MKMapTypeMutedStandard:
+                    title = @"Muted Standard";
+                    break;
+            }
+            UIAction *action = [UIAction actionWithTitle:title image:nil identifier:nil handler:^(__kindof UIAction *menuAction) {
+                mapView.mapType = mapType;
+            }];
+            action.state = (mapView.mapType == mapType) ? UIMenuElementStateOn : UIMenuElementStateOff;
+            [children addObject:action];
+        }
+        return [UIMenu menuWithTitle:@"Map Types" children:children];
+    }];
 }
 
 // MARK: - Description
