@@ -1,0 +1,259 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\title{WorkoutSpot Algorithms}
+\author{Leptos}
+\date{2021-01-05}
+
+\begin{document}
+\maketitle
+
+This article intends to serve as a reference for the formulae used in 
+WorkoutSpot. The code (in WorkoutSpot) should have links to the original
+formulae (as does this document), however referenced formulae may have 
+inconsistent variables, or components of a formula may be scattered.
+
+\section{Notation and Values}
+
+This document uses the following symbols and notation.
+
+altitude (height): $h$
+
+latitude: $\phi$
+
+longitude: $\lambda$
+
+semi-major axis: $a$ ($6378137$ meters is used for Earth)
+\cite[Fixed radius]{wikipedia_Earth_radius}
+
+semi-minor axis: $b$ ($6356752$ meters is used for Earth)
+\cite[Fixed radius]{wikipedia_Earth_radius}
+
+\pagebreak
+\section{Distances between Earth Coordinates}
+
+\begin{verbatim}
+    -[WSCoordinateAnalysis stepSpace]  
+\end{verbatim}
+
+This method uses a modified Haversine formula to find the
+distance $d$ between two coordinates on Earth. The radius $r$ of Earth
+is computed at each of the input latitudes $\phi$ using a geocentric
+radius formula. 
+
+Radius formula \cite[Geocentric radius]{wikipedia_Earth_radius}:
+\begin{equation}
+    r = \sqrt{\frac{
+        \left(a^2 \cos \left(\phi\right)\right)^2 + 
+        \left(b^2 \sin \left(\phi\right)\right)^2
+    }{
+        \left(a \cos \left(\phi\right)\right)^2 + 
+        \left(b \sin \left(\phi\right)\right)^2
+    }}
+\end{equation}
+
+To decrease the number of vector operations 
+(i.e., operations that must be performed on non-constant values),
+distribute the exponents. This allows $\sin{\phi}$ and $\cos{\phi}$
+to be squared once, then used in both the numerator, and denominator.
+\begin{equation}
+    r = \sqrt{\frac{
+        a^4 \cos^2 \left(\phi \right)+ b^4 \sin^2 \left(\phi\right)
+    }{
+        a^2 \cos^2 \left(\phi\right) + b^2 \sin^2 \left(\phi\right)
+    }}
+\end{equation}
+
+Haversine formula \cite[Formulation]{wikipedia_Haversine_formula}:
+\begin{equation}
+    d = 2r \arcsin \left(\sqrt{
+        \sin^2 \left(\frac{\phi_2 - \phi_1}{2}\right) + 
+        \cos \left(\phi_1\right) \cos \left(\phi_2\right)
+        \sin^2 \left(\frac{\lambda_2 - \lambda_1}{2}\right)
+    }\right)
+\end{equation}
+
+
+I modified the formula to use the radii of each location, instead of
+a single radius; the modification is straight forward: 
+$2r \rightarrow \left(r_1 + r_2\right)$
+
+Modified haversine formula:
+\begin{equation}
+    d = \left(r_1 + r_2\right) \arcsin \left(\sqrt{
+        \sin^2 \left(\frac{\phi_2 - \phi_1}{2}\right) + 
+        \cos \left(\phi_1\right) \cos \left(\phi_2\right)
+        \sin^2 \left(\frac{\lambda_2 - \lambda_1}{2}\right)
+    }\right)
+\end{equation}
+
+\pagebreak
+\section{Earth Coordinates to XYZ}
+
+\begin{verbatim}
+    -[WSCoordinateAnalysis globeMapForAltitudes:]  
+\end{verbatim}
+
+This method uses a geodetic to ECEF formula 
+\cite[From geodetic to ECEF coordinates]{wikipedia_Geographic_coordinate_conversion} 
+to convert latitude $\phi$, longitude $\lambda$, altitude $h$ 
+to XYZ coordinates, 
+where $\left(0, 0, 0\right)$ is the center of Earth.
+
+\begin{align}
+    e^2 &= 1 - \frac{b^2}{a^2} \\
+    N(\phi) &= \frac{a}{\sqrt{1 - e^2 \sin^2 \left(\phi\right) }} \\
+    X &= \left(N\left(\phi\right) + h\right)
+        \cos\left(\phi\right) \cos\left(\lambda\right) \\
+    Y &= \left(N\left(\phi\right) + h\right)
+        \cos\left(\phi\right) \sin\left(\lambda\right) \\
+    Z &= \left(\frac{b^2}{a^2} N\left(\phi\right) + h\right)
+        \sin\left(\phi\right)
+\end{align}
+
+\pagebreak
+\section{Geodetic Parameterization}
+
+Linear Scalar Parameterization:
+\begin{equation}
+    \label{linear_scalar_parameterization}
+    x = x_1 + \left(x_2 - x_1\right)t
+\end{equation}
+
+For the below equations assume there is an 
+initial point $P_1\left(\phi_1, \lambda_1\right)$,
+and final point $P_2\left(\phi_2, \lambda_2\right)$.
+This will involve the point $P_0\left(\phi_0, \lambda_0\right)$,
+where the great circle of $P_1$ and $P_2$ intersects the equator.
+Lastly, the point $P\left(\phi, \lambda\right)$ will be computed.
+
+Initial ($P_1$) Course, $\alpha_1$ 
+\cite[Course]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\alpha_1} = \frac{
+        \cos{\phi_2} \sin{\left(\lambda_2 - \lambda_1\right)}
+    }{
+        \cos{\phi_1} \sin{\phi_2} - 
+            \sin{\phi_1}\cos{\phi_2}
+                \cos{\left(\lambda_2 - \lambda_1\right)}
+    }
+\end{equation}
+
+Final ($P_2$) Course, $\alpha_2$
+\cite[Course]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\alpha_2} = \frac{
+        \cos{\phi_2} \sin{\left(\lambda_2 - \lambda_1\right)}
+    }{
+        -\cos{\phi_2} \sin{\phi_1} + 
+            \sin{\phi_2}\cos{\phi_1}
+                \cos{\left(\lambda_2 - \lambda_1\right)}
+    }
+\end{equation}
+
+Equator ($P_0$) Course, $\alpha_0$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \sin{\alpha_0} = \sin{\alpha_1} \cos{\phi_1}
+\end{equation}
+
+Equator ($P_0$) Course (with increased accuracy when the
+great circle nears the poles), $\alpha_0$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\alpha_0} = \frac{
+        \sin{\alpha_1} \cos{\phi_1}
+    }{
+        \sqrt{\cos^2 {\alpha_1} + \sin^2 {\alpha_1} \sin^2 {\phi_1}}
+    }
+\end{equation}
+
+Angular Distance (between $P_0$ and $P_1$), $\sigma_{01}$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\sigma_{01}} = \frac{
+        \tan{\phi_1}
+    }{
+        \cos{\alpha_1}
+    }
+\end{equation}
+
+Angular Distance (between $P_0$ and $P_2$), $\sigma_{02}$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\sigma_{02}} = \frac{
+        \tan{\phi_2}
+    }{
+        \cos{\alpha_2}
+    }
+\end{equation}
+
+Equator ($P_0$) Longitude, $\lambda_0$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\left(\lambda_0 - \lambda_1\right)} = \frac{
+        \sin{\alpha_0} \sin{\sigma_{01}}
+    }{
+        \cos{\sigma_{01}}
+    }
+\end{equation}
+
+Select an angular distance, $\sigma$; we'll be using the equation
+from \eqref{linear_scalar_parameterization} to select a value
+between the angular distances from above.
+\begin{equation}
+    \sigma = \sigma_1 + \left(\sigma_2 - \sigma_1\right)t
+\end{equation}
+
+Computed ($P_0$) Latitude, $\phi$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \sin{\phi} = \cos{\alpha_0} \sin{\sigma}
+\end{equation}
+
+Computed ($P_0$) Latitude (with increased accuracy around the poles), 
+$\phi$ \cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\phi} = \frac{
+        \cos{\alpha_0} \sin{\sigma}
+    }{
+        \sqrt{\cos^2{\sigma} + \sin^2{\alpha_0} \sin^2{\sigma}}
+    }
+\end{equation}
+
+Computed ($P_0$) Longitude, $\lambda$
+\cite[Finding way-points]{wikipedia_Great-circle_navigation}:
+\begin{equation}
+    \tan{\left(\lambda - \lambda_0\right)} = \frac{
+        \sin{\alpha_0} \sin{\sigma}
+    }{
+        \cos{\sigma}
+    }
+\end{equation}
+
+
+\begin{thebibliography}{9}
+
+    \bibitem{wikipedia_Earth_radius}
+\begin{verbatim*}
+https://en.wikipedia.org/wiki/Earth_radius
+\end{verbatim*}
+    
+    \bibitem{wikipedia_Haversine_formula}
+\begin{verbatim*}
+https://en.wikipedia.org/wiki/Haversine_formula
+\end{verbatim*}
+        
+    \bibitem{wikipedia_Geographic_coordinate_conversion}
+\begin{verbatim*}
+https://en.wikipedia.org/wiki/Geographic_coordinate_conversion
+\end{verbatim*}
+    
+    \bibitem{wikipedia_Great-circle_navigation}
+\begin{verbatim*}
+https://en.wikipedia.org/wiki/Great-circle_navigation
+\end{verbatim*}
+
+\end{thebibliography}
+
+\end{document}
