@@ -270,7 +270,8 @@ typedef NS_ENUM(NSUInteger, WSMapOverlayIndex) {
     graphScrollViewProxy.isAccessibilityElement = YES;
     graphScrollViewProxy.accessibilityLabel = @"Graph";
     graphScrollViewProxy.accessibilityHint = @"Adjust selection";
-    graphScrollViewProxy.accessibilityTraits = UIAccessibilityTraitAdjustable | UIAccessibilityTraitAllowsDirectInteraction;
+    graphScrollViewProxy.accessibilityTraits = UIAccessibilityTraitAllowsDirectInteraction;
+    
     graphScrollViewProxy.panGestureRecognizer.minimumNumberOfTouches = 2;
 }
 
