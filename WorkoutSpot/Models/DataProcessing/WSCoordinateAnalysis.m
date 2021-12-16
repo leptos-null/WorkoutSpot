@@ -118,12 +118,12 @@
     double *latSinSq = malloc(length * sizeof(double));
     double *latCosSq = malloc(length * sizeof(double));
     
-    vDSP_vsqD(latSin, 1, latSinSq, 1, length); // geoSinBuild = latSin**2
-    vDSP_vsqD(latCos, 1, latCosSq, 1, length); // geoCosBuild = latCos**2
+    vDSP_vsqD(latSin, 1, latSinSq, 1, length); // latSinSq = latSin**2
+    vDSP_vsqD(latCos, 1, latCosSq, 1, length); // latCosSq = latCos**2
     
-    // spheroidRadii = alphaFourth*geoCosBuild + betaFourth*geoSinBuild
+    // spheroidRadii = alphaFourth*latCosSq + betaFourth*latSinSq
     vDSP_vsmsmaD(latCosSq, 1, &alphaFourth, latSinSq, 1, &betaFourth, spheroidRadii, 1, length);
-    // geoSquaredSum = alphaSquared*geoCosBuild + betaSquared*geoSinBuild
+    // geoSquaredSum = alphaSquared*latCosSq + betaSquared*latSinSq
     vDSP_vsmsmaD(latCosSq, 1, &alphaSquared, latSinSq, 1, &betaSquared, geoSquaredSum, 1, length);
     
     vvdiv(spheroidRadii, spheroidRadii, geoSquaredSum, &len); // spheroidRadii /= geoSquaredSum
