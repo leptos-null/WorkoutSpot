@@ -78,7 +78,7 @@ typedef NS_ENUM(NSUInteger, WSSegmentStatsLabelIndex) {
     self.speedLabel.hidden = (stats.analysisDomain.speed == nil);
     
     WSHeartRate heartRate = stats.averageHeartRate;
-    self.heartRateLabel.text = [NSString stringWithFormat:@"Avg. Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
+    self.heartRateLabel.text = [NSString stringWithFormat:@"Avg. ♥ Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
     self.heartRateLabel.accessibilityLabel = [NSString stringWithFormat:@"Average Heart Rate: %@ BPM", [WSFormatterUtils beatsPerMinute:heartRate]];
     self.heartRateLabel.hidden = (stats.analysisDomain.heartRate == nil);
 }
