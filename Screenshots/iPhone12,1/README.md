@@ -1,4 +1,4 @@
-## iPhone 11 14.3
+## iPhone 11 15.2
 
 ![0_home](0_home.png)
 

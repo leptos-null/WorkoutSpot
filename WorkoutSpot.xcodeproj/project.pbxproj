@@ -459,7 +459,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = WS;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = Leptos;
 				TargetAttributes = {
 					FA03990D24D8ED6F001EB526 = {

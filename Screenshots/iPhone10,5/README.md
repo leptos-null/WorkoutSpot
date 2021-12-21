@@ -1,4 +1,4 @@
-## iPhone 8 Plus 14.3
+## iPhone 8 Plus 15.2
 
 ![0_home](0_home.png)
 
