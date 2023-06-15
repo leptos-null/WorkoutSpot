@@ -10,9 +10,11 @@ import SwiftUI
 
 @main
 struct WorkoutSpotApp: App {
+    let healthStore = HealthStore()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WorkoutList(healthStore: healthStore)
         }
     }
 }
