@@ -97,26 +97,7 @@ final class WorkoutObserver: ObservableObject {
                     
                     let sortComparator = KeyPathComparator<HKWorkout>(\.startDate, order: .reverse)
                     let sortedDelta = workouts.sorted(using: sortComparator)
-                    // happy-path is:
-                    //   sortedDelta[n-2]
-                    //   sortedDelta[n-1]
-                    //   localWorkouts[0]
-                    //   localWorkouts[1]
-                    if let lastDelta = sortedDelta.last,
-                       let firstExisting = localWorkouts.first {
-                        let test = [ lastDelta, firstExisting ]
-                        // happy-path
-                        if test == test.sorted(using: sortComparator) {
-                            localWorkouts.insert(contentsOf: sortedDelta, at: 0)
-                        } else {
-                            assertionFailure("TODO")
-                        }
-                    } else {
-                        // we're here because _either_ `sortedDelta` or `firstExisting` is empty.
-                        // we don't really care what happens here because adding an empty
-                        // array to the end of another array doesn't affect its order
-                        localWorkouts.insert(contentsOf: sortedDelta, at: 0)
-                    }
+                    localWorkouts = .sortedMerge(localWorkouts, sortedDelta, using: sortComparator)
                 }
                 
                 if let deletes {
