@@ -108,6 +108,9 @@ struct WorkoutCell: View {
     
     var body: some View {
         HStack {
+            Image(systemName: workout.workoutActivityType.systemImageName ?? "heart")
+                .font(.title)
+            
             VStack(alignment: .leading) {
                 Text(workout.workoutActivityType.debugDescription) // TODO
                     .font(.body)

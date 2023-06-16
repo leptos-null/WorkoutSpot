@@ -185,3 +185,180 @@ extension HKWorkoutActivityType: CustomDebugStringConvertible {
         }
     }
 }
+
+extension HKWorkoutActivityType {
+    var systemImageName: String? {
+        switch self {
+        case .americanFootball:
+            "figure.american.football"
+        case .archery:
+            "figure.archery"
+        case .australianFootball:
+            "figure.australian.football"
+        case .badminton:
+            "figure.badminton"
+        case .baseball:
+            "figure.baseball"
+        case .basketball:
+            "figure.basketball"
+        case .bowling:
+            "figure.bowling"
+        case .boxing:
+            "figure.boxing"
+        case .climbing:
+            "figure.climbing"
+        case .cricket:
+            "figure.cricket"
+        case .crossTraining:
+            "figure.cross.training"
+        case .curling:
+            "figure.curling"
+        case .cycling:
+            "figure.outdoor.cycle" // figure.indoor.cycle
+        case .dance:
+            "figure.dance"
+        case .danceInspiredTraining:
+            "figure.dance" // duplicate because this is deprecated
+        case .elliptical:
+            "figure.elliptical"
+        case .equestrianSports:
+            "figure.equestrian.sports"
+        case .fencing:
+            "figure.fencing"
+        case .fishing:
+            "figure.fishing"
+        case .functionalStrengthTraining:
+            "figure.strengthtraining.functional"
+        case .golf:
+            "figure.golf"
+        case .gymnastics:
+            "figure.gymnastics"
+        case .handball:
+            "figure.handball"
+        case .hiking:
+            "figure.hiking"
+        case .hockey:
+            "figure.hockey"
+        case .hunting:
+            "figure.hunting"
+        case .lacrosse:
+            "figure.lacrosse"
+        case .martialArts:
+            "figure.martial.arts"
+        case .mindAndBody:
+            "figure.mind.and.body"
+        case .mixedMetabolicCardioTraining:
+            "figure.mixed.cardio"
+        case .paddleSports:
+            nil // "oar.2.crossed"
+        case .play:
+            "figure.play"
+        case .preparationAndRecovery:
+            "figure.rolling"
+        case .racquetball:
+            "figure.racquetball"
+        case .rowing:
+            "figure.rower"
+        case .rugby:
+            "figure.rugby"
+        case .running:
+            "figure.run"
+        case .sailing:
+            "figure.sailing"
+        case .skatingSports:
+            "figure.skating"
+        case .snowSports:
+            "snowflake" // general snow
+        case .soccer:
+            "figure.soccer"
+        case .softball:
+            "figure.softball"
+        case .squash:
+            "figure.squash"
+        case .stairClimbing:
+            "figure.stair.stepper"
+        case .surfingSports:
+            "figure.surfing"
+        case .swimming:
+            "figure.pool.swim" // figure.open.water.swim
+        case .tableTennis:
+            "figure.table.tennis"
+        case .tennis:
+            "figure.tennis"
+        case .trackAndField:
+            "figure.track.and.field"
+        case .traditionalStrengthTraining:
+            "figure.strengthtraining.traditional"
+        case .volleyball:
+            "figure.volleyball"
+        case .walking:
+            "figure.walk"
+        case .waterFitness:
+            "figure.water.fitness"
+        case .waterPolo:
+            "figure.waterpolo"
+        case .waterSports:
+            "water.waves" // general water
+        case .wrestling:
+            "figure.wrestling"
+        case .yoga:
+            "figure.yoga"
+        case .barre:
+            "figure.barre"
+        case .coreTraining:
+            "figure.core.training"
+        case .crossCountrySkiing:
+            "figure.skiing.crosscountry"
+        case .downhillSkiing:
+            "figure.skiing.downhill"
+        case .flexibility:
+            "figure.flexibility"
+        case .highIntensityIntervalTraining:
+            "figure.highintensity.intervaltraining"
+        case .jumpRope:
+            "figure.jumprope"
+        case .kickboxing:
+            "figure.kickboxing"
+        case .pilates:
+            "figure.pilates"
+        case .snowboarding:
+            "figure.snowboarding"
+        case .stairs:
+            "figure.stairs"
+        case .stepTraining:
+            "figure.step.training"
+        case .wheelchairWalkPace:
+            "figure.roll"
+        case .wheelchairRunPace:
+            "figure.roll.runningpace"
+        case .taiChi:
+            "figure.taichi"
+        case .mixedCardio:
+            "figure.mixed.cardio"
+        case .handCycling:
+            "figure.hand.cycling"
+        case .discSports:
+            "figure.disc.sports"
+        case .fitnessGaming:
+            nil
+        case .cardioDance:
+            "figure.dance" // note: double use of image
+        case .socialDance:
+            "figure.socialdance"
+        case .pickleball:
+            "figure.pickleball"
+        case .cooldown:
+            "figure.cooldown"
+        case .swimBikeRun:
+            nil
+        case .transition:
+            nil
+        case .underwaterDiving:
+            nil // "water.waves.and.arrow.down"
+        case .other:
+            nil
+        @unknown default:
+            nil
+        }
+    }
+}
