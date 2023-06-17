@@ -64,13 +64,13 @@ final class CoordinateSeries {
 extension CoordinateSeries {
     // the distance between each data point and the value before it.
     // the first value is always 0
-    // func stepHeight() -> DataSeries {
+    // func stepHeight() -> ScalarSeries {
     //
     // }
 }
 
 extension CoordinateSeries {
-    // func convert(to domain: DataSeries) -> CoordinateSeries {
+    // func convert(to domain: ScalarSeries) -> CoordinateSeries {
     //     assert(self.data.count == domain.data.count)
     //     guard let domainMagnitude = domain.last else {
     //         fatalError("domain is empty")

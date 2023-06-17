@@ -1,5 +1,5 @@
 //
-//  DataSeries.swift
+//  ScalarSeries.swift
 //  WorkoutSpot
 //
 //  Created by Leptos on 6/16/23.
@@ -9,7 +9,7 @@
 import Foundation
 import Accelerate
 
-final class DataSeries {
+final class ScalarSeries {
     typealias Element = Double
     typealias Index = Int
     
@@ -38,7 +38,7 @@ final class DataSeries {
     }
 }
 
-extension DataSeries {
+extension ScalarSeries {
     func average<R: RangeExpression>(over range: R) -> Element where R.Bound == Index {
         vDSP.mean(data[range])
     }
@@ -57,8 +57,8 @@ extension DataSeries {
     }
 }
 
-extension DataSeries {
-    func derivative() -> DataSeries {
+extension ScalarSeries {
+    func derivative() -> ScalarSeries {
         let derivativeLength = data.count - 1
         
         var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
@@ -69,7 +69,7 @@ extension DataSeries {
         // [0.5, 1.5, 2.5, ... ]
         vDSP.formRamp(withInitialValue: 0.5, increment: 1, result: &keys)
         
-        let result = DataSeries(values: values, keys: keys, domainMagnitude: data.count)
+        let result = ScalarSeries(values: values, keys: keys, domainMagnitude: data.count)
         
         keys.deallocate()
         values.deallocate()
@@ -77,45 +77,45 @@ extension DataSeries {
         return result
     }
     
-    // the difference between each data point and the value before it.
+    // the distance between each data point and the value before it.
     // the first value is always 0
-    func stepHeight() -> DataSeries {
+    func stepHeight() -> ScalarSeries {
         var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: data.count)
         values[0] = 0 // we could instead use `data[0]` so that `stairCase` could fully reconstruct this object
         // values[i] = data[i + 1] - data[i]
         vDSP.subtract(data[1...], data.dropLast(), result: &values[1...])
-        return DataSeries(raw: values)
+        return ScalarSeries(raw: values)
     }
     
-    func stairCase() -> DataSeries {
+    func stairCase() -> ScalarSeries {
         var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: data.count)
         
         vDSP.integrate(data, using: .runningSum, result: &values)
         // if `stepHeight` used `data[0]` instead of `0` as the initial value,
         // we could reconstruct the original data series using
         //   vDSP.add(data[0], values, result: &values)
-        return DataSeries(raw: values)
+        return ScalarSeries(raw: values)
     }
     
-    func clipping(to range: ClosedRange<Element>) -> DataSeries {
+    func clipping(to range: ClosedRange<Element>) -> ScalarSeries {
         var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: data.count)
         
         vDSP.clip(data, to: range, result: &values)
-        return DataSeries(raw: values)
+        return ScalarSeries(raw: values)
     }
 }
 
-extension DataSeries {
-    func convert(to domain: DataSeries) -> DataSeries {
+extension ScalarSeries {
+    func convert(to domain: ScalarSeries) -> ScalarSeries {
         assert(self.data.count == domain.data.count)
         guard let domainMagnitude = domain.last else {
             fatalError("domain is empty")
         }
-        return DataSeries(values: data, keys: domain.data, domainMagnitude: domainMagnitude)
+        return ScalarSeries(values: data, keys: domain.data, domainMagnitude: domainMagnitude)
     }
 }
 
-extension DataSeries: RandomAccessCollection {
+extension ScalarSeries: RandomAccessCollection {
     subscript(position: Index) -> Element {
         data[position]
     }
@@ -130,7 +130,7 @@ extension DataSeries: RandomAccessCollection {
     }
 }
 
-extension Slice<DataSeries> {
+extension Slice<ScalarSeries> {
     func average() -> Element {
         base.average(over: indices)
     }
