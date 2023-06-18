@@ -63,7 +63,7 @@ extension ScalarSeries {
         
         var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
         // values[i] = data[i + 1] - data[i]
-        vDSP.subtract(data[1...], data[..<derivativeLength], result: &values)
+        vDSP.subtract(data.dropFirst(), data.dropLast(), result: &values)
         
         var keys = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
         // [0.5, 1.5, 2.5, ... ]
@@ -106,6 +106,37 @@ extension ScalarSeries {
 }
 
 extension ScalarSeries {
+    func derivative(in domain: ScalarSeries) -> ScalarSeries {
+        let derivativeLength = data.count - 1
+        
+        var dy = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
+        // dy[i] = data[i + 1] - data[i]
+        vDSP.subtract(self.data.dropFirst(), self.data.dropLast(), result: &dy)
+        
+        var dx = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
+        // dx[i] = data[i + 1] - data[i]
+        vDSP.subtract(domain.data.dropFirst(), domain.data.dropLast(), result: &dx)
+        
+        var keys = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
+        // [0.5, 1.5, 2.5, ... ]
+        vDSP.formRamp(withInitialValue: 0.5, increment: 1, result: &keys)
+        
+        var values = UnsafeMutableBufferPointer<Element>.allocate(capacity: derivativeLength)
+        vDSP.divide(dy, dx, result: &values)
+        
+        let filteredValues = vDSP.compress(values, gatingVector: dx, nonZeroGatingCount: nil)
+        let filteredKeys = vDSP.compress(keys, gatingVector: dx, nonZeroGatingCount: nil)
+        
+        values.deallocate()
+        keys.deallocate()
+        dx.deallocate()
+        dy.deallocate()
+        
+        let result = ScalarSeries(values: filteredValues, keys: filteredKeys, domainMagnitude: data.count)
+        
+        return result
+    }
+    
     func convert(to domain: ScalarSeries) -> ScalarSeries {
         guard let domainMagnitude = domain.last else {
             fatalError("domain is empty")
