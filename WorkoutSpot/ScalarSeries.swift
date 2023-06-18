@@ -107,11 +107,10 @@ extension ScalarSeries {
 
 extension ScalarSeries {
     func convert(to domain: ScalarSeries) -> ScalarSeries {
-        assert(self.data.count == domain.data.count)
         guard let domainMagnitude = domain.last else {
             fatalError("domain is empty")
         }
-        return ScalarSeries(values: data, keys: domain.data, domainMagnitude: domainMagnitude)
+        return ScalarSeries(values: data, keys: domain, domainMagnitude: domainMagnitude)
     }
 }
 
@@ -146,4 +145,7 @@ extension Slice<ScalarSeries> {
     func delta() -> Element {
         base.delta(over: indices)
     }
+}
+
+extension ScalarSeries: AccelerateBuffer {
 }

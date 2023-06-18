@@ -168,13 +168,12 @@ extension CoordinateSeries {
 }
 
 extension CoordinateSeries {
-    // func convert(to domain: ScalarSeries) -> CoordinateSeries {
-    //     assert(self.data.count == domain.data.count)
-    //     guard let domainMagnitude = domain.last else {
-    //         fatalError("domain is empty")
-    //     }
-    //     return CoordinateSeries(values: data, keys: domain.data, domainMagnitude: domainMagnitude)
-    // }
+    func convert(to domain: ScalarSeries) -> CoordinateSeries {
+        guard let domainMagnitude = domain.last else {
+            fatalError("domain is empty")
+        }
+        return CoordinateSeries(values: data, keys: domain, domainMagnitude: domainMagnitude)
+    }
 }
 
 extension CoordinateSeries: RandomAccessCollection {
