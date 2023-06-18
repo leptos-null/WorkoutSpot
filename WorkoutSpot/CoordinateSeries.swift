@@ -84,7 +84,7 @@ extension CoordinateSeries {
         
         let latSinCos = UnsafeMutableBufferPointer<Double>.allocate(capacity: length * 2) // sin(latitude), cos(latitude)
         var latSin = latSinCos[(length*0)..<(length*1)] // sin(latitude)
-        var latCos = latSinCos[(length*0)..<(length*1)] // cos(latitude)
+        var latCos = latSinCos[(length*1)..<(length*2)] // cos(latitude)
         
         if let coordinateBase = data.baseAddress {
             let elementStride = MemoryLayout<Element>.stride / MemoryLayout<Double>.stride
@@ -105,7 +105,7 @@ extension CoordinateSeries {
         
         var latSinSqCosSq = UnsafeMutableBufferPointer<Double>.allocate(capacity: length * 2) // sin^2(latitude), cos^2(latitude)
         let latSinSq = latSinSqCosSq[(length*0)..<(length*1)] // sin^2(latitude)
-        let latCosSq = latSinSqCosSq[(length*0)..<(length*1)] // cos^2(latitude)
+        let latCosSq = latSinSqCosSq[(length*1)..<(length*2)] // cos^2(latitude)
         
         // latSinSqCosSq[n] = latSinCos[n]
         // which is memory mapped to:
@@ -133,7 +133,7 @@ extension CoordinateSeries {
         
         var radAverage = UnsafeMutableBufferPointer<Double>.allocate(capacity: length * 2)
         vDSP.multiply(
-            subtraction: (continuousRadBuff[1...], continuousRadBuff.dropLast()),
+            subtraction: (continuousRadBuff.dropFirst(), continuousRadBuff.dropLast()),
             0.5, result: &radAverage[1...]
         )
         radAverage[length * 0] = 0
@@ -148,11 +148,11 @@ extension CoordinateSeries {
         
         var values = UnsafeMutableBufferPointer<Double>.allocate(capacity: length)
         values[0] = 0
-        vDSP.multiply(latCos[1...], latCos.dropLast(), result: &values[1...])
+        vDSP.multiply(latCos.dropFirst(), latCos.dropLast(), result: &values[1...])
         vDSP.add(multiplication: (values, lngAverage), latAverage, result: &values)
-        vForce.sqrt(values[1...], result: &values[1...])
-        vForce.asin(values[1...], result: &values[1...])
-        vDSP.multiply(addition: (radii[1...], radii.dropLast()), values[1...], result: &values[1...])
+        vForce.sqrt(values.dropFirst(), result: &values[1...])
+        vForce.asin(values.dropFirst(), result: &values[1...])
+        vDSP.multiply(addition: (radii.dropFirst(), radii.dropLast()), values.dropFirst(), result: &values[1...])
         
         radAverage.deallocate()
         radii.deallocate()
