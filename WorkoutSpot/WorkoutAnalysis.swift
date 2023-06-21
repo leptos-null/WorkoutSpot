@@ -12,6 +12,19 @@ import HealthKit
 import Accelerate
 
 final class WorkoutAnalysis {
+    let timeDomain: KeyedWorkoutData
+    let distanceDomain: KeyedWorkoutData
+    
+    init(rawWorkoutData: RawWorkoutData) {
+        let timeDomain = KeyedWorkoutData(timeKey: rawWorkoutData)
+        self.timeDomain = timeDomain
+        self.distanceDomain = KeyedWorkoutData(rekey: timeDomain, by: \.distance)
+    }
+}
+
+final class KeyedWorkoutData {
+    let key: KeyPath<KeyedWorkoutData, ScalarSeries>
+    
     let time: ScalarSeries
     let distance: ScalarSeries
     
@@ -25,7 +38,7 @@ final class WorkoutAnalysis {
     
     let heartRate: ScalarSeries
     
-    init(workoutData: RawWorkoutData) {
+    init(timeKey workoutData: RawWorkoutData) {
         let startDate = workoutData.workout.startDate
         let endDate = workoutData.workout.endDate
         
@@ -96,6 +109,8 @@ final class WorkoutAnalysis {
         
         let climbing = altitudeSeries.stepHeight()
         
+        self.key = \.time
+        
         self.time = ScalarSeries(raw: monotonicTime)
         self.distance = distanceSeries
         
@@ -117,6 +132,58 @@ final class WorkoutAnalysis {
         
         altitudeValues.deallocate()
         altitudeKeys.deallocate()
+    }
+    
+    init(rekey source: KeyedWorkoutData, by key: KeyPath<KeyedWorkoutData, ScalarSeries>) {
+        let domainSeries = source[keyPath: key]
+        
+        let timeSeries = source.time.convert(to: domainSeries)
+        let distanceSeries = source.distance.convert(to: domainSeries)
+        let altitudeSeries = source.altitude.convert(to: domainSeries)
+        
+        let climbing = altitudeSeries.stepHeight()
+        
+        self.key = key
+        
+        self.time = timeSeries
+        self.distance = distanceSeries
+        
+        self.altitude = altitudeSeries
+        self.coordinate = source.coordinate.convert(to: domainSeries)
+        self.speed = distanceSeries.derivative(in: timeSeries)
+        
+        self.grade = altitudeSeries.derivative(in: distanceSeries)
+        self.ascending = climbing.clipping(to: 0...(+.infinity)).stairCase()
+        self.descending = climbing.clipping(to: (-.infinity)...0).stairCase()
+        
+        self.heartRate = source.heartRate.convert(to: domainSeries)
+    }
+}
+
+extension KeyedWorkoutData {
+    private func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Int {
+        guard let firstIndex = time.indices.first,
+              let lastIndex = time.indices.last else {
+            return 0
+        }
+        
+        let nearestIndex = Int(floatingIndex.rounded())
+        return max(firstIndex, min(nearestIndex, lastIndex))
+    }
+    
+    func indexForPercent<F: BinaryFloatingPoint>(_ percent: F) -> Int {
+        let floatingCount = F(time.count)
+        return bestIndex(for: percent * floatingCount)
+    }
+    
+    func convertIndex(_ index: Int, from source: KeyedWorkoutData) -> Int {
+        let unit = self[keyPath: key]
+        let query = source[keyPath: key]
+        
+        let offset = query[index]
+        let base = unit[0]
+        
+        return bestIndex(for: offset - base)
     }
 }
 
