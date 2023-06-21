@@ -17,6 +17,7 @@
 		FA1E7E552A3E5316007DC95D /* WorkoutAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */; };
 		FA5D55362A3AB7C600135067 /* WorkoutSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */; };
 		FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5D55392A3AB7C700135067 /* Assets.xcassets */; };
+		FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA98F782A438D4800E369AA /* WorkoutMap.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSpotApp.swift; sourceTree = "<group>"; };
 		FA5D55392A3AB7C700135067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA5D55432A3AB8CF00135067 /* WorkoutSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorkoutSpot.entitlements; sourceTree = "<group>"; };
+		FAA98F782A438D4800E369AA /* WorkoutMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 			children = (
 				FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */,
 				FA1E7E4A2A3BBDDD007DC95D /* WorkoutList.swift */,
+				FAA98F782A438D4800E369AA /* WorkoutMap.swift */,
 				FA1E7E462A3BB688007DC95D /* HealthStore.swift */,
 				FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */,
 				FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */,
@@ -153,6 +156,7 @@
 				FA1E7E4D2A3BC72E007DC95D /* RangeReplaceableCollection+Merge.swift in Sources */,
 				FA5D55362A3AB7C600135067 /* WorkoutSpotApp.swift in Sources */,
 				FA1E7E4B2A3BBDDD007DC95D /* WorkoutList.swift in Sources */,
+				FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */,
 				FA1E7E532A3D8826007DC95D /* CoordinateSeries.swift in Sources */,
 				FA1E7E452A3BB34E007DC95D /* HKWorkoutActivityType+String.swift in Sources */,
 				FA1E7E472A3BB688007DC95D /* HealthStore.swift in Sources */,
