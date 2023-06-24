@@ -160,23 +160,80 @@ final class KeyedWorkoutData {
     }
 }
 
+extension KeyedWorkoutData: RandomAccessCollection {
+    typealias Index = Int
+    typealias Indices = Range<Index>
+    
+    @dynamicMemberLookup
+    struct Element {
+        let base: KeyedWorkoutData
+        let index: KeyedWorkoutData.Index
+        
+        subscript<T: BidirectionalCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.Element where T.Index == KeyedWorkoutData.Index {
+            let series = base[keyPath: member]
+            return series[index]
+        }
+    }
+    
+    @dynamicMemberLookup
+    struct SubSequence: RandomAccessCollection {
+        typealias Element = KeyedWorkoutData.Element
+        typealias Index = KeyedWorkoutData.Index
+        
+        let base: KeyedWorkoutData
+        let indices: KeyedWorkoutData.Indices
+        
+        subscript<T: BidirectionalCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.SubSequence where T.Indices == KeyedWorkoutData.Indices {
+            let series = base[keyPath: member]
+            return series[indices]
+        }
+        
+        var startIndex: KeyedWorkoutData.Index { indices.lowerBound }
+        var endIndex: KeyedWorkoutData.Index { indices.upperBound }
+        
+        subscript(position: Index) -> Element {
+            base[position]
+        }
+        
+        subscript(bounds: KeyedWorkoutData.Indices) -> Self {
+            base[bounds]
+        }
+    }
+    
+    subscript(position: Index) -> Element {
+        Element(base: self, index: position)
+    }
+    
+    subscript(bounds: Indices) -> SubSequence {
+        SubSequence(base: self, indices: bounds)
+    }
+    
+    private var representativeSeries: ScalarSeries { time }
+    
+    var startIndex: Index { representativeSeries.startIndex }
+    var endIndex: Index { representativeSeries.endIndex }
+    var indices: Indices { representativeSeries.indices }
+    var count: Int { representativeSeries.count }
+}
+
 extension KeyedWorkoutData {
-    private func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Int {
-        guard let firstIndex = time.indices.first,
-              let lastIndex = time.indices.last else {
+    private func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
+        guard let firstIndex = indices.first,
+              let lastIndex = indices.last else {
+            assertionFailure("No valid index found")
             return 0
         }
         
-        let nearestIndex = Int(floatingIndex.rounded())
-        return max(firstIndex, min(nearestIndex, lastIndex))
+        let nearestIndex = Index(floatingIndex.rounded())
+        return Swift.max(firstIndex, Swift.min(nearestIndex, lastIndex))
     }
     
-    func indexForPercent<F: BinaryFloatingPoint>(_ percent: F) -> Int {
-        let floatingCount = F(time.count)
+    func indexForPercent<F: BinaryFloatingPoint>(_ percent: F) -> Index {
+        let floatingCount = F(count)
         return bestIndex(for: percent * floatingCount)
     }
     
-    func convertIndex(_ index: Int, from source: KeyedWorkoutData) -> Int {
+    func convertIndex(_ index: Index, from source: KeyedWorkoutData) -> Index {
         let unit = self[keyPath: key]
         let query = source[keyPath: key]
         
