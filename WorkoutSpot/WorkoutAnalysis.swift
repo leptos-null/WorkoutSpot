@@ -160,6 +160,10 @@ final class KeyedWorkoutData {
     }
 }
 
+extension KeyedWorkoutData {
+    var keySeries: ScalarSeries { self[keyPath: key] }
+}
+
 extension KeyedWorkoutData: RandomAccessCollection {
     typealias Index = Int
     typealias Indices = Range<Index>
@@ -169,7 +173,7 @@ extension KeyedWorkoutData: RandomAccessCollection {
         let base: KeyedWorkoutData
         let index: KeyedWorkoutData.Index
         
-        subscript<T: BidirectionalCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.Element where T.Index == KeyedWorkoutData.Index {
+        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.Element where T.Index == KeyedWorkoutData.Index {
             let series = base[keyPath: member]
             return series[index]
         }
@@ -183,7 +187,7 @@ extension KeyedWorkoutData: RandomAccessCollection {
         let base: KeyedWorkoutData
         let indices: KeyedWorkoutData.Indices
         
-        subscript<T: BidirectionalCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.SubSequence where T.Indices == KeyedWorkoutData.Indices {
+        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.SubSequence where T.Indices == KeyedWorkoutData.Indices {
             let series = base[keyPath: member]
             return series[indices]
         }
@@ -217,7 +221,7 @@ extension KeyedWorkoutData: RandomAccessCollection {
 }
 
 extension KeyedWorkoutData {
-    private func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
+    func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
         guard let firstIndex = indices.first,
               let lastIndex = indices.last else {
             assertionFailure("No valid index found")
