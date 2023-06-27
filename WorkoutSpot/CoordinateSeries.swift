@@ -190,3 +190,9 @@ extension CoordinateSeries: RandomAccessCollection {
         try body(data)
     }
 }
+
+extension CoordinateSeries: AccelerateBuffer {
+    func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
+        try body(data)
+    }
+}
