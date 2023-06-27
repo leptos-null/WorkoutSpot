@@ -70,9 +70,7 @@ struct KeyedWorkoutView: View {
         )
         
         WorkoutGraphView(
-            keyedData: viewModel.keyedData,
-            selectedIndex: $viewModel.selectionPoint,
-            selectedRange: $viewModel.selectionRange
+            keyedWorkoutViewModel: viewModel
         )
     }
 }

@@ -8,68 +8,64 @@
 
 import UIKit
 import SwiftUI
+import Combine
 
 struct WorkoutGraphView: UIViewRepresentable {
-    var keyedData: KeyedWorkoutData
-    
-    @Binding var selectedIndex: KeyedWorkoutData.Index?
-    @Binding var selectedRange: KeyedWorkoutData.Indices
+    let keyedWorkoutViewModel: KeyedWorkoutViewModel
     
     func makeUIView(context: Context) -> GraphView {
-        GraphView(keyedData: keyedData, selectedIndex: _selectedIndex, selectedRange: _selectedRange)
+        GraphView(viewModel: keyedWorkoutViewModel)
     }
     
     func updateUIView(_ view: GraphView, context: Context) {
-        if view.keyedData !== keyedData {
-            view.resetSources(keyedData: keyedData, selectedIndex: _selectedIndex, selectedRange: _selectedRange)
+        if view.viewModel !== keyedWorkoutViewModel {
+            view.viewModel = keyedWorkoutViewModel
         }
     }
 }
 
 class GraphView: UIView {
-    // this should only be written to from `init` or `resetSources`
-    private(set) var keyedData: KeyedWorkoutData
-    
-    @Binding var selectedIndex: KeyedWorkoutData.Index? {
-        didSet {
-            updatePointMarks()
-        }
-    }
-    
-    @Binding var selectedRange: KeyedWorkoutData.Indices {
-        didSet {
-            drawView.data = keyedData[selectedRange]
-        }
-    }
-    
     let scrollView = UIScrollView()
     let drawView = GraphDrawView()
     
     private let scrollViewContent = UIView()
     
-    func resetSources(keyedData: KeyedWorkoutData, selectedIndex: Binding<KeyedWorkoutData.Index?>, selectedRange: Binding<KeyedWorkoutData.Indices>) {
-        self.keyedData = keyedData
-        
-        // these do not trigger the `didSet` blocks
-        self._selectedIndex = selectedIndex
-        self._selectedRange = selectedRange
-        
-        updateForNewSources()
+    var viewModel: KeyedWorkoutViewModel {
+        didSet {
+            subscribeToViewModel()
+        }
     }
     
-    private func updateForNewSources() {
-        drawView.data = keyedData[selectedRange]
+    private var cancellables: Set<AnyCancellable> = []
+    
+    private func subscribeToViewModel() {
+        var cancellables: Set<AnyCancellable> = []
         
-        scrollView.maximumZoomScale = max(1, CGFloat(keyedData.count) / 24.0)
+        viewModel.$keyedData
+            .sink { [unowned self] keyedData in
+                scrollView.maximumZoomScale = max(1, CGFloat(keyedData.count) / 24.0)
+                // we don't want to listen for `selectionRange` too because that results in a feedback loop
+                updateScrollViewForSelectedRange(keyedData: keyedData)
+            }
+            .store(in: &cancellables)
         
-        updateScrollViewForSelectedRange()
-        updatePointMarks()
+        Publishers.CombineLatest(viewModel.$keyedData, viewModel.$selectionRange)
+            .sink { [unowned self] (keyedData, selectionRange) in
+                drawView.data = keyedData[selectionRange]
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$selectionPoint
+            .sink { [unowned self] selectionPoint in
+                drawView.pointMarksIndex = selectionPoint
+            }
+            .store(in: &cancellables)
+        
+        self.cancellables = cancellables
     }
     
-    init(keyedData: KeyedWorkoutData, selectedIndex: Binding<KeyedWorkoutData.Index?>, selectedRange: Binding<KeyedWorkoutData.Indices>) {
-        self.keyedData = keyedData
-        self._selectedIndex = selectedIndex
-        self._selectedRange = selectedRange
+    init(viewModel: KeyedWorkoutViewModel) {
+        self.viewModel = viewModel
         super.init(frame: .zero)
         
         scrollView.delegate = self
@@ -113,15 +109,15 @@ class GraphView: UIView {
         let hoverGesture = UIHoverGestureRecognizer(target: self, action: #selector(handleHoverGesture(_:)))
         scrollView.addGestureRecognizer(hoverGesture)
         
-        updateForNewSources()
+        subscribeToViewModel()
     }
     
     private func setSelectedIndexForX(_ x: CGFloat) {
         guard let guides = drawView.guides else { return }
         let floatingOffset = guides.keySeries.floatingOffsetForX(x)
-        let floatingBase = CGFloat(selectedRange.lowerBound)
+        let floatingBase = CGFloat(viewModel.selectionRange.lowerBound)
         
-        selectedIndex = keyedData.bestClosedIndex(for: floatingBase + floatingOffset)
+        viewModel.selectionPoint = viewModel.keyedData.bestClosedIndex(for: floatingBase + floatingOffset)
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
@@ -142,7 +138,7 @@ class GraphView: UIView {
             let hoverPoint = gesture.location(in: drawView)
             setSelectedIndexForX(hoverPoint.x)
         case .ended:
-            selectedIndex = nil
+            viewModel.selectionPoint = nil
         default:
             break
         }
@@ -152,7 +148,14 @@ class GraphView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        updateScrollViewForSelectedRange(keyedData: viewModel.keyedData)
+    }
+    
     private func updateRange() {
+        let keyedData = viewModel.keyedData
         let percentStart = scrollView.contentOffset.x / scrollView.contentSize.width
         let length = CGFloat(keyedData.count) / scrollView.zoomScale
         
@@ -160,23 +163,20 @@ class GraphView: UIView {
         let endIndex = keyedData.bestHalfOpenIndex(for: CGFloat(startIndex) + length)
         let range = startIndex..<endIndex
         
-        if selectedRange != range {
-            selectedRange = range
+        if viewModel.selectionRange != range {
+            viewModel.selectionRange = range
         }
     }
     
-    private func updateScrollViewForSelectedRange() {
+    private func updateScrollViewForSelectedRange(keyedData: KeyedWorkoutData) {
         let fullCount = keyedData.count
+        let selectedRange = viewModel.selectionRange
         
         scrollView.zoomScale = CGFloat(fullCount) / CGFloat(selectedRange.count)
         scrollView.contentOffset = CGPoint(
             x: scrollView.contentSize.width * CGFloat(selectedRange.lowerBound) / CGFloat(fullCount),
             y: 0
         )
-    }
-    
-    private func updatePointMarks() {
-        drawView.pointMarksIndex = selectedIndex
     }
 }
 
