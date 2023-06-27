@@ -53,7 +53,9 @@ extension ScalarSeries {
     
     func delta<R: RangeExpression>(over range: R) -> Element where R.Bound == Index {
         let resolved = range.relative(to: data)
-        return data[resolved.upperBound] - data[resolved.lowerBound]
+        guard let lastIndex = resolved.last,
+              let firstIndex = resolved.first else { return 0 } // empty, no change
+        return data[lastIndex] - data[firstIndex]
     }
 }
 
