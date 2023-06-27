@@ -179,4 +179,7 @@ extension Slice<ScalarSeries> {
 }
 
 extension ScalarSeries: AccelerateBuffer {
+    func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
+        try body(data)
+    }
 }
