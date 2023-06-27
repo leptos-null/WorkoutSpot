@@ -43,10 +43,10 @@ class GraphDrawView: UIView {
     override func draw(_ rect: CGRect) {
         guard let guides else { return }
         
-        let pairs = [
-            (guides.heartRate, UIColor.systemRed),
-            (guides.speed, UIColor.systemBlue),
-            (guides.altitude, UIColor.systemOrange),
+        let pairs: [(guide: GraphGuide, color: UIColor)] = [
+            (guides.heartRate, .heartRate),
+            (guides.speed, .speed),
+            (guides.altitude, .altitude),
         ]
         
         for (guide, color) in pairs {

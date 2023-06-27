@@ -62,8 +62,8 @@ struct KeyedWorkoutView: View {
     var body: some View {
         WorkoutMap(
             coordinates: viewModel.keyedData.coordinate,
-            routeColor: .systemIndigo,
-            segmentColor: .systemGreen,
+            routeColor: .workoutFull,
+            segmentColor: .workoutSegment,
             segmentStart: viewModel.segmentStartUnit,
             segmentEnd: viewModel.segmentEndUnit,
             annotationCoordinate: viewModel.annotationCoordinate

@@ -23,6 +23,7 @@
 		FACFF2492A4A149D00340E22 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2482A4A149D00340E22 /* UIView+Constraints.swift */; };
 		FACFF24B2A4A170F00340E22 /* WorkoutGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF24A2A4A170F00340E22 /* WorkoutGraphView.swift */; };
 		FACFF24D2A4AAF8600340E22 /* KeyedWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF24C2A4AAF8600340E22 /* KeyedWorkoutView.swift */; };
+		FACFF24F2A4AB2CF00340E22 /* UIColor+Semantic.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF24E2A4AB2CF00340E22 /* UIColor+Semantic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		FACFF2482A4A149D00340E22 /* UIView+Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Constraints.swift"; sourceTree = "<group>"; };
 		FACFF24A2A4A170F00340E22 /* WorkoutGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutGraphView.swift; sourceTree = "<group>"; };
 		FACFF24C2A4AAF8600340E22 /* KeyedWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedWorkoutView.swift; sourceTree = "<group>"; };
+		FACFF24E2A4AB2CF00340E22 /* UIColor+Semantic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Semantic.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				FA1E7E442A3BB34E007DC95D /* HKWorkoutActivityType+String.swift */,
 				FA1E7E4C2A3BC72E007DC95D /* RangeReplaceableCollection+Merge.swift */,
 				FACFF2482A4A149D00340E22 /* UIView+Constraints.swift */,
+				FACFF24E2A4AB2CF00340E22 /* UIColor+Semantic.swift */,
 				FA5D55432A3AB8CF00135067 /* WorkoutSpot.entitlements */,
 				FA5D55392A3AB7C700135067 /* Assets.xcassets */,
 			);
@@ -188,6 +191,7 @@
 				FACFF2472A48E2A200340E22 /* GraphGuide.swift in Sources */,
 				FA1E7E472A3BB688007DC95D /* HealthStore.swift in Sources */,
 				FA1E7E552A3E5316007DC95D /* WorkoutAnalysis.swift in Sources */,
+				FACFF24F2A4AB2CF00340E22 /* UIColor+Semantic.swift in Sources */,
 				FA1E7E512A3D5AFB007DC95D /* ScalarSeries.swift in Sources */,
 				FACFF2442A488A8300340E22 /* GraphDrawView.swift in Sources */,
 			);
