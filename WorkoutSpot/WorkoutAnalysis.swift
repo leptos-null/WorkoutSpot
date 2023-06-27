@@ -221,22 +221,31 @@ extension KeyedWorkoutData: RandomAccessCollection {
 }
 
 extension KeyedWorkoutData {
-    func bestIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
+    /// Select an index that may be a valid index or equal to `endIndex`
+    func bestHalfOpenIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
+        let nearestIndex = Index(floatingIndex.rounded())
+        return Swift.max(startIndex, Swift.min(nearestIndex, endIndex))
+    }
+    
+    /// Select a valid index that best represents `floatingIndex`
+    func bestClosedIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
         guard let firstIndex = indices.first,
               let lastIndex = indices.last else {
-            assertionFailure("No valid index found")
-            return 0
+            fatalError("Empty collection")
         }
         
         let nearestIndex = Index(floatingIndex.rounded())
         return Swift.max(firstIndex, Swift.min(nearestIndex, lastIndex))
     }
-    
+    /// Select a valid index that represents `percent`
+    ///
+    /// `0` would return the first valid index and
+    /// `1` would return the last valid index
     func indexForPercent<F: BinaryFloatingPoint>(_ percent: F) -> Index {
         let floatingCount = F(count)
-        return bestIndex(for: percent * floatingCount)
+        return bestClosedIndex(for: percent * floatingCount)
     }
-    
+    /// Select the index that best represents `source[index]`
     func convertIndex(_ index: Index, from source: KeyedWorkoutData) -> Index {
         let unit = self[keyPath: key]
         let query = source[keyPath: key]
@@ -244,7 +253,7 @@ extension KeyedWorkoutData {
         let offset = query[index]
         let base = unit[0]
         
-        return bestIndex(for: offset - base)
+        return bestClosedIndex(for: offset - base)
     }
 }
 
