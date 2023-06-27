@@ -41,21 +41,31 @@ class GraphView: UIView {
     private func subscribeToViewModel() {
         var cancellables: Set<AnyCancellable> = []
         
-        viewModel.$keyedData
-            .sink { [unowned self] keyedData in
+        viewModel.$synced
+            .removeDuplicates { lhs, rhs in
+                // we don't want to get changes for `selectionRange` too because that
+                // results in a feedback loop with `updateScrollViewForSelectedRange`
+                lhs.keyedData === rhs.keyedData
+            }
+            .sink { [unowned self] synced in
+                let keyedData = synced.keyedData
                 scrollView.maximumZoomScale = max(1, CGFloat(keyedData.count) / 24.0)
-                // we don't want to listen for `selectionRange` too because that results in a feedback loop
-                updateScrollViewForSelectedRange(keyedData: keyedData)
+                updateScrollViewForSelectedRange(keyedData: keyedData, selectedRange: synced.selectionRange)
             }
             .store(in: &cancellables)
         
-        Publishers.CombineLatest(viewModel.$keyedData, viewModel.$selectionRange)
-            .sink { [unowned self] (keyedData, selectionRange) in
-                drawView.data = keyedData[selectionRange]
+        viewModel.$synced
+            .removeDuplicates { lhs, rhs in
+                (lhs.keyedData === rhs.keyedData) && (lhs.selectionRange == rhs.selectionRange)
+            }
+            .sink { [unowned self] synced in
+                drawView.data = synced.keyedData[synced.selectionRange]
             }
             .store(in: &cancellables)
         
-        viewModel.$selectionPoint
+        viewModel.$synced
+            .map(\.selectionPoint)
+            .removeDuplicates()
             .sink { [unowned self] selectionPoint in
                 drawView.pointMarksIndex = selectionPoint
             }
@@ -151,7 +161,10 @@ class GraphView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        updateScrollViewForSelectedRange(keyedData: viewModel.keyedData)
+        updateScrollViewForSelectedRange(
+            keyedData: viewModel.keyedData,
+            selectedRange: viewModel.selectionRange
+        )
     }
     
     private func updateRange() {
@@ -168,9 +181,8 @@ class GraphView: UIView {
         }
     }
     
-    private func updateScrollViewForSelectedRange(keyedData: KeyedWorkoutData) {
+    private func updateScrollViewForSelectedRange(keyedData: KeyedWorkoutData, selectedRange: Range<Int>) {
         let fullCount = keyedData.count
-        let selectedRange = viewModel.selectionRange
         
         scrollView.zoomScale = CGFloat(fullCount) / CGFloat(selectedRange.count)
         scrollView.contentOffset = CGPoint(

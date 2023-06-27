@@ -9,35 +9,65 @@
 import SwiftUI
 import CoreLocation
 
+@dynamicMemberLookup
 final class KeyedWorkoutViewModel: ObservableObject {
+    struct Synced {
+        let keyedData: KeyedWorkoutData
+        var selectionPoint: Int?
+        var selectionRange: Range<Int>
+    }
+    
     let analysis: WorkoutAnalysis
     
-    @Published var keyedData: KeyedWorkoutData {
-        didSet {
-            let newValue = keyedData
+    @Published private(set) var synced: Synced
+    
+    var keyedData: KeyedWorkoutData {
+        get { synced.keyedData }
+        set {
+            let oldValue = synced
+            let oldKeyedData = oldValue.keyedData
             
-            if let selectionPoint {
-                self.selectionPoint = newValue.convertIndex(selectionPoint, from: oldValue)
-            }
-            let lowerBound = newValue.convertIndex(selectionRange.lowerBound, from: oldValue)
-            let upperBound = newValue.convertIndex(selectionRange.upperBound, from: oldValue)
-            self.selectionRange = lowerBound..<upperBound
+            let newSelectionPoint = oldValue.selectionPoint
+                .map { newValue.convertIndex($0, from: oldKeyedData) }
+            
+            let lowerBound = newValue.convertIndex(oldValue.selectionRange.first!, from: oldKeyedData)
+            let upperBound = newValue.convertIndex(oldValue.selectionRange.last!, from: oldKeyedData)
+            
+            synced = .init(
+                keyedData: newValue,
+                selectionPoint: newSelectionPoint,
+                selectionRange: Range(lowerBound...upperBound)
+            )
         }
     }
     
-    @Published var selectionPoint: Int?
-    @Published var selectionRange: Range<Int>
+    subscript<T>(dynamicMember member: KeyPath<Synced, T>) -> T {
+        synced[keyPath: member]
+    }
+    
+    subscript<T>(dynamicMember member: WritableKeyPath<Synced, T>) -> T {
+        _read {
+            yield synced[keyPath: member]
+        }
+        set(newValue) {
+            synced[keyPath: member] = newValue
+        }
+    }
     
     init(analysis: WorkoutAnalysis) {
         self.analysis = analysis
-        self.keyedData = analysis.timeDomain
-        self.selectionPoint = nil
-        self.selectionRange = analysis.timeDomain.indices
+        
+        let keyedData = analysis.timeDomain
+        self.synced = .init(
+            keyedData: keyedData,
+            selectionPoint: nil,
+            selectionRange: keyedData.indices
+        )
     }
     
     var annotationCoordinate: CLLocationCoordinate2D? {
-        guard let selectionPoint else { return nil }
-        return keyedData.coordinate[selectionPoint]
+        guard let indx = synced.selectionPoint else { return nil }
+        return keyedData.coordinate[indx]
     }
     
     private func percentIntoDistanceDomain(index: Int) -> CGFloat {
@@ -48,11 +78,11 @@ final class KeyedWorkoutViewModel: ObservableObject {
     }
     
     var segmentStartUnit: CGFloat {
-        percentIntoDistanceDomain(index: selectionRange.first!)
+        percentIntoDistanceDomain(index: synced.selectionRange.first!)
     }
     
     var segmentEndUnit: CGFloat {
-        percentIntoDistanceDomain(index: selectionRange.last!)
+        percentIntoDistanceDomain(index: synced.selectionRange.last!)
     }
 }
 
