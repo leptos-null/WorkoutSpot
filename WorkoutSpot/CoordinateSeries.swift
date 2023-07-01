@@ -16,6 +16,58 @@ final class CoordinateSeries {
     
     private let data: UnsafeBufferPointer<Element>
     
+    static func lerp(_ p_1: Element, _ p_2: Element, t: Double) -> Element {
+        // fast paths
+        if t == 0 { return p_1 }
+        if t == 1 { return p_2 }
+        
+        let degToRad: Double = .pi / 180
+        let phi_1 = p_1.latitude * degToRad, lambda_1 = p_1.longitude * degToRad,
+            phi_2 = p_2.latitude * degToRad, lambda_2 = p_2.longitude * degToRad
+        
+        // https://en.wikipedia.org/wiki/Great-circle_navigation
+        
+        let lambda_12 = lambda_2 - lambda_1
+        let alpha_1 = atan2(
+            cos(phi_2) * sin(lambda_12),
+            +cos(phi_1) * sin(phi_2) - sin(phi_1) * cos(phi_2) * cos(lambda_12)
+        )
+        
+        let alpha_2 = atan2(
+            cos(phi_1) * sin(lambda_12),
+            -cos(phi_2) * sin(phi_1) + sin(phi_2) * cos(phi_1) * cos(lambda_12)
+        )
+        
+        let alpha_0 = atan2(
+            sin(alpha_1) * cos(phi_1),
+            sqrt(pow(cos(alpha_1), 2) + pow(sin(alpha_1), 2) * pow(sin(phi_1), 2))
+        )
+        
+        let sigma_01 = atan2(tan(phi_1), cos(alpha_1))
+        let sigma_02 = atan2(tan(phi_2), cos(alpha_2))
+        
+        let lambda_0 = lambda_1 - atan2(
+            sin(alpha_0) * sin(sigma_01),
+            cos(sigma_01)
+        )
+        
+        // https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support
+        let sigma = (1 - t) * sigma_01 + t * sigma_02
+        let phi = atan2(
+            cos(alpha_0) * sin(sigma),
+            sqrt(pow(cos(sigma), 2) + pow(sin(alpha_0), 2) * pow(sin(sigma), 2))
+        )
+        let lambda = atan2(
+            sin(alpha_0) * sin(sigma),
+            cos(sigma)
+        ) + lambda_0
+        
+        return Element(
+            latitude: phi / degToRad,
+            longitude: lambda / degToRad
+        )
+    }
+    
     init<T: AccelerateBuffer, U: AccelerateBuffer>(values: T, keys: U, domainMagnitude: Int) where T.Element == Element, U.Element == Double {
         let interpolated = UnsafeMutableBufferPointer<Element>.allocate(capacity: domainMagnitude)
         
