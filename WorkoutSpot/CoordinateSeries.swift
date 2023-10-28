@@ -69,31 +69,49 @@ final class CoordinateSeries {
     }
     
     init<T: AccelerateBuffer, U: AccelerateBuffer>(values: T, keys: U, domainMagnitude: Int) where T.Element == Element, U.Element == Double {
-        let interpolated = UnsafeMutableBufferPointer<Element>.allocate(capacity: domainMagnitude)
-        
-        let keyPaths: [WritableKeyPath<Element, Double>] = [
-            \.latitude, \.longitude
-        ]
-        let elementStride = MemoryLayout<Element>.stride / MemoryLayout<Double>.stride
-        
-        values.withUnsafeBufferPointer { valuesBuff in
+        data = values.withUnsafeBufferPointer { valuesBuff in
             keys.withUnsafeBufferPointer { keysBuff in
-                guard let valuesBase = valuesBuff.baseAddress,
-                      let keysBase = keysBuff.baseAddress,
-                      let interpolateBase = interpolated.baseAddress else { return }
+                let interpolated = UnsafeMutableBufferPointer<Element>.allocate(capacity: domainMagnitude)
                 
-                for keyPath in keyPaths {
-                    vDSP_vgenpD(
-                        valuesBase.pointer(to: keyPath)!, elementStride,
-                        keysBase, 1,
-                        interpolateBase.pointer(to: keyPath)!, elementStride,
-                        vDSP_Length(domainMagnitude), vDSP_Length(keysBuff.count)
-                    )
+                // this block is an approximate translation of the `vDSP_vgenp` algorithm (with a custom lerp function)
+                
+                let keyCount = keysBuff.count // `N` from `vDSP_vgenp`
+                assert(valuesBuff.count == keyCount)
+                
+                let firstKey = Int(keysBuff[0])
+                let lastKey = Int(keysBuff[keyCount - 1])
+                
+                assert(Int(vDSP.maximum(keysBuff)) == lastKey) // see comment about `m` below
+                
+                // duplicate the first value we have for all values up to the first key we have.
+                // this is `n <= B[0],  then C[n] = A[0]` from `vDSP_vgenp`
+                UnsafeMutableBufferPointer(rebasing: interpolated[..<firstKey])
+                    .initialize(repeating: valuesBuff[0])
+                
+                let topFillIndex = Swift.min(lastKey, domainMagnitude)
+                
+                var hiKeyIndex: Int = 1 // `m` from `vDSP_vgenp`
+                for interpolatedIndex in firstKey..<topFillIndex {
+                    let floatingIndx = Double(interpolatedIndex) // `n` from `vDSP_vgenp`
+                    // attempt to satisfy `Let m be such that B[m] < n <= B[m+1]` from `vDSP_vgenp`
+                    // however this is non-deterministic since `m` could have multiple values if `B` is unordered.
+                    // we take advantage of this by assuming that `keys` is sorted, allowing us to re-used `hiKeyIndex`.
+                    // this assumption satisfies the original definition in all cases except where the last element
+                    // in `B` / `keysBuff` is not the maximum. for now, we don't support this case (see assert above).
+                    while keysBuff[hiKeyIndex] <= floatingIndx { hiKeyIndex += 1 }
+                    
+                    let t = (floatingIndx - keysBuff[hiKeyIndex - 1]) / (keysBuff[hiKeyIndex] - keysBuff[hiKeyIndex - 1])
+                    interpolated[interpolatedIndex] = Self.lerp(valuesBuff[hiKeyIndex - 1], valuesBuff[hiKeyIndex], t: t)
                 }
+                
+                // duplicate the last value we have for all values after the last key we have.
+                // this is `B[M-1] < n, then C[n] = A[M-1]` from `vDSP_vgenp`
+                UnsafeMutableBufferPointer(rebasing: interpolated[topFillIndex...])
+                    .initialize(repeating: valuesBuff[keyCount - 1])
+                
+                return UnsafeBufferPointer(interpolated)
             }
         }
-        
-        data = UnsafeBufferPointer(interpolated)
     }
     
     convenience init<T: AccelerateBuffer, U: AccelerateBuffer, F: BinaryFloatingPoint>(values: T, keys: U, domainMagnitude: F) where T.Element == Element, U.Element == Double {
