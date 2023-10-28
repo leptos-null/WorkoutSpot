@@ -202,6 +202,12 @@ extension KeyedWorkoutData: RandomAccessCollection {
         subscript(bounds: KeyedWorkoutData.Indices) -> Self {
             base[bounds]
         }
+        
+        // since `SubSequence` conforms to `RandomAccessCollection`,
+        // `distance` is confused with the function `distance(from:to:)`
+        var distance: ScalarSeries.SubSequence {
+            base.distance[indices]
+        }
     }
     
     subscript(position: Index) -> Element {
