@@ -261,6 +261,27 @@ extension KeyedWorkoutData {
         
         return bestClosedIndex(for: offset - base)
     }
+    /// Select the range that best represents `source[range]`
+    func convertRange(_ range: Range<Index>, from source: KeyedWorkoutData) -> Range<Index> {
+        // use first and last because it's more accurate.
+        // we can't call `convertIndex` with `upperBound` because it could be out of bounds.
+        // `upperBound` could also represent a very different point from `last`; e.g. the indices
+        // on either side of a pause segment in a workout.
+        guard let firstIndex = range.first,
+              let lastIndex = range.last else {
+            let lowerBound = convertIndex(range.lowerBound, from: source)
+            return lowerBound..<lowerBound // we got an empty range, return an empty range
+        }
+        
+        let lowerBound = convertIndex(firstIndex, from: source)
+        let upperBound = convertIndex(lastIndex, from: source)
+        return Range(lowerBound...upperBound)
+    }
+    /// Convenience function to get the subsequence that best represents `source[range]`
+    func subSequence(converting range: Range<Index>, from source: KeyedWorkoutData) -> SubSequence {
+        let range = convertRange(range, from: source)
+        return self[range]
+    }
 }
 
 extension HKUnit {
