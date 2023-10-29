@@ -39,7 +39,9 @@ class GraphView: UIView {
     private var cancellables: Set<AnyCancellable> = []
     
     private func subscribeToViewModel() {
-        var cancellables: Set<AnyCancellable> = []
+        // cancel all immediately to avoid any changes that occur on initial
+        // subscription in the new pipelines from affecting the old view model
+        cancellables.removeAll(keepingCapacity: true)
         
         viewModel.$synced
             .removeDuplicates { lhs, rhs in
@@ -70,8 +72,6 @@ class GraphView: UIView {
                 drawView.pointMarksIndex = selectionPoint
             }
             .store(in: &cancellables)
-        
-        self.cancellables = cancellables
     }
     
     init(viewModel: KeyedWorkoutViewModel) {
