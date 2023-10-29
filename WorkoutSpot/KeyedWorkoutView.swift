@@ -86,6 +86,47 @@ final class KeyedWorkoutViewModel: ObservableObject {
     }
 }
 
+// with help from https://nilcoalescing.com/blog/AnchoredPositionInSwiftUI/
+struct BoundedPosition: Layout {
+    let proposedX: CGFloat?
+    let proposedY: CGFloat?
+    
+    init(x: CGFloat? = nil, y: CGFloat? = nil) {
+        proposedX = x
+        proposedY = y
+    }
+    
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let maxNeeded = subviews.reduce(into: CGSize.zero) { partialResult, subview in
+            let subSize = subview.sizeThatFits(proposal)
+            partialResult.width = max(partialResult.width, subSize.width)
+            partialResult.height = max(partialResult.height, subSize.height)
+        }
+        return proposal.replacingUnspecifiedDimensions(by: maxNeeded)
+    }
+    
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        for subview in subviews {
+            let dimensions = subview.dimensions(in: proposal)
+            
+            let xCenter = proposedX ?? dimensions[HorizontalAlignment.center]
+            let yCenter = proposedY ?? dimensions[VerticalAlignment.center]
+            
+            let midWidth = dimensions.width/2
+            let midHeight = dimensions.height/2
+            
+            let x = max(bounds.minX + midWidth, min(xCenter, bounds.maxX - midWidth))
+            let y = max(bounds.minY + midHeight, min(yCenter, bounds.maxY - midHeight))
+            
+            subview.place(
+                at: CGPoint(x: x, y: y),
+                anchor: .center,
+                proposal: ProposedViewSize(width: dimensions.width, height: dimensions.height)
+            )
+        }
+    }
+}
+
 struct KeyedWorkoutView: View {
     @ObservedObject var viewModel: KeyedWorkoutViewModel
     @StateObject private var graphViewModel = GraphDrawViewModel()
@@ -112,16 +153,16 @@ struct KeyedWorkoutView: View {
                 }
                 .overlay {
                     if let indx = viewModel.selectionPoint, let graphGuides = graphViewModel.guides {
-                        GeometryReader { geometryProxy in
+                        BoundedPosition(x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex)) {
                             WorkoutPointStatsView(stats: viewModel.keyedData[indx])
                                 .padding(8)
                                 .padding(.horizontal, 4)
                                 .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 8))
-                                .position(
-                                    x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex),
-                                    y: geometryProxy.size.height / 2
-                                )
                         }
+                        .padding(.horizontal, -8)
+                        /* apply a negative padding of the background corner radius.
+                         this allows the corner to go out of bounds which results in
+                         the rectangle below to never become disconnected from the background */
                     }
                 }
                 
