@@ -88,19 +88,84 @@ final class KeyedWorkoutViewModel: ObservableObject {
 
 struct KeyedWorkoutView: View {
     @ObservedObject var viewModel: KeyedWorkoutViewModel
+    @StateObject private var graphViewModel = GraphDrawViewModel()
     
     var body: some View {
-        WorkoutMap(
-            coordinates: viewModel.keyedData.coordinate,
-            routeColor: .workoutFull,
-            segmentColor: .workoutSegment,
-            segmentStart: viewModel.segmentStartUnit,
-            segmentEnd: viewModel.segmentEndUnit,
-            annotationCoordinate: viewModel.annotationCoordinate
-        )
-        
-        WorkoutGraphView(
-            keyedWorkoutViewModel: viewModel
-        )
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                WorkoutMap(
+                    coordinates: viewModel.keyedData.coordinate,
+                    routeColor: .workoutFull,
+                    segmentColor: .workoutSegment,
+                    segmentStart: viewModel.segmentStartUnit,
+                    segmentEnd: viewModel.segmentEndUnit,
+                    annotationCoordinate: viewModel.annotationCoordinate
+                )
+                .padding(.bottom)
+                
+                HStack {
+                    WorkoutSegmentStatsView(viewModel: viewModel)
+                        .padding(8)
+                        .padding(.horizontal, 4)
+                        .opacity((viewModel.selectionPoint == nil) ? 1 : 0)
+                    Spacer()
+                }
+                .overlay {
+                    if let indx = viewModel.selectionPoint, let graphGuides = graphViewModel.guides {
+                        GeometryReader { geometryProxy in
+                            WorkoutPointStatsView(stats: viewModel.keyedData[indx])
+                                .padding(8)
+                                .padding(.horizontal, 4)
+                                .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 8))
+                                .position(
+                                    x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex),
+                                    y: geometryProxy.size.height / 2
+                                )
+                        }
+                    }
+                }
+                
+                WorkoutGraphView(
+                    keyedWorkoutViewModel: viewModel,
+                    graphDrawViewModel: graphViewModel
+                )
+                .padding(.top)
+                .background {
+                    if let indx = viewModel.selectionPoint, let graphGuides = graphViewModel.guides {
+                        GeometryReader { geometryProxy in
+                            Rectangle()
+                                .frame(width: 4)
+                                .foregroundStyle(.ultraThickMaterial)
+                                .position(
+                                    x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex),
+                                    y: geometryProxy.size.height / 2
+                                )
+                        }
+                    }
+                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                viewModel.selectionPoint = nil
+            }
+            
+            Picker("Domain", selection: $viewModel.keyedData) {
+                Text("Time")
+                    .tag(viewModel.analysis.timeDomain)
+                Text("Distance")
+                    .tag(viewModel.analysis.distanceDomain)
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+}
+
+extension KeyedWorkoutData: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.key)
+    }
+    
+    static func == (lhs: KeyedWorkoutData, rhs: KeyedWorkoutData) -> Bool {
+        lhs === rhs
     }
 }

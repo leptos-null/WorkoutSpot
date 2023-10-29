@@ -12,29 +12,32 @@ import Combine
 
 struct WorkoutGraphView: UIViewRepresentable {
     let keyedWorkoutViewModel: KeyedWorkoutViewModel
+    let graphDrawViewModel: GraphDrawViewModel
     
     func makeUIView(context: Context) -> GraphView {
-        GraphView(viewModel: keyedWorkoutViewModel)
+        GraphView(workoutViewModel: keyedWorkoutViewModel, drawViewModel: graphDrawViewModel)
     }
     
     func updateUIView(_ view: GraphView, context: Context) {
-        if view.viewModel !== keyedWorkoutViewModel {
-            view.viewModel = keyedWorkoutViewModel
+        if view.workoutViewModel !== keyedWorkoutViewModel {
+            view.workoutViewModel = keyedWorkoutViewModel
         }
     }
 }
 
 class GraphView: UIView {
     let scrollView = UIScrollView()
-    let drawView = GraphDrawView()
+    let drawView: GraphDrawView
     
     private let scrollViewContent = UIView()
     
-    var viewModel: KeyedWorkoutViewModel {
+    var workoutViewModel: KeyedWorkoutViewModel {
         didSet {
             subscribeToViewModel()
         }
     }
+    
+    let drawViewModel: GraphDrawViewModel
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -43,7 +46,7 @@ class GraphView: UIView {
         // subscription in the new pipelines from affecting the old view model
         cancellables.removeAll(keepingCapacity: true)
         
-        viewModel.$synced
+        workoutViewModel.$synced
             .removeDuplicates { lhs, rhs in
                 // we don't want to get changes for `selectionRange` too because that
                 // results in a feedback loop with `updateScrollViewForSelectedRange`
@@ -56,7 +59,7 @@ class GraphView: UIView {
             }
             .store(in: &cancellables)
         
-        viewModel.$synced
+        workoutViewModel.$synced
             .removeDuplicates { lhs, rhs in
                 (lhs.keyedData === rhs.keyedData) && (lhs.selectionRange == rhs.selectionRange)
             }
@@ -65,7 +68,7 @@ class GraphView: UIView {
             }
             .store(in: &cancellables)
         
-        viewModel.$synced
+        workoutViewModel.$synced
             .map(\.selectionPoint)
             .removeDuplicates()
             .sink { [unowned self] selectionPoint in
@@ -74,8 +77,12 @@ class GraphView: UIView {
             .store(in: &cancellables)
     }
     
-    init(viewModel: KeyedWorkoutViewModel) {
-        self.viewModel = viewModel
+    init(workoutViewModel: KeyedWorkoutViewModel, drawViewModel: GraphDrawViewModel) {
+        self.workoutViewModel = workoutViewModel
+        self.drawViewModel = drawViewModel
+        
+        self.drawView = GraphDrawView(viewModel: drawViewModel)
+        
         super.init(frame: .zero)
         
         scrollView.delegate = self
@@ -83,7 +90,7 @@ class GraphView: UIView {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         
-        drawView.backgroundColor = .systemBackground
+        drawView.backgroundColor = .clear
         drawView.graphInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -123,11 +130,11 @@ class GraphView: UIView {
     }
     
     private func setSelectedIndexForX(_ x: CGFloat) {
-        guard let guides = drawView.guides else { return }
+        guard let guides = drawViewModel.guides else { return }
         let floatingOffset = guides.keySeries.floatingOffsetForX(x)
-        let floatingBase = CGFloat(viewModel.selectionRange.lowerBound)
+        let floatingBase = CGFloat(workoutViewModel.selectionRange.lowerBound)
         
-        viewModel.selectionPoint = viewModel.keyedData.bestClosedIndex(for: floatingBase + floatingOffset)
+        workoutViewModel.selectionPoint = workoutViewModel.keyedData.bestClosedIndex(for: floatingBase + floatingOffset)
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
@@ -148,7 +155,7 @@ class GraphView: UIView {
             let hoverPoint = gesture.location(in: drawView)
             setSelectedIndexForX(hoverPoint.x)
         case .ended:
-            viewModel.selectionPoint = nil
+            workoutViewModel.selectionPoint = nil
         default:
             break
         }
@@ -162,13 +169,13 @@ class GraphView: UIView {
         super.layoutSubviews()
         
         updateScrollViewForSelectedRange(
-            keyedData: viewModel.keyedData,
-            selectedRange: viewModel.selectionRange
+            keyedData: workoutViewModel.keyedData,
+            selectedRange: workoutViewModel.selectionRange
         )
     }
     
     private func updateRange() {
-        let keyedData = viewModel.keyedData
+        let keyedData = workoutViewModel.keyedData
         let percentStart = scrollView.contentOffset.x / scrollView.contentSize.width
         let length = CGFloat(keyedData.count) / scrollView.zoomScale
         
@@ -176,8 +183,8 @@ class GraphView: UIView {
         let endIndex = keyedData.bestHalfOpenIndex(for: CGFloat(startIndex) + length)
         let range = startIndex..<endIndex
         
-        if viewModel.selectionRange != range {
-            viewModel.selectionRange = range
+        if workoutViewModel.selectionRange != range {
+            workoutViewModel.selectionRange = range
         }
     }
     
