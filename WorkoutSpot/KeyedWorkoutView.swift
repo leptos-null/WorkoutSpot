@@ -225,3 +225,9 @@ extension KeyedWorkoutData: Hashable {
         lhs === rhs
     }
 }
+
+extension CoordinateSeries: Equatable {
+    static func == (lhs: CoordinateSeries, rhs: CoordinateSeries) -> Bool {
+        lhs === rhs
+    }
+}
