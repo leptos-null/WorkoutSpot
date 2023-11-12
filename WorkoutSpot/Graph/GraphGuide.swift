@@ -202,18 +202,18 @@ class GraphGuides<DataSource, Series: AccelerateBuffer> where Series.Element == 
     let data: DataSource
     let config: GraphConfig
     
-    private var cache: [KeyPath<DataSource, Series>: GraphGuide] = [:]
+    private var cache: [KeyPath<DataSource, Series?>: GraphGuide] = [:]
     
     init(data: DataSource, config: GraphConfig) {
         self.data = data
         self.config = config
     }
     
-    subscript(dynamicMember member: KeyPath<DataSource, Series>) -> GraphGuide {
+    subscript(dynamicMember member: KeyPath<DataSource, Series?>) -> GraphGuide? {
         if let cached = cache[member] {
             return cached
         }
-        let series = data[keyPath: member]
+        guard let series = data[keyPath: member] else { return nil }
         let graphGuide = GraphGuide(series: series, config: config)
         cache[member] = graphGuide
         return graphGuide

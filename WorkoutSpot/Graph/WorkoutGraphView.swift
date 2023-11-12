@@ -130,8 +130,9 @@ class GraphView: UIView {
     }
     
     private func setSelectedIndexForX(_ x: CGFloat) {
-        guard let guides = drawViewModel.guides else { return }
-        let floatingOffset = guides.keySeries.floatingOffsetForX(x)
+        guard let guides = drawViewModel.guides,
+              let keyGuide = guides.keySeries else { return }
+        let floatingOffset = keyGuide.floatingOffsetForX(x)
         let floatingBase = CGFloat(workoutViewModel.selectionRange.lowerBound)
         
         workoutViewModel.selectionPoint = workoutViewModel.keyedData.bestClosedIndex(for: floatingBase + floatingOffset)

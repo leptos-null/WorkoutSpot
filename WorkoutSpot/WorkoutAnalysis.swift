@@ -13,7 +13,7 @@ import Accelerate
 
 final class WorkoutAnalysis {
     let timeDomain: KeyedWorkoutData
-    let distanceDomain: KeyedWorkoutData
+    let distanceDomain: KeyedWorkoutData?
     
     init(rawWorkoutData: RawWorkoutData) {
         let timeDomain = KeyedWorkoutData(timeKey: rawWorkoutData)
@@ -23,20 +23,22 @@ final class WorkoutAnalysis {
 }
 
 final class KeyedWorkoutData {
-    let key: KeyPath<KeyedWorkoutData, ScalarSeries>
+    let key: KeyPath<KeyedWorkoutData, ScalarSeries?>
     
-    let time: ScalarSeries
-    let distance: ScalarSeries
+    let guaranteedTime: ScalarSeries
     
-    let altitude: ScalarSeries
-    let coordinate: CoordinateSeries
-    let speed: ScalarSeries
+    var time: ScalarSeries? { guaranteedTime } // optional version for convenience with key path accessors
+    let distance: ScalarSeries?
     
-    let grade: ScalarSeries
-    let ascending: ScalarSeries
-    let descending: ScalarSeries
+    let altitude: ScalarSeries?
+    let coordinate: CoordinateSeries?
+    let speed: ScalarSeries?
     
-    let heartRate: ScalarSeries
+    let grade: ScalarSeries?
+    let ascending: ScalarSeries?
+    let descending: ScalarSeries?
+    
+    let heartRate: ScalarSeries?
     
     init(timeKey workoutData: RawWorkoutData) {
         let startDate = workoutData.workout.startDate
@@ -88,12 +90,12 @@ final class KeyedWorkoutData {
             heartRateKeys[index] = heartRate.startDate.timeIntervalSince(startDate)
         }
         
-        let altitudeSeries = ScalarSeries(
+        let altitudeSeries = altitudeCount == 0 ? nil : ScalarSeries(
             values: altitudeValues[0..<altitudeCount],
             keys: altitudeKeys[0..<altitudeCount],
             domainMagnitude: domainLength
         )
-        let coordinateSeries = CoordinateSeries(
+        let coordinateSeries = coordinateCount == 0 ? nil : CoordinateSeries(
             values: coordinateValues[0..<coordinateCount],
             keys: coordinateKeys[0..<coordinateCount],
             domainMagnitude: domainLength
@@ -105,22 +107,26 @@ final class KeyedWorkoutData {
             domainMagnitude: domainLength
         )
         
-        let distanceSeries = coordinateSeries.stepHeight().stairCase()
+        let distanceSeries = coordinateSeries?.stepHeight().stairCase()
         
-        let climbing = altitudeSeries.stepHeight()
+        let climbing = altitudeSeries?.stepHeight()
         
         self.key = \.time
         
-        self.time = ScalarSeries(raw: monotonicTime)
+        self.guaranteedTime = ScalarSeries(raw: monotonicTime)
         self.distance = distanceSeries
         
         self.altitude = altitudeSeries
         self.coordinate = coordinateSeries
-        self.speed = distanceSeries.derivative()
+        self.speed = distanceSeries?.derivative()
         
-        self.grade = altitudeSeries.derivative(in: distanceSeries)
-        self.ascending = climbing.clipping(to: 0...(+.infinity)).stairCase()
-        self.descending = climbing.clipping(to: (-.infinity)...0).stairCase()
+        if let altitudeSeries, let distanceSeries {
+            self.grade = altitudeSeries.derivative(in: distanceSeries)
+        } else {
+            self.grade = nil
+        }
+        self.ascending = climbing?.clipping(to: 0...(+.infinity)).stairCase()
+        self.descending = climbing?.clipping(to: (-.infinity)...0).stairCase()
         
         self.heartRate = heartRateSeries
         
@@ -134,34 +140,38 @@ final class KeyedWorkoutData {
         altitudeKeys.deallocate()
     }
     
-    init(rekey source: KeyedWorkoutData, by key: KeyPath<KeyedWorkoutData, ScalarSeries>) {
-        let domainSeries = source[keyPath: key]
+    init?(rekey source: KeyedWorkoutData, by key: KeyPath<KeyedWorkoutData, ScalarSeries?>) {
+        guard let domainSeries = source[keyPath: key] else { return nil }
         
-        let timeSeries = source.time.convert(to: domainSeries)
-        let distanceSeries = source.distance.convert(to: domainSeries)
-        let altitudeSeries = source.altitude.convert(to: domainSeries)
+        let timeSeries = source.guaranteedTime.convert(to: domainSeries)
+        let distanceSeries = source.distance?.convert(to: domainSeries)
+        let altitudeSeries = source.altitude?.convert(to: domainSeries)
         
-        let climbing = altitudeSeries.stepHeight()
+        let climbing = altitudeSeries?.stepHeight()
         
         self.key = key
         
-        self.time = timeSeries
+        self.guaranteedTime = timeSeries
         self.distance = distanceSeries
         
         self.altitude = altitudeSeries
-        self.coordinate = source.coordinate.convert(to: domainSeries)
-        self.speed = distanceSeries.derivative(in: timeSeries)
+        self.coordinate = source.coordinate?.convert(to: domainSeries)
+        self.speed = distanceSeries?.derivative(in: timeSeries)
         
-        self.grade = altitudeSeries.derivative(in: distanceSeries)
-        self.ascending = climbing.clipping(to: 0...(+.infinity)).stairCase()
-        self.descending = climbing.clipping(to: (-.infinity)...0).stairCase()
+        if let altitudeSeries, let distanceSeries {
+            self.grade = altitudeSeries.derivative(in: distanceSeries)
+        } else {
+            self.grade = nil
+        }
+        self.ascending = climbing?.clipping(to: 0...(+.infinity)).stairCase()
+        self.descending = climbing?.clipping(to: (-.infinity)...0).stairCase()
         
-        self.heartRate = source.heartRate.convert(to: domainSeries)
+        self.heartRate = source.heartRate?.convert(to: domainSeries)
     }
 }
 
 extension KeyedWorkoutData {
-    var keySeries: ScalarSeries { self[keyPath: key] }
+    var keySeries: ScalarSeries? { self[keyPath: key] }
 }
 
 extension KeyedWorkoutData: RandomAccessCollection {
@@ -173,9 +183,9 @@ extension KeyedWorkoutData: RandomAccessCollection {
         let base: KeyedWorkoutData
         let index: KeyedWorkoutData.Index
         
-        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.Element where T.Index == KeyedWorkoutData.Index {
+        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T?>) -> T.Element? where T.Index == KeyedWorkoutData.Index {
             let series = base[keyPath: member]
-            return series[index]
+            return series?[index]
         }
     }
     
@@ -187,9 +197,9 @@ extension KeyedWorkoutData: RandomAccessCollection {
         let base: KeyedWorkoutData
         let indices: KeyedWorkoutData.Indices
         
-        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T>) -> T.SubSequence where T.Indices == KeyedWorkoutData.Indices {
+        subscript<T: RandomAccessCollection>(dynamicMember member: KeyPath<KeyedWorkoutData, T?>) -> T.SubSequence? where T.Indices == KeyedWorkoutData.Indices {
             let series = base[keyPath: member]
-            return series[indices]
+            return series?[indices]
         }
         
         var startIndex: KeyedWorkoutData.Index { indices.lowerBound }
@@ -205,8 +215,8 @@ extension KeyedWorkoutData: RandomAccessCollection {
         
         // since `SubSequence` conforms to `RandomAccessCollection`,
         // `distance` is confused with the function `distance(from:to:)`
-        var distance: ScalarSeries.SubSequence {
-            base.distance[indices]
+        var distance: ScalarSeries.SubSequence? {
+            base.distance?[indices]
         }
     }
     
@@ -218,7 +228,7 @@ extension KeyedWorkoutData: RandomAccessCollection {
         SubSequence(base: self, indices: bounds)
     }
     
-    private var representativeSeries: ScalarSeries { time }
+    private var representativeSeries: ScalarSeries { guaranteedTime }
     
     var startIndex: Index { representativeSeries.startIndex }
     var endIndex: Index { representativeSeries.endIndex }
@@ -253,8 +263,10 @@ extension KeyedWorkoutData {
     }
     /// Select the index that best represents `source[index]`
     func convertIndex(_ index: Index, from source: KeyedWorkoutData) -> Index {
-        let unit = self[keyPath: key]
-        let query = source[keyPath: key]
+        guard let unit = self[keyPath: key],
+              let query = source[keyPath: key] else {
+            fatalError("Coverting index from data that does not have key series (\(key))")
+        }
         
         let offset = query[index]
         let base = unit[0]

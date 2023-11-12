@@ -67,22 +67,24 @@ final class KeyedWorkoutViewModel: ObservableObject {
     
     var annotationCoordinate: CLLocationCoordinate2D? {
         guard let indx = synced.selectionPoint else { return nil }
-        return keyedData.coordinate[indx]
+        return keyedData.coordinate?[indx]
     }
     
-    private func percentIntoDistanceDomain(index: Int) -> CGFloat {
-        let distanceDomain = analysis.distanceDomain
+    private func percentIntoDistanceDomain(index: Int) -> CGFloat? {
+        guard let distanceDomain = analysis.distanceDomain else { return nil }
         let indx = distanceDomain.convertIndex(index, from: keyedData)
         let total = distanceDomain.count
         return CGFloat(indx) / CGFloat(total)
     }
     
-    var segmentStartUnit: CGFloat {
-        percentIntoDistanceDomain(index: synced.selectionRange.first!)
+    var segmentStartUnit: CGFloat? {
+        guard let rangeFirst = synced.selectionRange.first else { return nil }
+        return percentIntoDistanceDomain(index: rangeFirst)
     }
     
-    var segmentEndUnit: CGFloat {
-        percentIntoDistanceDomain(index: synced.selectionRange.last!)
+    var segmentEndUnit: CGFloat? {
+        guard let rangeLast = synced.selectionRange.last else { return nil }
+        return percentIntoDistanceDomain(index: rangeLast)
     }
 }
 
@@ -131,19 +133,30 @@ struct KeyedWorkoutView: View {
     @ObservedObject var viewModel: KeyedWorkoutViewModel
     @StateObject private var graphViewModel = GraphDrawViewModel()
     
+    // the x position within `WorkoutGraphView`
+    private var relativeSelectionPositionX: CGFloat? {
+        guard let indx = viewModel.selectionPoint,
+              let graphGuides = graphViewModel.guides,
+              let keyGuide = graphGuides.keySeries else { return nil }
+        return keyGuide.xForOffset(indx - graphGuides.data.startIndex)
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
-                WorkoutMap(
-                    coordinates: viewModel.keyedData.coordinate,
-                    routeColor: .workoutFull,
-                    segmentColor: .workoutSegment,
-                    segmentStart: viewModel.segmentStartUnit,
-                    segmentEnd: viewModel.segmentEndUnit,
-                    annotationCoordinate: viewModel.annotationCoordinate
-                )
-                .padding(.bottom)
-                
+                if let coordinates = viewModel.keyedData.coordinate,
+                   let startUnit = viewModel.segmentStartUnit,
+                   let endUnit = viewModel.segmentEndUnit {
+                    WorkoutMap(
+                        coordinates: coordinates,
+                        routeColor: .workoutFull,
+                        segmentColor: .workoutSegment,
+                        segmentStart: startUnit,
+                        segmentEnd: endUnit,
+                        annotationCoordinate: viewModel.annotationCoordinate
+                    )
+                    .padding(.bottom)
+                }
                 HStack {
                     WorkoutSegmentStatsView(viewModel: viewModel)
                         .padding(8)
@@ -152,8 +165,8 @@ struct KeyedWorkoutView: View {
                     Spacer()
                 }
                 .overlay {
-                    if let indx = viewModel.selectionPoint, let graphGuides = graphViewModel.guides {
-                        BoundedPosition(x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex)) {
+                    if let indx = viewModel.selectionPoint, let relativeSelectionPositionX {
+                        BoundedPosition(x: relativeSelectionPositionX) {
                             WorkoutPointStatsView(stats: viewModel.keyedData[indx])
                                 .padding(8)
                                 .padding(.horizontal, 4)
@@ -172,13 +185,13 @@ struct KeyedWorkoutView: View {
                 )
                 .padding(.top)
                 .background {
-                    if let indx = viewModel.selectionPoint, let graphGuides = graphViewModel.guides {
+                    if let relativeSelectionPositionX {
                         GeometryReader { geometryProxy in
                             Rectangle()
                                 .frame(width: 4)
                                 .foregroundStyle(.ultraThickMaterial)
                                 .position(
-                                    x: graphGuides.keySeries.xForOffset(indx - graphGuides.data.startIndex),
+                                    x: relativeSelectionPositionX,
                                     y: geometryProxy.size.height / 2
                                 )
                         }
@@ -190,13 +203,15 @@ struct KeyedWorkoutView: View {
                 viewModel.selectionPoint = nil
             }
             
-            Picker("Domain", selection: $viewModel.keyedData) {
-                Text("Time")
-                    .tag(viewModel.analysis.timeDomain)
-                Text("Distance")
-                    .tag(viewModel.analysis.distanceDomain)
+            if let distanceDomain = viewModel.analysis.distanceDomain {
+                Picker("Domain", selection: $viewModel.keyedData) {
+                    Text("Time")
+                        .tag(viewModel.analysis.timeDomain)
+                    Text("Distance")
+                        .tag(distanceDomain)
+                }
+                .pickerStyle(.segmented)
             }
-            .pickerStyle(.segmented)
         }
     }
 }

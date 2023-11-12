@@ -72,21 +72,26 @@ class GraphDrawView: UIView {
     override func draw(_ rect: CGRect) {
         guard let guides = viewModel.guides else { return }
         
-        let pairs: [(guide: GraphGuide, color: UIColor)] = [
+        let pairs: [(guide: GraphGuide?, color: UIColor)] = [
             (guides.heartRate, .heartRate),
             (guides.speed, .speed),
             (guides.altitude, .altitude),
         ]
         
-        for (guide, color) in pairs {
+        let validPairs: [(guide: GraphGuide, color: UIColor)] = pairs.compactMap { guide, color in
+            guard let guide else { return nil }
+            return (guide, color)
+        }
+        
+        for (guide, color) in validPairs {
             color.setStroke()
             guide.path.stroke()
         }
         
-        if let pointMarksIndex {
-            let pointMarkX = guides.keySeries.xForOffset(pointMarksIndex - guides.data.startIndex)
+        if let pointMarksIndex, let keyGuide = guides.keySeries {
+            let pointMarkX = keyGuide.xForOffset(pointMarksIndex - guides.data.startIndex)
             
-            for (guide, color) in pairs {
+            for (guide, color) in validPairs {
                 let pointMark = CGPoint(
                     x: pointMarkX,
                     y: guide.yForX(pointMarkX)

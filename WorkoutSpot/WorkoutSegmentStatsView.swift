@@ -10,8 +10,9 @@ import SwiftUI
 
 extension KeyedWorkoutData.SubSequence {
     var dateRange: Range<Date>? {
-        guard let first = self.time.first,
-              let last = self.time.last else { return nil }
+        guard let timeSeries = self.time,
+              let first = timeSeries.first,
+              let last = timeSeries.last else { return nil }
         let start = Date(timeIntervalSinceReferenceDate: first)
         let end = Date(timeIntervalSinceReferenceDate: last)
         return start..<end
@@ -53,45 +54,55 @@ struct WorkoutSegmentStatsView: View {
                 .foregroundStyle(Color(uiColor: .workoutSegment))
             }
             
-            TitleValueInlineView(title: "Distance") {
-                Text(
-                    Measurement(value: stats.distance.delta(), unit: UnitLength.meters),
-                    format: .measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
+            if let distance = stats.distance {
+                TitleValueInlineView(title: "Distance") {
+                    Text(
+                        Measurement(value: distance.delta(), unit: UnitLength.meters),
+                        format: .measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(2)))
+                    )
+                }
+                .foregroundStyle(Color(uiColor: .workoutSegment))
             }
-            .foregroundStyle(Color(uiColor: .workoutSegment))
             
-            TitleValueInlineView(title: "Climbing") {
-                Text(
-                    Measurement(value: stats.ascending.delta(), unit: UnitLength.meters),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
+            if let ascending = stats.ascending {
+                TitleValueInlineView(title: "Climbing") {
+                    Text(
+                        Measurement(value: ascending.delta(), unit: UnitLength.meters),
+                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
+                    )
+                }
+                .foregroundStyle(Color(uiColor: .altitude))
             }
-            .foregroundStyle(Color(uiColor: .altitude))
             
-            TitleValueInlineView(title: "Avg. Grade") {
-                Text(
-                    stats.altitude.delta() / stats.distance.delta(),
-                    format: .percent.precision(.fractionLength(2))
-                )
+            if let altitude = stats.altitude, let distance = stats.distance {
+                TitleValueInlineView(title: "Avg. Grade") {
+                    Text(
+                        altitude.delta() / distance.delta(),
+                        format: .percent.precision(.fractionLength(2))
+                    )
+                }
+                .foregroundStyle(Color(uiColor: .workoutSegment))
             }
-            .foregroundStyle(Color(uiColor: .workoutSegment))
             
-            TitleValueInlineView(title: "Avg. Speed") {
-                Text(
-                    Measurement(value: stats.distance.delta() / stats.time.delta(), unit: UnitSpeed.metersPerSecond),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
+            if let distance = stats.distance, let time = stats.time {
+                TitleValueInlineView(title: "Avg. Speed") {
+                    Text(
+                        Measurement(value: distance.delta() / time.delta(), unit: UnitSpeed.metersPerSecond),
+                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
+                    )
+                }
+                .foregroundStyle(Color(uiColor: .speed))
             }
-            .foregroundStyle(Color(uiColor: .speed))
             
-            TitleValueInlineView(title: "Avg. Heart Rate") {
-                Text(
-                    Measurement(value: timeStats.heartRate.average(), unit: UnitFrequency.hertz),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
+            if let heartRate = timeStats.heartRate {
+                TitleValueInlineView(title: "Avg. Heart Rate") {
+                    Text(
+                        Measurement(value: heartRate.average(), unit: UnitFrequency.hertz),
+                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
+                    )
+                }
+                .foregroundStyle(Color(uiColor: .heartRate))
             }
-            .foregroundStyle(Color(uiColor: .heartRate))
         }
     }
 }
