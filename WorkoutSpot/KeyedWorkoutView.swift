@@ -133,6 +133,9 @@ struct KeyedWorkoutView: View {
     @ObservedObject var viewModel: KeyedWorkoutViewModel
     @StateObject private var graphViewModel = GraphDrawViewModel()
     
+    private let pointStatsViewRadius: CGFloat = 8
+    private let horizontalInset: CGFloat = 4
+    
     // the x position within `WorkoutGraphView`
     private var relativeSelectionPositionX: CGFloat? {
         guard let indx = viewModel.selectionPoint,
@@ -170,12 +173,13 @@ struct KeyedWorkoutView: View {
                             WorkoutPointStatsView(stats: viewModel.keyedData[indx])
                                 .padding(8)
                                 .padding(.horizontal, 4)
-                                .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 8))
+                                .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
                         }
-                        .padding(.horizontal, -8)
+                        .padding(.horizontal, horizontalInset - pointStatsViewRadius)
                         /* apply a negative padding of the background corner radius.
                          this allows the corner to go out of bounds which results in
-                         the rectangle below to never become disconnected from the background */
+                         the rectangle below to never become disconnected from the background.
+                         */
                     }
                 }
                 
@@ -202,6 +206,7 @@ struct KeyedWorkoutView: View {
             .onTapGesture {
                 viewModel.selectionPoint = nil
             }
+            .padding(.horizontal, horizontalInset)
             
             if let distanceDomain = viewModel.analysis.distanceDomain {
                 Picker("Domain", selection: $viewModel.keyedData) {
