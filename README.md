@@ -22,11 +22,3 @@ For a given segment of a workout, view:
 
 Visualize the calculated speed, altitude, and heart rate with a graph over a segment. 
 Change the segment selection by zooming and scrolling on the graph.
-
-### Screenshots
-
-![Time domain](Screenshots/iPhone12,1/3_time_segment.png)
-
-![Distance domain](Screenshots/iPhone12,1/5_distance_point.png)
-
-[More screenshots](Screenshots/)
