@@ -129,13 +129,22 @@ class GraphView: UIView {
         subscribeToViewModel()
     }
     
-    private func setSelectedIndexForX(_ x: CGFloat) {
+    private func setSelectedIndexForX(_ x: CGFloat, limitToSelection: Bool = true) {
         guard let guides = drawViewModel.guides,
               let keyGuide = guides.keySeries else { return }
         let floatingOffset = keyGuide.floatingOffsetForX(x)
         let floatingBase = CGFloat(workoutViewModel.selectionRange.lowerBound)
+        let floatingIndex = floatingBase + floatingOffset
         
-        workoutViewModel.selectionPoint = workoutViewModel.keyedData.bestClosedIndex(for: floatingBase + floatingOffset)
+        let fixedIndex: Int
+        if limitToSelection {
+            let workoutRange = workoutViewModel.keyedData[workoutViewModel.selectionRange]
+            fixedIndex = workoutRange.bestClosedIndex(for: floatingIndex)
+        } else {
+            let workoutRange = workoutViewModel.keyedData
+            fixedIndex = workoutRange.bestClosedIndex(for: floatingIndex)
+        }
+        workoutViewModel.selectionPoint = fixedIndex
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
