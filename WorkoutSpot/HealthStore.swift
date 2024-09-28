@@ -143,3 +143,7 @@ final class RawWorkoutData {
         self.heartRates = heartRates
     }
 }
+
+extension NSPredicate: @retroactive @unchecked Sendable {
+    
+}

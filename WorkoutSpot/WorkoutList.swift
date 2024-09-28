@@ -135,6 +135,6 @@ struct WorkoutDetail: View {
     }
 }
 
-extension HKObject: Identifiable {
+extension HKObject: @retroactive Identifiable {
     public var id: UUID { uuid }
 }

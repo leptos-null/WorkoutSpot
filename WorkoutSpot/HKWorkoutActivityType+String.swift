@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-extension HKWorkoutActivityType: CustomDebugStringConvertible {
+extension HKWorkoutActivityType: @retroactive CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case .americanFootball:

@@ -73,7 +73,9 @@ final class WorkoutObserver: ObservableObject {
     
     func prefetch(limit: Int) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            prefetch(limit: limit, completion: continuation.resume(with:))
+            prefetch(limit: limit) { result in
+                continuation.resume(with: result)
+            }
         }
     }
     
