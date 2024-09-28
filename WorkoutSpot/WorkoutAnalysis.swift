@@ -236,7 +236,7 @@ extension KeyedWorkoutData: RandomAccessCollection {
     var count: Int { representativeSeries.count }
 }
 
-extension KeyedWorkoutData {
+extension RandomAccessCollection where Index: BinaryInteger {
     /// Select an index that may be a valid index or equal to `endIndex`
     func bestHalfOpenIndex<F: BinaryFloatingPoint>(for floatingIndex: F) -> Index {
         let nearestIndex = Index(floatingIndex.rounded())
@@ -261,6 +261,9 @@ extension KeyedWorkoutData {
         let floatingCount = F(count)
         return bestClosedIndex(for: percent * floatingCount)
     }
+}
+
+extension KeyedWorkoutData {
     /// Select the index that best represents `source[index]`
     func convertIndex(_ index: Index, from source: KeyedWorkoutData) -> Index {
         guard let unit = self[keyPath: key],
