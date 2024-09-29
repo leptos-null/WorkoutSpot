@@ -31,6 +31,7 @@
 		FACFF2512A4B108500340E22 /* TitleValueInlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2502A4B108500340E22 /* TitleValueInlineView.swift */; };
 		FACFF2532A4B10A000340E22 /* WorkoutPointStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */; };
 		FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */; };
+		FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		FACFF2502A4B108500340E22 /* TitleValueInlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueInlineView.swift; sourceTree = "<group>"; };
 		FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPointStatsView.swift; sourceTree = "<group>"; };
 		FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentStatsView.swift; sourceTree = "<group>"; };
+		FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Measurement.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 		FA8614C92CA9DA3E002877D7 /* StatsViews */ = {
 			isa = PBXGroup;
 			children = (
+				FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */,
 				FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */,
 				FA8614C72CA9D383002877D7 /* WorkoutExtremaStatsView.swift */,
 				FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */,
@@ -221,6 +224,7 @@
 				FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */,
 				FA1E7E532A3D8826007DC95D /* CoordinateSeries.swift in Sources */,
 				FA8614CD2CA9E258002877D7 /* UserDefaults+Typed.swift in Sources */,
+				FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */,
 				FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */,
 				FA1E7E452A3BB34E007DC95D /* HKWorkoutActivityType+String.swift in Sources */,
 				FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */,
