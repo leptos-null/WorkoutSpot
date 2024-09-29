@@ -17,6 +17,8 @@ struct WorkoutExtremaStatsView: View {
     let data: KeyedWorkoutData.SubSequence
     let extrema: ExtremaType
     
+    @StateObject private var unitPreferences: UnitPreferences = .shared
+    
     private func value(for series: Slice<ScalarSeries>) -> ScalarSeries.Element {
         switch extrema {
         case .min: series.minimum()
@@ -27,25 +29,16 @@ struct WorkoutExtremaStatsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if let altitude = data.altitude {
-                Text(
-                    Measurement(value: value(for: altitude), unit: UnitLength.meters),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
-                .foregroundStyle(Color(uiColor: .altitude))
+                Text(meters: value(for: altitude), width: .abbreviated, unit: unitPreferences.altitudeUnit)
+                    .foregroundStyle(Color(uiColor: .altitude))
             }
             if let speed = data.speed {
-                Text(
-                    Measurement(value: value(for: speed), unit: UnitSpeed.metersPerSecond),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
-                .foregroundStyle(Color(uiColor: .speed))
+                Text(metersPerSecond: value(for: speed), width: .abbreviated, unit: unitPreferences.speedUnit)
+                    .foregroundStyle(Color(uiColor: .speed))
             }
             if let heartRate = data.heartRate {
-                Text(
-                    Measurement(value: value(for: heartRate), unit: UnitFrequency.hertz),
-                    format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                )
-                .foregroundStyle(Color(uiColor: .heartRate))
+                Text.beatsPerSecond(value(for: heartRate), width: .abbreviated)
+                    .foregroundStyle(Color(uiColor: .heartRate))
             }
         }
         .font(.footnote)

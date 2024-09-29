@@ -24,6 +24,8 @@ struct WorkoutSegmentStatsView: View {
     
     let stats: KeyedWorkoutData.SubSequence
     
+    @StateObject private var unitPreferences: UnitPreferences = .shared
+    
     // Averages of derivates are only valid in the domain they're taken with respect to.
     // For example, speed is the derivative of distance with respect to time; the average
     // value of the speed series is only valid in the time domain.
@@ -56,20 +58,14 @@ struct WorkoutSegmentStatsView: View {
             
             if let distance = stats.distance {
                 TitleValueInlineView(title: "Distance") {
-                    Text(
-                        Measurement(value: distance.delta(), unit: UnitLength.meters),
-                        format: .measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(meters: distance.delta(), width: .abbreviated, unit: unitPreferences.distanceUnit)
                 }
                 .foregroundStyle(Color(uiColor: .workoutSegment))
             }
             
             if let ascending = stats.ascending {
                 TitleValueInlineView(title: "Climbing") {
-                    Text(
-                        Measurement(value: ascending.delta(), unit: UnitLength.meters),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(meters: ascending.delta(), width: .abbreviated, unit: unitPreferences.altitudeUnit)
                 }
                 .foregroundStyle(Color(uiColor: .altitude))
             }
@@ -86,20 +82,14 @@ struct WorkoutSegmentStatsView: View {
             
             if let distance = stats.distance, let time = stats.time {
                 TitleValueInlineView(title: "Avg. Speed") {
-                    Text(
-                        Measurement(value: distance.delta() / time.delta(), unit: UnitSpeed.metersPerSecond),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(metersPerSecond: distance.delta() / time.delta(), width: .abbreviated, unit: unitPreferences.speedUnit)
                 }
                 .foregroundStyle(Color(uiColor: .speed))
             }
             
             if let heartRate = timeStats.heartRate {
                 TitleValueInlineView(title: "Avg. Heart Rate") {
-                    Text(
-                        Measurement(value: heartRate.average(), unit: UnitFrequency.hertz),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text.beatsPerSecond(heartRate.average(), width: .abbreviated)
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
             }

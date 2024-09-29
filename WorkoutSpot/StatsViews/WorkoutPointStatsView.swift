@@ -11,6 +11,8 @@ import SwiftUI
 struct WorkoutPointStatsView: View {
     let stats: KeyedWorkoutData.Element
     
+    @StateObject private var unitPreferences: UnitPreferences = .shared
+    
     var body: some View {
         VStack(alignment: .leading) {
             if let time = stats.time {
@@ -24,18 +26,12 @@ struct WorkoutPointStatsView: View {
             
             if let distance = stats.distance {
                 TitleValueInlineView(title: "Distance") {
-                    Text(
-                        Measurement(value: distance, unit: UnitLength.meters),
-                        format: .measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(meters: distance, width: .abbreviated, unit: unitPreferences.distanceUnit)
                 }
             }
             if let altitude = stats.altitude {
                 TitleValueInlineView(title: "Altitude") {
-                    Text(
-                        Measurement(value: altitude, unit: UnitLength.meters),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(meters: altitude, width: .abbreviated, unit: unitPreferences.altitudeUnit)
                 }
                 .foregroundStyle(Color(uiColor: .altitude))
             }
@@ -50,19 +46,13 @@ struct WorkoutPointStatsView: View {
             
             if let speed = stats.speed {
                 TitleValueInlineView(title: "Speed") {
-                    Text(
-                        Measurement(value: speed, unit: UnitSpeed.metersPerSecond),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text(metersPerSecond: speed, width: .abbreviated, unit: unitPreferences.speedUnit)
                 }
                 .foregroundStyle(Color(uiColor: .speed))
             }
             if let heartRate = stats.heartRate {
                 TitleValueInlineView(title: "Heart Rate") {
-                    Text(
-                        Measurement(value: heartRate, unit: UnitFrequency.hertz),
-                        format: .measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(2)))
-                    )
+                    Text.beatsPerSecond(heartRate, width: .abbreviated)
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
             }
