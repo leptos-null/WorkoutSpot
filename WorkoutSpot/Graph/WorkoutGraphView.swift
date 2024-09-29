@@ -48,9 +48,7 @@ class GraphView: UIView {
         
         workoutViewModel.$synced
             .removeDuplicates { lhs, rhs in
-                // we don't want to get changes for `selectionRange` too because that
-                // results in a feedback loop with `updateScrollViewForSelectedRange`
-                lhs.keyedData === rhs.keyedData
+                lhs.keyedData === rhs.keyedData && lhs.selectionRange == rhs.selectionRange
             }
             .sink { [unowned self] synced in
                 let keyedData = synced.keyedData
