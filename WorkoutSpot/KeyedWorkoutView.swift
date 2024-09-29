@@ -183,22 +183,32 @@ struct KeyedWorkoutView: View {
                     }
                 }
                 
-                WorkoutGraphView(
-                    keyedWorkoutViewModel: viewModel,
-                    graphDrawViewModel: graphViewModel
-                )
-                .padding(.top)
-                .background {
-                    if let relativeSelectionPositionX {
-                        GeometryReader { geometryProxy in
-                            Rectangle()
-                                .frame(width: 4)
-                                .foregroundStyle(.ultraThickMaterial)
-                                .position(
-                                    x: relativeSelectionPositionX,
-                                    y: geometryProxy.size.height / 2
-                                )
+                HStack(spacing: 6) {
+                    WorkoutGraphView(
+                        keyedWorkoutViewModel: viewModel,
+                        graphDrawViewModel: graphViewModel
+                    )
+                    .padding(.top)
+                    .background {
+                        if let relativeSelectionPositionX {
+                            GeometryReader { geometryProxy in
+                                Rectangle()
+                                    .frame(width: 4)
+                                    .foregroundStyle(.ultraThickMaterial)
+                                    .position(
+                                        x: relativeSelectionPositionX,
+                                        y: geometryProxy.size.height / 2
+                                    )
+                            }
+                            .clipped()
                         }
+                    }
+                    VStack {
+                        WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .max)
+                            .padding(.top, 8)
+                        Spacer()
+                        WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .min)
+                            .padding(.bottom, 8)
                     }
                 }
             }
