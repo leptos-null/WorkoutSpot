@@ -17,6 +17,7 @@
 		FA1E7E552A3E5316007DC95D /* WorkoutAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */; };
 		FA5D55362A3AB7C600135067 /* WorkoutSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */; };
 		FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5D55392A3AB7C700135067 /* Assets.xcassets */; };
+		FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */; };
 		FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA98F782A438D4800E369AA /* WorkoutMap.swift */; };
 		FACFF2442A488A8300340E22 /* GraphDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2432A488A8300340E22 /* GraphDrawView.swift */; };
 		FACFF2472A48E2A200340E22 /* GraphGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2462A48E2A200340E22 /* GraphGuide.swift */; };
@@ -42,6 +43,7 @@
 		FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSpotApp.swift; sourceTree = "<group>"; };
 		FA5D55392A3AB7C700135067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA5D55432A3AB8CF00135067 /* WorkoutSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorkoutSpot.entitlements; sourceTree = "<group>"; };
+		FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutGraphPreview.swift; sourceTree = "<group>"; };
 		FAA98F782A438D4800E369AA /* WorkoutMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutMap.swift; sourceTree = "<group>"; };
 		FACFF2432A488A8300340E22 /* GraphDrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphDrawView.swift; sourceTree = "<group>"; };
 		FACFF2462A48E2A200340E22 /* GraphGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphGuide.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				FACFF2462A48E2A200340E22 /* GraphGuide.swift */,
 				FACFF24A2A4A170F00340E22 /* WorkoutGraphView.swift */,
 				FACFF2432A488A8300340E22 /* GraphDrawView.swift */,
+				FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */,
 			);
 			path = Graph;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				FACFF2512A4B108500340E22 /* TitleValueInlineView.swift in Sources */,
 				FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */,
 				FA1E7E532A3D8826007DC95D /* CoordinateSeries.swift in Sources */,
+				FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */,
 				FA1E7E452A3BB34E007DC95D /* HKWorkoutActivityType+String.swift in Sources */,
 				FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */,
 				FACFF2472A48E2A200340E22 /* GraphGuide.swift in Sources */,

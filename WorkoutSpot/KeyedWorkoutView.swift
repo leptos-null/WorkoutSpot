@@ -217,6 +217,10 @@ struct KeyedWorkoutView: View {
                 }
                 .pickerStyle(.segmented)
             }
+            
+            WorkoutGraphPreview(viewModel: viewModel)
+                .frame(height: 36)
+                .padding(.top, 2)
         }
     }
 }
