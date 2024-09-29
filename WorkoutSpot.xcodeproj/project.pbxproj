@@ -19,6 +19,8 @@
 		FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5D55392A3AB7C700135067 /* Assets.xcassets */; };
 		FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */; };
 		FA8614C82CA9D383002877D7 /* WorkoutExtremaStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614C72CA9D383002877D7 /* WorkoutExtremaStatsView.swift */; };
+		FA8614CB2CA9E06A002877D7 /* UnitPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614CA2CA9E06A002877D7 /* UnitPreferences.swift */; };
+		FA8614CD2CA9E258002877D7 /* UserDefaults+Typed.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614CC2CA9E258002877D7 /* UserDefaults+Typed.swift */; };
 		FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA98F782A438D4800E369AA /* WorkoutMap.swift */; };
 		FACFF2442A488A8300340E22 /* GraphDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2432A488A8300340E22 /* GraphDrawView.swift */; };
 		FACFF2472A48E2A200340E22 /* GraphGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2462A48E2A200340E22 /* GraphGuide.swift */; };
@@ -46,6 +48,8 @@
 		FA5D55432A3AB8CF00135067 /* WorkoutSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorkoutSpot.entitlements; sourceTree = "<group>"; };
 		FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutGraphPreview.swift; sourceTree = "<group>"; };
 		FA8614C72CA9D383002877D7 /* WorkoutExtremaStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutExtremaStatsView.swift; sourceTree = "<group>"; };
+		FA8614CA2CA9E06A002877D7 /* UnitPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitPreferences.swift; sourceTree = "<group>"; };
+		FA8614CC2CA9E258002877D7 /* UserDefaults+Typed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Typed.swift"; sourceTree = "<group>"; };
 		FAA98F782A438D4800E369AA /* WorkoutMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutMap.swift; sourceTree = "<group>"; };
 		FACFF2432A488A8300340E22 /* GraphDrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphDrawView.swift; sourceTree = "<group>"; };
 		FACFF2462A48E2A200340E22 /* GraphGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphGuide.swift; sourceTree = "<group>"; };
@@ -96,6 +100,8 @@
 				FA8614C92CA9DA3E002877D7 /* StatsViews */,
 				FACFF2452A48E29500340E22 /* Graph */,
 				FA1E7E462A3BB688007DC95D /* HealthStore.swift */,
+				FA8614CA2CA9E06A002877D7 /* UnitPreferences.swift */,
+				FA8614CC2CA9E258002877D7 /* UserDefaults+Typed.swift */,
 				FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */,
 				FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */,
 				FA1E7E522A3D8826007DC95D /* CoordinateSeries.swift */,
@@ -209,10 +215,12 @@
 				FACFF2532A4B10A000340E22 /* WorkoutPointStatsView.swift in Sources */,
 				FA8614C82CA9D383002877D7 /* WorkoutExtremaStatsView.swift in Sources */,
 				FACFF2492A4A149D00340E22 /* UIView+Constraints.swift in Sources */,
+				FA8614CB2CA9E06A002877D7 /* UnitPreferences.swift in Sources */,
 				FA1E7E4B2A3BBDDD007DC95D /* WorkoutList.swift in Sources */,
 				FACFF2512A4B108500340E22 /* TitleValueInlineView.swift in Sources */,
 				FAA98F792A438D4800E369AA /* WorkoutMap.swift in Sources */,
 				FA1E7E532A3D8826007DC95D /* CoordinateSeries.swift in Sources */,
+				FA8614CD2CA9E258002877D7 /* UserDefaults+Typed.swift in Sources */,
 				FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */,
 				FA1E7E452A3BB34E007DC95D /* HKWorkoutActivityType+String.swift in Sources */,
 				FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */,
