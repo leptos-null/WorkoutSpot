@@ -88,7 +88,7 @@ struct WorkoutSegmentStatsView: View {
             }
             
             if let heartRate = timeStats.heartRate {
-                TitleValueInlineView(title: "Avg. Heart Rate") {
+                TitleValueInlineView(title: "Avg. ♥ Rate") {
                     Text.beatsPerSecond(heartRate.average(), width: .abbreviated)
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))

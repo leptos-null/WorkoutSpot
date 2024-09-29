@@ -51,7 +51,7 @@ struct WorkoutPointStatsView: View {
                 .foregroundStyle(Color(uiColor: .speed))
             }
             if let heartRate = stats.heartRate {
-                TitleValueInlineView(title: "Heart Rate") {
+                TitleValueInlineView(title: "♥ Rate") {
                     Text.beatsPerSecond(heartRate, width: .abbreviated)
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
