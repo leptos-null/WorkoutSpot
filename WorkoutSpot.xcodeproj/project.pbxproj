@@ -91,11 +91,9 @@
 				FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */,
 				FA1E7E4A2A3BBDDD007DC95D /* WorkoutList.swift */,
 				FACFF24C2A4AAF8600340E22 /* KeyedWorkoutView.swift */,
-				FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */,
-				FA8614C72CA9D383002877D7 /* WorkoutExtremaStatsView.swift */,
-				FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */,
 				FACFF2502A4B108500340E22 /* TitleValueInlineView.swift */,
 				FAA98F782A438D4800E369AA /* WorkoutMap.swift */,
+				FA8614C92CA9DA3E002877D7 /* StatsViews */,
 				FACFF2452A48E29500340E22 /* Graph */,
 				FA1E7E462A3BB688007DC95D /* HealthStore.swift */,
 				FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */,
@@ -110,6 +108,16 @@
 				FA5D55392A3AB7C700135067 /* Assets.xcassets */,
 			);
 			path = WorkoutSpot;
+			sourceTree = "<group>";
+		};
+		FA8614C92CA9DA3E002877D7 /* StatsViews */ = {
+			isa = PBXGroup;
+			children = (
+				FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */,
+				FA8614C72CA9D383002877D7 /* WorkoutExtremaStatsView.swift */,
+				FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */,
+			);
+			path = StatsViews;
 			sourceTree = "<group>";
 		};
 		FACFF2452A48E29500340E22 /* Graph */ = {
