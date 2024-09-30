@@ -16,12 +16,20 @@ final class HealthStore {
     // all sample types used throughout the app.
     // request all up front so that we don't show the
     // authorization screen multiple times in a short spane
-    static let sampleTypes: Set<HKSampleType> = [
-        HKWorkoutType.workoutType(),
-        HKQuantityType(.heartRate),
-        HKSeriesType.workoutRoute(),
-        HKQuantityType(.runningPower),
-    ]
+    static let sampleTypes: Set<HKSampleType> = {
+        var types: Set<HKSampleType> = [
+            HKWorkoutType.workoutType(),
+            HKQuantityType(.heartRate),
+            HKSeriesType.workoutRoute(),
+            HKQuantityType(.runningPower),
+        ]
+        
+        if #available(iOS 17.0, *) {
+            types.insert(HKQuantityType(.cyclingPower))
+        }
+        
+        return types
+    }()
     
     func requestReadAuthorizationIfNeeded() async throws {
         try await healthStore.requestAuthorization(toShare: [], read: Self.sampleTypes)
@@ -116,14 +124,26 @@ final class HealthStore {
     func rawWorkoutData(for workout: HKWorkout) async throws -> RawWorkoutData {
         let predicate = HKQuery.predicateForObjects(from: workout)
         
-        let heartRateType = HKQuantityType(.heartRate)
         // "HealthKit returns quantities in ascending order, based on their start date"
-        async let heartRatePromise = queryQuantitySeries(quantityType: heartRateType, predicate: predicate)
-
-        let runningPowerType = HKQuantityType(.runningPower)
-        // "HealthKit returns quantities in ascending order, based on their start date"
-        async let runningPowerPromise = queryQuantitySeries(quantityType: runningPowerType, predicate: predicate)
-
+        async let heartRatePromise = queryQuantitySeries(
+            quantityType: HKQuantityType(.heartRate),
+            predicate: predicate
+        )
+        async let runningPowerPromise = queryQuantitySeries(
+            quantityType: HKQuantityType(.runningPower),
+            predicate: predicate
+        )
+        // inline function because I don't know another way to add
+        // the availability check for an `async let`
+        async let cyclingPowerPromise: [HKDiscreteQuantitySample] = {
+            guard #available(iOS 17.0, *) else { return [] }
+            
+            return try await queryQuantitySeries(
+                quantityType: HKQuantityType(.cyclingPower),
+                predicate: predicate
+            )
+        }()
+        
         async let locationsPromise = queryWorkoutRoute(predicate: predicate, sortDescriptors: [
             NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
         ])
@@ -132,7 +152,8 @@ final class HealthStore {
             workout: workout,
             locations: try await locationsPromise,
             heartRates: try await heartRatePromise,
-            runningPower: try await runningPowerPromise
+            runningPower: try await runningPowerPromise,
+            cyclingPower: try await cyclingPowerPromise
         )
     }
 }
@@ -143,12 +164,14 @@ final class RawWorkoutData {
     let locations: [CLLocation]
     let heartRates: [HKDiscreteQuantitySample]
     let runningPower: [HKDiscreteQuantitySample]
-
-    init(workout: HKWorkout, locations: [CLLocation], heartRates: [HKDiscreteQuantitySample], runningPower: [HKDiscreteQuantitySample]) {
+    let cyclingPower: [HKDiscreteQuantitySample]
+    
+    init(workout: HKWorkout, locations: [CLLocation], heartRates: [HKDiscreteQuantitySample], runningPower: [HKDiscreteQuantitySample], cyclingPower: [HKDiscreteQuantitySample]) {
         self.workout = workout
         self.locations = locations
         self.heartRates = heartRates
         self.runningPower = runningPower
+        self.cyclingPower = cyclingPower
     }
 }
 
