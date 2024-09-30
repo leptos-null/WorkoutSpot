@@ -73,6 +73,7 @@ class GraphDrawView: UIView {
         guard let guides = viewModel.guides else { return }
         
         let pairs: [(guide: GraphGuide?, color: UIColor)] = [
+            (guides.cyclingPower, .cyclingPower),
             (guides.runningPower, .runningPower),
             (guides.heartRate, .heartRate),
             (guides.speed, .speed),
