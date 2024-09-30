@@ -58,14 +58,14 @@ struct WorkoutSegmentStatsView: View {
             
             if let distance = stats.distance {
                 TitleValueInlineView(title: "Distance") {
-                    Text(meters: distance.delta(), width: .abbreviated, unit: unitPreferences.distanceUnit)
+                    Text.meters(distance.delta(), width: .abbreviated, unit: unitPreferences.distanceUnit)
                 }
                 .foregroundStyle(Color(uiColor: .workoutSegment))
             }
             
             if let ascending = stats.ascending {
                 TitleValueInlineView(title: "Climbing") {
-                    Text(meters: ascending.delta(), width: .abbreviated, unit: unitPreferences.altitudeUnit)
+                    Text.meters(ascending.delta(), width: .abbreviated, unit: unitPreferences.altitudeUnit)
                 }
                 .foregroundStyle(Color(uiColor: .altitude))
             }
@@ -82,7 +82,7 @@ struct WorkoutSegmentStatsView: View {
             
             if let distance = stats.distance, let time = stats.time {
                 TitleValueInlineView(title: "Avg. Speed") {
-                    Text(metersPerSecond: distance.delta() / time.delta(), width: .abbreviated, unit: unitPreferences.speedUnit)
+                    Text.metersPerSecond(distance.delta() / time.delta(), width: .abbreviated, unit: unitPreferences.speedUnit)
                 }
                 .foregroundStyle(Color(uiColor: .speed))
             }

@@ -29,11 +29,11 @@ struct WorkoutExtremaStatsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if let altitude = data.altitude {
-                Text(meters: value(for: altitude), width: .abbreviated, unit: unitPreferences.altitudeUnit)
+                Text.meters(value(for: altitude), width: .abbreviated, unit: unitPreferences.altitudeUnit)
                     .foregroundStyle(Color(uiColor: .altitude))
             }
             if let speed = data.speed {
-                Text(metersPerSecond: value(for: speed), width: .abbreviated, unit: unitPreferences.speedUnit)
+                Text.metersPerSecond(value(for: speed), width: .abbreviated, unit: unitPreferences.speedUnit)
                     .foregroundStyle(Color(uiColor: .speed))
             }
             if let heartRate = data.heartRate {

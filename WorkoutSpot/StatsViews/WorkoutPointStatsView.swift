@@ -26,12 +26,12 @@ struct WorkoutPointStatsView: View {
             
             if let distance = stats.distance {
                 TitleValueInlineView(title: "Distance") {
-                    Text(meters: distance, width: .abbreviated, unit: unitPreferences.distanceUnit)
+                    Text.meters(distance, width: .abbreviated, unit: unitPreferences.distanceUnit)
                 }
             }
             if let altitude = stats.altitude {
                 TitleValueInlineView(title: "Altitude") {
-                    Text(meters: altitude, width: .abbreviated, unit: unitPreferences.altitudeUnit)
+                    Text.meters(altitude, width: .abbreviated, unit: unitPreferences.altitudeUnit)
                 }
                 .foregroundStyle(Color(uiColor: .altitude))
             }
@@ -46,7 +46,7 @@ struct WorkoutPointStatsView: View {
             
             if let speed = stats.speed {
                 TitleValueInlineView(title: "Speed") {
-                    Text(metersPerSecond: speed, width: .abbreviated, unit: unitPreferences.speedUnit)
+                    Text.metersPerSecond(speed, width: .abbreviated, unit: unitPreferences.speedUnit)
                 }
                 .foregroundStyle(Color(uiColor: .speed))
             }
