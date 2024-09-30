@@ -40,7 +40,30 @@ final class KeyedWorkoutData {
     
     let heartRate: ScalarSeries?
     let runningPower: ScalarSeries?
-
+    
+    private static func seriesFor(samples: [HKDiscreteQuantitySample], unit: HKUnit, baseDate: Date, domainLength: Int) -> ScalarSeries {
+        let sampleCount = samples.count
+        
+        let values = UnsafeMutableBufferPointer<Double>.allocate(capacity: sampleCount)
+        let keys = UnsafeMutableBufferPointer<TimeInterval>.allocate(capacity: sampleCount)
+        
+        for (index, sample) in samples.enumerated() {
+            values[index] = sample.quantity.doubleValue(for: unit)
+            keys[index] = sample.startDate.timeIntervalSince(baseDate)
+        }
+        
+        let series = ScalarSeries(
+            values: values,
+            keys: keys,
+            domainMagnitude: domainLength
+        )
+        
+        keys.deallocate()
+        values.deallocate()
+        
+        return series
+    }
+    
     init(timeKey workoutData: RawWorkoutData) {
         let startDate = workoutData.workout.startDate
         let endDate = workoutData.workout.endDate
@@ -80,28 +103,6 @@ final class KeyedWorkoutData {
             }
         }
         
-        let heartRates = workoutData.heartRates
-        let heartRateCount = heartRates.count
-        
-        let heartRateValues = UnsafeMutableBufferPointer<Double>.allocate(capacity: heartRateCount)
-        let heartRateKeys = UnsafeMutableBufferPointer<TimeInterval>.allocate(capacity: heartRateCount)
-        
-        for (index, heartRate) in heartRates.enumerated() {
-            heartRateValues[index] = heartRate.quantity.doubleValue(for: .beatsPerSecond)
-            heartRateKeys[index] = heartRate.startDate.timeIntervalSince(startDate)
-        }
-        
-        let runningPowers = workoutData.runningPower
-        let runningPowerCount = runningPowers.count
-        
-        let runningPowerValues = UnsafeMutableBufferPointer<Double>.allocate(capacity: runningPowerCount)
-        let runningPowerKeys = UnsafeMutableBufferPointer<TimeInterval>.allocate(capacity: runningPowerCount)
-        
-        for (index, runningPower) in runningPowers.enumerated() {
-            runningPowerValues[index] = runningPower.quantity.doubleValue(for: .watt())
-            runningPowerKeys[index] = runningPower.startDate.timeIntervalSince(startDate)
-        }
-
         let altitudeSeries = altitudeCount == 0 ? nil : ScalarSeries(
             values: altitudeValues[0..<altitudeCount],
             keys: altitudeKeys[0..<altitudeCount],
@@ -113,18 +114,16 @@ final class KeyedWorkoutData {
             domainMagnitude: domainLength
         )
         
-        let heartRateSeries = ScalarSeries(
-            values: heartRateValues,
-            keys: heartRateKeys,
-            domainMagnitude: domainLength
+        let heartRateSeries = Self.seriesFor(
+            samples: workoutData.heartRates, unit: .beatsPerSecond,
+            baseDate: startDate, domainLength: domainLength
         )
-
-        let runningPowerSeries = ScalarSeries(
-            values: runningPowerValues,
-            keys: runningPowerKeys,
-            domainMagnitude: domainLength
+        
+        let runningPowerSeries = Self.seriesFor(
+            samples: workoutData.runningPower, unit: .watt(),
+            baseDate: startDate, domainLength: domainLength
         )
-
+        
         let distanceSeries = coordinateSeries?.stepHeight().stairCase()
         
         let climbing = altitudeSeries?.stepHeight()
@@ -148,12 +147,6 @@ final class KeyedWorkoutData {
         
         self.heartRate = heartRateSeries
         self.runningPower = runningPowerSeries
-        
-        runningPowerValues.deallocate()
-        runningPowerKeys.deallocate()
-        
-        heartRateValues.deallocate()
-        heartRateKeys.deallocate()
         
         coordinateValues.deallocate()
         coordinateKeys.deallocate()
