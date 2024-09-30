@@ -93,6 +93,12 @@ struct WorkoutSegmentStatsView: View {
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
             }
+            if let runningPower = timeStats.runningPower {
+                TitleValueInlineView(title: "Avg. Power", accessibilityLabel: "Average Power") {
+                    Text(watts: runningPower.average(), width: .abbreviated)
+                }
+                .foregroundStyle(Color(uiColor: .runningPower))
+            }
         }
     }
 }

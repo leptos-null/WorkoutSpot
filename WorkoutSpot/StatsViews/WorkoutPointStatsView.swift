@@ -56,6 +56,12 @@ struct WorkoutPointStatsView: View {
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
             }
+            if let runningPower = stats.runningPower {
+                TitleValueInlineView(title: "Power") {
+                    Text(watts: runningPower, width: .abbreviated)
+                }
+                .foregroundStyle(Color(uiColor: .runningPower))
+            }
         }
     }
 }

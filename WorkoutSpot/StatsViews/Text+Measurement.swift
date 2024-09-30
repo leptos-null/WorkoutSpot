@@ -76,3 +76,14 @@ extension Text {
             .accessibilityLabel(Text(beatsPerSecond: beatsPerSecond, width: .wide))
     }
 }
+
+extension Text {
+    // we only support showing power in watts right now, so use the preferred API until we need to change
+    init(watts: Double, width: Measurement<UnitPower>.FormatStyle.UnitWidth) {
+        let measurement = Measurement(value: watts, unit: UnitPower.watts)
+        self.init(
+            measurement,
+            format: .measurement(width: width, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(0)))
+        )
+    }
+}
