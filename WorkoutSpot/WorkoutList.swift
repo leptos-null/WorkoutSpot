@@ -82,13 +82,15 @@ struct WorkoutList: View {
             }
         } detail: {
             if let selection, let workout = workoutSource.workout(for: selection) {
-                WorkoutDetail(workout: workout)
+                WorkoutDetail(workout: workout, healthStore: healthStore)
+                    .navigationTitle(workout.workoutActivityType.debugDescription) // TODO: user facing string
+                    .navigationBarTitleDisplayMode(.inline)
             } else {
                 Text("Select a workout from the sidebar")
             }
         }
         .task {
-            // TODO
+            // TODO: error handling
             try! await healthStore.requestReadAuthorizationIfNeeded()
             try! await workoutSource.prefetch(limit: 20)
             self.trailFetchInFlight = true
@@ -112,7 +114,7 @@ struct WorkoutCell: View {
                 .font(.title)
             
             VStack(alignment: .leading) {
-                Text(workout.workoutActivityType.debugDescription) // TODO
+                Text(workout.workoutActivityType.debugDescription) // TODO: user facing string
                     .font(.body)
                 Text(dateRange, format: Date.IntervalFormatStyle(date: .omitted, time: .standard))
                     .font(.subheadline)
@@ -127,11 +129,39 @@ struct WorkoutCell: View {
     }
 }
 
+final class WorkoutDetailViewModel: ObservableObject {
+    @Published private(set) var analysis: WorkoutAnalysis?
+    
+    func update(for workout: HKWorkout, healthStore: HealthStore) async {
+        // TODO: error handling
+        let workoutData = try! await healthStore.rawWorkoutData(for: workout)
+        let analysis = WorkoutAnalysis(rawWorkoutData: workoutData)
+        await MainActor.run {
+            self.analysis = analysis
+        }
+    }
+}
+
 struct WorkoutDetail: View {
+    @StateObject private var viewModel = WorkoutDetailViewModel()
+    
     let workout: HKWorkout
+    let healthStore: HealthStore
     
     var body: some View {
-        Text(verbatim: "TODO")
+        if let analysis = viewModel.analysis {
+            KeyedWorkoutView(viewModel: .init(analysis: analysis))
+                .onChange(of: workout) { newValue in
+                    Task {
+                        await viewModel.update(for: newValue, healthStore: healthStore)
+                    }
+                }
+        } else {
+            ProgressView()
+                .task {
+                    await viewModel.update(for: workout, healthStore: healthStore)
+                }
+        }
     }
 }
 
