@@ -44,6 +44,10 @@ struct WorkoutExtremaStatsView: View {
                 Text(watts: value(for: runningPower), width: .abbreviated)
                     .foregroundStyle(Color(uiColor: .runningPower))
             }
+            if let cyclingPower = data.cyclingPower {
+                Text(watts: value(for: cyclingPower), width: .abbreviated)
+                    .foregroundStyle(Color(uiColor: .cyclingPower))
+            }
         }
         .font(.footnote)
     }
