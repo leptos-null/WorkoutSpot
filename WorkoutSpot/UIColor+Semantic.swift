@@ -9,6 +9,7 @@
 import UIKit
 
 extension UIColor {
+    static var cyclingPower: UIColor { systemPurple }
     static var runningPower: UIColor { systemPurple }
     static var heartRate: UIColor { systemRed }
     static var speed: UIColor { systemBlue }
