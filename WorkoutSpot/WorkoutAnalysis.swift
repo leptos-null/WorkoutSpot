@@ -40,6 +40,7 @@ final class KeyedWorkoutData {
     
     let heartRate: ScalarSeries?
     let runningPower: ScalarSeries?
+    let cyclingPower: ScalarSeries?
     
     private static func seriesFor(samples: [HKDiscreteQuantitySample], unit: HKUnit, baseDate: Date, domainLength: Int) -> ScalarSeries? {
         let sampleCount = samples.count
@@ -125,6 +126,11 @@ final class KeyedWorkoutData {
             baseDate: startDate, domainLength: domainLength
         )
         
+        let cyclingPowerSeries = Self.seriesFor(
+            samples: workoutData.cyclingPower, unit: .watt(),
+            baseDate: startDate, domainLength: domainLength
+        )
+        
         let distanceSeries = coordinateSeries?.stepHeight().stairCase()
         
         let climbing = altitudeSeries?.stepHeight()
@@ -148,6 +154,7 @@ final class KeyedWorkoutData {
         
         self.heartRate = heartRateSeries
         self.runningPower = runningPowerSeries
+        self.cyclingPower = cyclingPowerSeries
         
         coordinateValues.deallocate()
         coordinateKeys.deallocate()
@@ -184,6 +191,7 @@ final class KeyedWorkoutData {
         
         self.heartRate = source.heartRate?.convert(to: domainSeries)
         self.runningPower = source.runningPower?.convert(to: domainSeries)
+        self.cyclingPower = source.cyclingPower?.convert(to: domainSeries)
     }
 }
 
