@@ -61,31 +61,44 @@ struct WorkoutList: View {
                     if let fetchError = prefetchError ?? workoutSource.error {
                         ErrorBulletinView("An error occurred fetching workouts.", error: fetchError)
                     }
-                    List(selection: $selection) {
-                        ForEach(datedWorkouts) { staple in
-                            Section {
-                                ForEach(staple.workouts) { workout in
-                                    WorkoutCell(workout: workout)
+                    if datedWorkouts.isEmpty {
+                        // we would like to use `ContentUnavailableView`, but it's iOS 17+
+                        VStack(spacing: 12) {
+                            Spacer()
+                            Text("No Workouts")
+                                .font(.headline)
+                            
+                            Text("Ensure that WorkoutSpot has permissions to view your workouts in HealthKit. To add a workout to HealthKit, record or import a workout with an app that Works with Apple Health.")
+                            Spacer()
+                        }
+                        .padding(24)
+                    } else {
+                        List(selection: $selection) {
+                            ForEach(datedWorkouts) { staple in
+                                Section {
+                                    ForEach(staple.workouts) { workout in
+                                        WorkoutCell(workout: workout)
+                                    }
+                                } header: {
+                                    Text(staple.date, style: .date)
+                                        .font(.title3)
                                 }
-                            } header: {
-                                Text(staple.date, style: .date)
-                                    .font(.title3)
+                            }
+                            if trailFetchInFlight {
+                                HStack {
+                                    Spacer()
+                                    ProgressView()
+                                    Spacer()
+                                }
                             }
                         }
-                        if trailFetchInFlight {
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                        }
+                        .listStyle(.insetGrouped)
                     }
-                    .listStyle(.insetGrouped)
-                    .navigationTitle("Workouts")
-                    .refreshable {
-                        await withCheckedContinuation { continuation in
-                            workoutSource.streamUpdates(initialCompletion: continuation.resume)
-                        }
+                }
+                .navigationTitle("Workouts")
+                .refreshable {
+                    await withCheckedContinuation { continuation in
+                        workoutSource.streamUpdates(initialCompletion: continuation.resume)
                     }
                 }
             } else {
