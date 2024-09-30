@@ -41,8 +41,9 @@ final class KeyedWorkoutData {
     let heartRate: ScalarSeries?
     let runningPower: ScalarSeries?
     
-    private static func seriesFor(samples: [HKDiscreteQuantitySample], unit: HKUnit, baseDate: Date, domainLength: Int) -> ScalarSeries {
+    private static func seriesFor(samples: [HKDiscreteQuantitySample], unit: HKUnit, baseDate: Date, domainLength: Int) -> ScalarSeries? {
         let sampleCount = samples.count
+        guard sampleCount > 0 else { return nil }
         
         let values = UnsafeMutableBufferPointer<Double>.allocate(capacity: sampleCount)
         let keys = UnsafeMutableBufferPointer<TimeInterval>.allocate(capacity: sampleCount)
