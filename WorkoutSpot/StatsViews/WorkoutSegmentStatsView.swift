@@ -71,7 +71,7 @@ struct WorkoutSegmentStatsView: View {
             }
             
             if let altitude = stats.altitude, let distance = stats.distance {
-                TitleValueInlineView(title: "Avg. Grade") {
+                TitleValueInlineView(title: "Avg. Grade", accessibilityLabel: "Average Grade") {
                     Text(
                         altitude.delta() / distance.delta(),
                         format: .percent.precision(.fractionLength(2))
@@ -81,14 +81,14 @@ struct WorkoutSegmentStatsView: View {
             }
             
             if let distance = stats.distance, let time = stats.time {
-                TitleValueInlineView(title: "Avg. Speed") {
+                TitleValueInlineView(title: "Avg. Speed", accessibilityLabel: "Average Speed") {
                     Text.metersPerSecond(distance.delta() / time.delta(), width: .abbreviated, unit: unitPreferences.speedUnit)
                 }
                 .foregroundStyle(Color(uiColor: .speed))
             }
             
             if let heartRate = timeStats.heartRate {
-                TitleValueInlineView(title: "Avg. ♥ Rate") {
+                TitleValueInlineView(title: "Avg. ♥ Rate", accessibilityLabel: "Average Heart Rate") {
                     Text.beatsPerSecond(heartRate.average(), width: .abbreviated)
                 }
                 .foregroundStyle(Color(uiColor: .heartRate))
