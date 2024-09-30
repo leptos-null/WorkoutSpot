@@ -132,6 +132,9 @@ struct BoundedPosition: Layout {
 struct KeyedWorkoutView: View {
     @ObservedObject var viewModel: KeyedWorkoutViewModel
     @StateObject private var graphViewModel = GraphDrawViewModel()
+    @StateObject private var unitPreferences: UnitPreferences = .shared
+    
+    @Environment(\.locale) private var locale
     
     private let pointStatsViewRadius: CGFloat = 8
     private let horizontalInset: CGFloat = 4
@@ -142,6 +145,14 @@ struct KeyedWorkoutView: View {
               let graphGuides = graphViewModel.guides,
               let keyGuide = graphGuides.keySeries else { return nil }
         return keyGuide.xForOffset(indx - graphGuides.data.startIndex)
+    }
+    
+    private func pickerUnitFormatter() -> MeasurementFormatter {
+        let formatter = MeasurementFormatter()
+        formatter.unitOptions = .providedUnit
+        formatter.unitStyle = .medium
+        formatter.locale = locale
+        return formatter
     }
     
     var body: some View {
@@ -231,6 +242,47 @@ struct KeyedWorkoutView: View {
             WorkoutGraphPreview(viewModel: viewModel)
                 .frame(height: 36)
                 .padding(.top, 2)
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu("Units") {
+                    let formatter = pickerUnitFormatter()
+                    Group {
+                        Picker(
+                            "Distance", systemImage: "ruler", selection: $unitPreferences.distanceUnit,
+                            measurementFormatter: formatter, units: [
+                                .kilometers, .miles, .yards
+                            ]
+                        )
+                        
+                        Picker(
+                            "Altitude", systemImage: "barometer", selection: $unitPreferences.altitudeUnit,
+                            measurementFormatter: formatter, units: [
+                                .meters, .feet, .yards
+                            ]
+                        )
+                        
+                        Picker(
+                            "Speed", systemImage: "speedometer", selection: $unitPreferences.speedUnit,
+                            measurementFormatter: formatter, units: [
+                                .kilometersPerHour, .milesPerHour, .knots
+                            ]
+                        )
+                    }
+                    .pickerStyle(.menu)
+                }
+            }
+        }
+    }
+}
+
+extension Picker where Label == SwiftUI.Label<Text, Image>, SelectionValue: Foundation.Unit {
+    init<Units>(_ titleKey: LocalizedStringKey, systemImage: String, selection: Binding<SelectionValue>, measurementFormatter: MeasurementFormatter, units: Units)
+    where Units: RandomAccessCollection, Units.Element == SelectionValue, Content == ForEach<Units, SelectionValue, Text> {
+        self.init(titleKey, systemImage: systemImage, selection: selection) {
+            ForEach(units, id: \.self) { unit in
+                Text(measurementFormatter.string(from: unit))
+            }
         }
     }
 }
