@@ -39,7 +39,8 @@ final class KeyedWorkoutData {
     let descending: ScalarSeries?
     
     let heartRate: ScalarSeries?
-    
+    let runningPower: ScalarSeries?
+
     init(timeKey workoutData: RawWorkoutData) {
         let startDate = workoutData.workout.startDate
         let endDate = workoutData.workout.endDate
@@ -90,6 +91,17 @@ final class KeyedWorkoutData {
             heartRateKeys[index] = heartRate.startDate.timeIntervalSince(startDate)
         }
         
+        let runningPowers = workoutData.runningPower
+        let runningPowerCount = runningPowers.count
+        
+        let runningPowerValues = UnsafeMutableBufferPointer<Double>.allocate(capacity: runningPowerCount)
+        let runningPowerKeys = UnsafeMutableBufferPointer<TimeInterval>.allocate(capacity: runningPowerCount)
+        
+        for (index, runningPower) in runningPowers.enumerated() {
+            runningPowerValues[index] = runningPower.quantity.doubleValue(for: .watt())
+            runningPowerKeys[index] = runningPower.startDate.timeIntervalSince(startDate)
+        }
+
         let altitudeSeries = altitudeCount == 0 ? nil : ScalarSeries(
             values: altitudeValues[0..<altitudeCount],
             keys: altitudeKeys[0..<altitudeCount],
@@ -106,7 +118,13 @@ final class KeyedWorkoutData {
             keys: heartRateKeys,
             domainMagnitude: domainLength
         )
-        
+
+        let runningPowerSeries = ScalarSeries(
+            values: runningPowerValues,
+            keys: runningPowerKeys,
+            domainMagnitude: domainLength
+        )
+
         let distanceSeries = coordinateSeries?.stepHeight().stairCase()
         
         let climbing = altitudeSeries?.stepHeight()
@@ -129,6 +147,10 @@ final class KeyedWorkoutData {
         self.descending = climbing?.clipping(to: (-.infinity)...0).stairCase()
         
         self.heartRate = heartRateSeries
+        self.runningPower = runningPowerSeries
+        
+        runningPowerValues.deallocate()
+        runningPowerKeys.deallocate()
         
         heartRateValues.deallocate()
         heartRateKeys.deallocate()
@@ -167,6 +189,7 @@ final class KeyedWorkoutData {
         self.descending = climbing?.clipping(to: (-.infinity)...0).stairCase()
         
         self.heartRate = source.heartRate?.convert(to: domainSeries)
+        self.runningPower = source.runningPower?.convert(to: domainSeries)
     }
 }
 

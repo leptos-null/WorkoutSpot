@@ -19,7 +19,8 @@ final class HealthStore {
     static let sampleTypes: Set<HKSampleType> = [
         HKWorkoutType.workoutType(),
         HKQuantityType(.heartRate),
-        HKSeriesType.workoutRoute()
+        HKSeriesType.workoutRoute(),
+        HKQuantityType(.runningPower),
     ]
     
     func requestReadAuthorizationIfNeeded() async throws {
@@ -118,7 +119,11 @@ final class HealthStore {
         let heartRateType = HKQuantityType(.heartRate)
         // "HealthKit returns quantities in ascending order, based on their start date"
         async let heartRatePromise = queryQuantitySeries(quantityType: heartRateType, predicate: predicate)
-        
+
+        let runningPowerType = HKQuantityType(.runningPower)
+        // "HealthKit returns quantities in ascending order, based on their start date"
+        async let runningPowerPromise = queryQuantitySeries(quantityType: runningPowerType, predicate: predicate)
+
         async let locationsPromise = queryWorkoutRoute(predicate: predicate, sortDescriptors: [
             NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
         ])
@@ -126,7 +131,8 @@ final class HealthStore {
         return RawWorkoutData(
             workout: workout,
             locations: try await locationsPromise,
-            heartRates: try await heartRatePromise
+            heartRates: try await heartRatePromise,
+            runningPower: try await runningPowerPromise
         )
     }
 }
@@ -136,11 +142,13 @@ final class RawWorkoutData {
     
     let locations: [CLLocation]
     let heartRates: [HKDiscreteQuantitySample]
-    
-    init(workout: HKWorkout, locations: [CLLocation], heartRates: [HKDiscreteQuantitySample]) {
+    let runningPower: [HKDiscreteQuantitySample]
+
+    init(workout: HKWorkout, locations: [CLLocation], heartRates: [HKDiscreteQuantitySample], runningPower: [HKDiscreteQuantitySample]) {
         self.workout = workout
         self.locations = locations
         self.heartRates = heartRates
+        self.runningPower = runningPower
     }
 }
 
