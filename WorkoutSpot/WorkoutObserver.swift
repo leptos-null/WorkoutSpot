@@ -12,6 +12,7 @@ import HealthKit
 final class WorkoutObserver: ObservableObject {
     // sorted descending by start date
     @Published private(set) var workouts: [HKWorkout]?
+    @Published private(set) var error: Error?
     
     let healthStore: HKHealthStore
     
@@ -83,14 +84,16 @@ final class WorkoutObserver: ObservableObject {
         var completion = initialCompletion
         var localWorkouts: [HKWorkout] = []
         var localLookup: [UUID: HKWorkout] = [:]
+        var localError: Error? = nil
         
         let updateHandler: (HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void = { [weak self] query, samples, deletes, anchor, error in
             DispatchQueue.main.async {
+                guard let self else { return }
                 if let error {
-                    //
+                    localError = error
+                    self.error = localError
                     return
                 }
-                guard let self else { return }
                 
                 if let workouts = samples as? [HKWorkout] {
                     for workout in workouts {
@@ -131,6 +134,7 @@ final class WorkoutObserver: ObservableObject {
                 
                 self.workouts = localWorkouts
                 self.workoutLookup = localLookup
+                self.error = localError
                 completion?()
                 completion = nil
             }

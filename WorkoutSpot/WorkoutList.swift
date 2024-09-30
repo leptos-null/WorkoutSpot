@@ -25,6 +25,9 @@ struct WorkoutList: View {
     @State private var selection: HKWorkout.ID?
     @State private var trailFetchInFlight = false
     
+    @State private var healthAuthError: Error?
+    @State private var prefetchError: Error?
+    
     @StateObject private var workoutSource: WorkoutObserver
     
     @Environment(\.calendar) private var calendar
@@ -51,30 +54,38 @@ struct WorkoutList: View {
     var body: some View {
         NavigationSplitView {
             if let datedWorkouts {
-                List(selection: $selection) {
-                    ForEach(datedWorkouts) { staple in
-                        Section {
-                            ForEach(staple.workouts) { workout in
-                                WorkoutCell(workout: workout)
+                VStack {
+                    if let healthAuthError {
+                        ErrorBulletinView("An error occurred getting HealthKit authorization.", error: healthAuthError)
+                    }
+                    if let fetchError = prefetchError ?? workoutSource.error {
+                        ErrorBulletinView("An error occurred fetching workouts.", error: fetchError)
+                    }
+                    List(selection: $selection) {
+                        ForEach(datedWorkouts) { staple in
+                            Section {
+                                ForEach(staple.workouts) { workout in
+                                    WorkoutCell(workout: workout)
+                                }
+                            } header: {
+                                Text(staple.date, style: .date)
+                                    .font(.title3)
                             }
-                        } header: {
-                            Text(staple.date, style: .date)
-                                .font(.title3)
+                        }
+                        if trailFetchInFlight {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
                         }
                     }
-                    if trailFetchInFlight {
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
+                    .listStyle(.insetGrouped)
+                    .navigationTitle("Workouts")
+                    .refreshable {
+                        await withCheckedContinuation { continuation in
+                            workoutSource.streamUpdates(initialCompletion: continuation.resume)
                         }
-                    }
-                }
-                .listStyle(.insetGrouped)
-                .navigationTitle("Workouts")
-                .refreshable {
-                    await withCheckedContinuation { continuation in
-                        workoutSource.streamUpdates(initialCompletion: continuation.resume)
                     }
                 }
             } else {
@@ -90,14 +101,42 @@ struct WorkoutList: View {
             }
         }
         .task {
-            // TODO: error handling
-            try! await healthStore.requestReadAuthorizationIfNeeded()
-            try! await workoutSource.prefetch(limit: 20)
+            do {
+                try await healthStore.requestReadAuthorizationIfNeeded()
+            } catch {
+                self.healthAuthError = error
+                // don't return, maybe we can still read some data
+            }
+            do {
+                try await workoutSource.prefetch(limit: 20)
+            } catch {
+                self.prefetchError = error
+                return
+            }
             self.trailFetchInFlight = true
             workoutSource.streamUpdates {
                 trailFetchInFlight = false
             }
         }
+    }
+}
+
+struct ErrorBulletinView<S: StringProtocol>: View {
+    let title: S
+    let error: Error
+    
+    init(_ title: S, error: Error) {
+        self.title = title
+        self.error = error
+    }
+    
+    var body: some View {
+        VStack {
+            Label(title, systemImage: "exclamationmark.triangle")
+            Text(error.localizedDescription)
+        }
+        .padding(12)
+        .background(Color.red, in: RoundedRectangle(cornerRadius: 8))
     }
 }
 
@@ -130,14 +169,20 @@ struct WorkoutCell: View {
 }
 
 final class WorkoutDetailViewModel: ObservableObject {
-    @Published private(set) var analysis: WorkoutAnalysis?
+    @Published private(set) var analysis: Result<WorkoutAnalysis, Error>?
     
     func update(for workout: HKWorkout, healthStore: HealthStore) async {
-        // TODO: error handling
-        let workoutData = try! await healthStore.rawWorkoutData(for: workout)
-        let analysis = WorkoutAnalysis(rawWorkoutData: workoutData)
+        let result: Result<WorkoutAnalysis, Error>
+        do {
+            let workoutData = try await healthStore.rawWorkoutData(for: workout)
+            let analysis = WorkoutAnalysis(rawWorkoutData: workoutData)
+            result = .success(analysis)
+        } catch {
+            result = .failure(error)
+        }
+        
         await MainActor.run {
-            self.analysis = analysis
+            self.analysis = result
         }
     }
 }
@@ -149,13 +194,20 @@ struct WorkoutDetail: View {
     let healthStore: HealthStore
     
     var body: some View {
-        if let analysis = viewModel.analysis {
-            KeyedWorkoutView(viewModel: .init(analysis: analysis))
-                .onChange(of: workout) { newValue in
-                    Task {
-                        await viewModel.update(for: newValue, healthStore: healthStore)
-                    }
+        if let result = viewModel.analysis {
+            Group {
+                switch result {
+                case .success(let analysis):
+                    KeyedWorkoutView(viewModel: .init(analysis: analysis))
+                case .failure(let error):
+                    ErrorBulletinView("An error occurred fetching data for this workout.", error: error)
                 }
+            }
+            .onChange(of: workout) { newValue in
+                Task {
+                    await viewModel.update(for: newValue, healthStore: healthStore)
+                }
+            }
         } else {
             ProgressView()
                 .task {
