@@ -233,3 +233,42 @@ struct WorkoutDetail: View {
 extension HKObject: @retroactive Identifiable {
     public var id: UUID { uuid }
 }
+
+extension HKWorkout {
+    var distanceQuantityTypeIdentifier: HKQuantityTypeIdentifier? {
+        switch workoutActivityType {
+        case .cycling: .distanceCycling
+        case .hiking: .distanceWalkingRunning // not sure
+        case .walking, .running: .distanceWalkingRunning
+        case .swimming: .distanceSwimming
+        case .downhillSkiing: .distanceDownhillSnowSports
+        case .snowboarding: .distanceDownhillSnowSports
+        case .wheelchairWalkPace, .wheelchairRunPace: .distanceWheelchair
+        case .paddleSports:
+            if #available(iOS 18.0, *) {
+                .distancePaddleSports
+            } else {
+                nil
+            }
+        case .rowing:
+            if #available(iOS 18.0, *) {
+                .distanceRowing
+            } else {
+                nil
+            }
+        case .skatingSports:
+            if #available(iOS 18.0, *) {
+                .distanceSkatingSports
+            } else {
+                nil
+            }
+        case .crossCountrySkiing:
+            if #available(iOS 18.0, *) {
+                .distanceCrossCountrySkiing
+            } else {
+                nil
+            }
+        default: nil
+        }
+    }
+}
