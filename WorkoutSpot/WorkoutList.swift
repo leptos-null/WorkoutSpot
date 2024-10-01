@@ -176,7 +176,33 @@ struct WorkoutCell: View {
             VStack(alignment: .trailing) {
                 Text(dateRange, format: .components(style: .condensedAbbreviated))
                     .font(.headline)
+                WorkoutAccessoryLabel(workout: workout)
             }
+        }
+    }
+}
+
+struct WorkoutAccessoryLabel: View {
+    let workout: HKWorkout
+    
+    @StateObject private var unitPreferences: UnitPreferences = .shared
+    
+    private var accessoryText: Text? {
+        if let quantityTypeIdentifier = workout.distanceQuantityTypeIdentifier,
+           let statistics = workout.statistics(for: HKQuantityType(quantityTypeIdentifier)),
+           let totalDistance = statistics.sumQuantity() {
+            let meters = totalDistance.doubleValue(for: .meter())
+            return Text.meters(meters, width: .abbreviated, unit: unitPreferences.distanceUnit)
+        }
+        
+        return nil
+    }
+    
+    var body: some View {
+        if let accessoryText {
+            accessoryText
+                .font(.callout)
+                .foregroundStyle(.secondary)
         }
     }
 }
