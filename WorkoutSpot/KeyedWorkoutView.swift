@@ -158,7 +158,11 @@ struct KeyedWorkoutView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
-                if let coordinates = viewModel.keyedData.coordinate,
+                // we always want to use the same coordinate series
+                // since WorkoutMap re-focuses the map if the input
+                // coordinates change (even if the route appears the same).
+                // Use time domain because it's non-optional and usually has less points
+                if let coordinates = viewModel.analysis.timeDomain.coordinate,
                    let startUnit = viewModel.segmentStartUnit,
                    let endUnit = viewModel.segmentEndUnit {
                     WorkoutMap(
