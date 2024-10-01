@@ -107,7 +107,7 @@ struct WorkoutList: View {
         } detail: {
             if let selection, let workout = workoutSource.workout(for: selection) {
                 WorkoutDetail(workout: workout, healthStore: healthStore)
-                    .navigationTitle(workout.workoutActivityType.debugDescription) // TODO: user facing string
+                    .navigationTitle(workout.workoutActivityType.localizedName)
                     .navigationBarTitleDisplayMode(.inline)
             } else {
                 Text("Select a workout from the sidebar")
@@ -166,7 +166,7 @@ struct WorkoutCell: View {
                 .font(.title)
             
             VStack(alignment: .leading) {
-                Text(workout.workoutActivityType.debugDescription) // TODO: user facing string
+                Text(workout.workoutActivityType.localizedName)
                     .font(.body)
                 Text(dateRange, format: Date.IntervalFormatStyle(date: .omitted, time: .standard))
                     .font(.subheadline)
