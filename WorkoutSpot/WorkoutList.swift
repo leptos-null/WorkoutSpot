@@ -245,25 +245,25 @@ extension HKWorkout {
         case .snowboarding: .distanceDownhillSnowSports
         case .wheelchairWalkPace, .wheelchairRunPace: .distanceWheelchair
         case .paddleSports:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, visionOS 2.0, *) {
                 .distancePaddleSports
             } else {
                 nil
             }
         case .rowing:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, visionOS 2.0, *) {
                 .distanceRowing
             } else {
                 nil
             }
         case .skatingSports:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, visionOS 2.0, *) {
                 .distanceSkatingSports
             } else {
                 nil
             }
         case .crossCountrySkiing:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, visionOS 2.0, *) {
                 .distanceCrossCountrySkiing
             } else {
                 nil
