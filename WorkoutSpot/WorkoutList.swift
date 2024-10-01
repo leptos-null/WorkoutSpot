@@ -81,7 +81,7 @@ struct WorkoutList: View {
                                     }
                                 } header: {
                                     Text(staple.date, style: .date)
-                                        .font(.title3)
+                                        .font(.title3.weight(.semibold))
                                 }
                             }
                             if trailFetchInFlight {
@@ -168,7 +168,7 @@ struct WorkoutCell: View {
             VStack(alignment: .leading) {
                 Text(workout.workoutActivityType.localizedName)
                     .font(.body)
-                Text(dateRange, format: Date.IntervalFormatStyle(date: .omitted, time: .standard))
+                Text(dateRange, format: Date.IntervalFormatStyle(date: .omitted, time: .shortened))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
