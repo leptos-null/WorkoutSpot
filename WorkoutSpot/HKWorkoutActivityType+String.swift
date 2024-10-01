@@ -216,7 +216,7 @@ extension HKWorkoutActivityType {
         case .cycling:
             "figure.outdoor.cycle" // figure.indoor.cycle
         case .dance:
-            "figure.dance"
+            "figure.dance" // duplicate because this is deprecated
         case .danceInspiredTraining:
             "figure.dance" // duplicate because this is deprecated
         case .elliptical:
@@ -342,7 +342,7 @@ extension HKWorkoutActivityType {
         case .fitnessGaming:
             nil
         case .cardioDance:
-            "figure.dance" // note: double use of image
+            "figure.dance" // used in other cases, but those cases are deprecated
         case .socialDance:
             "figure.socialdance"
         case .pickleball:
@@ -442,12 +442,17 @@ extension HKWorkoutActivityType {
         case .handCycling: "Hand Cycling"
         case .discSports: "Disc Sports"
         case .fitnessGaming: "Fitness Gaming"
-        case .cardioDance: "Cardio Dance" // iOS just calls this "Dance" - that might just be to ease the transition from the deprecated "dance" case
+        case .cardioDance:
+            // iOS just calls this "Dance" - that might just be to ease the transition from the deprecated "dance" case
+            "Cardio Dance"
         case .socialDance: "Social Dance"
         case .pickleball: "Pickleball"
         case .cooldown: "Cooldown"
         case .swimBikeRun: "Multisport" // "Swim Bike Run"
-        case .transition: "Transition" // iOS calls this "Activity Transition" - see docs: workouts themeselves shouldn't be of this type, instead activities within a workout can be of this type
+        case .transition:
+            // iOS calls this "Activity Transition" - see docs: workouts themeselves
+            //   shouldn't be of this type, instead activities within a workout can be of this type
+            "Transition"
         case .underwaterDiving: "Underwater Diving" // iOS just calls this "Dive"
         case .other: "Other"
         @unknown default: "Unknown"
