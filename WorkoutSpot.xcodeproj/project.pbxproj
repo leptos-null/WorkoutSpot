@@ -104,9 +104,7 @@
 				FA1E7E462A3BB688007DC95D /* HealthStore.swift */,
 				FA8614CA2CA9E06A002877D7 /* UnitPreferences.swift */,
 				FA8614CC2CA9E258002877D7 /* UserDefaults+Typed.swift */,
-				FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */,
-				FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */,
-				FA1E7E522A3D8826007DC95D /* CoordinateSeries.swift */,
+				FAF05E6E2CABB48C00BB212D /* Processing */,
 				FA1E7E482A3BB6A6007DC95D /* WorkoutObserver.swift */,
 				FA1E7E442A3BB34E007DC95D /* HKWorkoutActivityType+String.swift */,
 				FA1E7E4C2A3BC72E007DC95D /* RangeReplaceableCollection+Merge.swift */,
@@ -138,6 +136,16 @@
 				FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */,
 			);
 			path = Graph;
+			sourceTree = "<group>";
+		};
+		FAF05E6E2CABB48C00BB212D /* Processing */ = {
+			isa = PBXGroup;
+			children = (
+				FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */,
+				FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */,
+				FA1E7E522A3D8826007DC95D /* CoordinateSeries.swift */,
+			);
+			path = Processing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
