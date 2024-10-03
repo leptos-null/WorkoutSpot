@@ -24,9 +24,11 @@ struct WorkoutList: View {
     
     @State private var selection: HKWorkout.ID?
     @State private var trailFetchInFlight = false
+    @State private var isPresentingDemoConfirmation: Bool = false
     
     @State private var healthAuthError: Error?
     @State private var prefetchError: Error?
+    @State private var demoWriteError: Error?
     
     @StateObject private var workoutSource: WorkoutObserver
     
@@ -51,6 +53,26 @@ struct WorkoutList: View {
         }
     }
     
+    private func writeDemoWorkouts() async throws {
+        try await healthStore.healthStore.requestAuthorization(toShare: HealthStore.sampleTypes, read: HealthStore.sampleTypes)
+        
+        let bundle: Bundle = .main
+        let archives = [
+            "AP2IL",
+            "IL2AP"
+        ]
+        
+        for archive in archives {
+            guard let url = bundle.url(forResource: archive, withExtension: "archive") else {
+                throw URLError(.resourceUnavailable)
+            }
+            let data = try Data(contentsOf: url)
+            let workoutData = try RawWorkoutData.unarchive(from: data)
+            
+            try await healthStore.write(workoutData: workoutData)
+        }
+    }
+    
     var body: some View {
         NavigationSplitView {
             if let datedWorkouts {
@@ -60,6 +82,9 @@ struct WorkoutList: View {
                     }
                     if let fetchError = prefetchError ?? workoutSource.error {
                         ErrorBulletinView("An error occurred fetching workouts.", error: fetchError)
+                    }
+                    if let demoWriteError {
+                        ErrorBulletinView("An error occurred writing demo workouts.", error: demoWriteError)
                     }
                     if datedWorkouts.isEmpty {
                         // we would like to use `ContentUnavailableView`, but it's iOS 17+
@@ -72,6 +97,30 @@ struct WorkoutList: View {
                             Spacer()
                         }
                         .padding(24)
+                        .gesture(
+                            LongPressGesture(minimumDuration: 2 /* seconds */)
+                                .onEnded { finished in
+                                    guard finished else { return }
+                                    isPresentingDemoConfirmation = true
+                                }
+                        )
+                        .alert("Add Demo Workouts", isPresented: $isPresentingDemoConfirmation) {
+                            Button("Cancel", role: .cancel) {
+                                isPresentingDemoConfirmation = false
+                            }
+                            Button("Add") {
+                                Task {
+                                    do {
+                                        try await writeDemoWorkouts()
+                                    } catch {
+                                        demoWriteError = error
+                                    }
+                                }
+                                isPresentingDemoConfirmation = false
+                            }
+                        } message: {
+                            Text("Add workouts to HealthKit? This is intended for demonstration purposes only. This operation may interfere with existing workouts in HealthKit. Workouts and associated data added by this operation may be removed from within the Health app, if needed.")
+                        }
                     } else {
                         List(selection: $selection) {
                             ForEach(datedWorkouts) { staple in
