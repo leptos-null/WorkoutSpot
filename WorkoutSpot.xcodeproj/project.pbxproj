@@ -32,6 +32,7 @@
 		FACFF2532A4B10A000340E22 /* WorkoutPointStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */; };
 		FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */; };
 		FAD39A5D2CACB4DB00E6509B /* CodingWorkingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39A5C2CACB4DB00E6509B /* CodingWorkingData.swift */; };
+		FAD39A692CACDAC900E6509B /* HealthStore+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39A682CACDAC900E6509B /* HealthStore+Writing.swift */; };
 		FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +64,7 @@
 		FACFF2522A4B10A000340E22 /* WorkoutPointStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPointStatsView.swift; sourceTree = "<group>"; };
 		FACFF2542A4B10F600340E22 /* WorkoutSegmentStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentStatsView.swift; sourceTree = "<group>"; };
 		FAD39A5C2CACB4DB00E6509B /* CodingWorkingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodingWorkingData.swift; sourceTree = "<group>"; };
+		FAD39A682CACDAC900E6509B /* HealthStore+Writing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HealthStore+Writing.swift"; sourceTree = "<group>"; };
 		FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Measurement.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +107,7 @@
 				FACFF2452A48E29500340E22 /* Graph */,
 				FA1E7E462A3BB688007DC95D /* HealthStore.swift */,
 				FAD39A5C2CACB4DB00E6509B /* CodingWorkingData.swift */,
+				FAD39A682CACDAC900E6509B /* HealthStore+Writing.swift */,
 				FA8614CA2CA9E06A002877D7 /* UnitPreferences.swift */,
 				FA8614CC2CA9E258002877D7 /* UserDefaults+Typed.swift */,
 				FAF05E6E2CABB48C00BB212D /* Processing */,
@@ -241,6 +244,7 @@
 				FA1E7E452A3BB34E007DC95D /* HKWorkoutActivityType+String.swift in Sources */,
 				FACFF2552A4B10F600340E22 /* WorkoutSegmentStatsView.swift in Sources */,
 				FACFF2472A48E2A200340E22 /* GraphGuide.swift in Sources */,
+				FAD39A692CACDAC900E6509B /* HealthStore+Writing.swift in Sources */,
 				FA1E7E472A3BB688007DC95D /* HealthStore.swift in Sources */,
 				FA1E7E552A3E5316007DC95D /* WorkoutAnalysis.swift in Sources */,
 				FACFF24F2A4AB2CF00340E22 /* UIColor+Semantic.swift in Sources */,
