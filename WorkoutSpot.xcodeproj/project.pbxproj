@@ -35,6 +35,9 @@
 		FAD39A692CACDAC900E6509B /* HealthStore+Writing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39A682CACDAC900E6509B /* HealthStore+Writing.swift */; };
 		FAD39A702CAF1E3200E6509B /* AP2IL.archive in Resources */ = {isa = PBXBuildFile; fileRef = FAD39A6C2CAF1E3200E6509B /* AP2IL.archive */; };
 		FAD39A722CAF1E3200E6509B /* IL2AP.archive in Resources */ = {isa = PBXBuildFile; fileRef = FAD39A6D2CAF1E3200E6509B /* IL2AP.archive */; };
+		FAD39AAE2CAF830100E6509B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD39AAA2CAF830100E6509B /* Assets.xcassets */; };
+		FAD39AAF2CAF830100E6509B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAB2CAF830100E6509B /* ContentView.swift */; };
+		FAD39AB02CAF830100E6509B /* WSIconApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAC2CAF830100E6509B /* WSIconApp.swift */; };
 		FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,11 +72,23 @@
 		FAD39A682CACDAC900E6509B /* HealthStore+Writing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HealthStore+Writing.swift"; sourceTree = "<group>"; };
 		FAD39A6C2CAF1E3200E6509B /* AP2IL.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = AP2IL.archive; sourceTree = "<group>"; };
 		FAD39A6D2CAF1E3200E6509B /* IL2AP.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = IL2AP.archive; sourceTree = "<group>"; };
+		FAD39A9C2CAF82EB00E6509B /* WSIcon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WSIcon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAD39AAA2CAF830100E6509B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAD39AAB2CAF830100E6509B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FAD39AAC2CAF830100E6509B /* WSIconApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSIconApp.swift; sourceTree = "<group>"; };
+		FAD39AB12CAF838000E6509B /* WSIcon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WSIcon.entitlements; sourceTree = "<group>"; };
 		FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Measurement.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FA5D552F2A3AB7C600135067 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD39A992CAF82EB00E6509B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -87,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				FA5D55342A3AB7C600135067 /* WorkoutSpot */,
+				FAD39AAD2CAF830100E6509B /* WSIcon */,
 				FA5D55332A3AB7C600135067 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -95,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				FA5D55322A3AB7C600135067 /* WorkoutSpot.app */,
+				FAD39A9C2CAF82EB00E6509B /* WSIcon.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,6 +175,17 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		FAD39AAD2CAF830100E6509B /* WSIcon */ = {
+			isa = PBXGroup;
+			children = (
+				FAD39AAC2CAF830100E6509B /* WSIconApp.swift */,
+				FAD39AAB2CAF830100E6509B /* ContentView.swift */,
+				FAD39AB12CAF838000E6509B /* WSIcon.entitlements */,
+				FAD39AAA2CAF830100E6509B /* Assets.xcassets */,
+			);
+			path = WSIcon;
+			sourceTree = "<group>";
+		};
 		FAF05E6E2CABB48C00BB212D /* Processing */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +216,25 @@
 			productReference = FA5D55322A3AB7C600135067 /* WorkoutSpot.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FAD39A9B2CAF82EB00E6509B /* WSIcon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAD39AA92CAF82EB00E6509B /* Build configuration list for PBXNativeTarget "WSIcon" */;
+			buildPhases = (
+				FAD39A982CAF82EB00E6509B /* Sources */,
+				FAD39A992CAF82EB00E6509B /* Frameworks */,
+				FAD39A9A2CAF82EB00E6509B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WSIcon;
+			packageProductDependencies = (
+			);
+			productName = WSIcon;
+			productReference = FAD39A9C2CAF82EB00E6509B /* WSIcon.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -195,12 +242,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = Leptos;
 				TargetAttributes = {
 					FA5D55312A3AB7C600135067 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					FAD39A9B2CAF82EB00E6509B = {
+						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -218,6 +268,7 @@
 			projectRoot = "";
 			targets = (
 				FA5D55312A3AB7C600135067 /* WorkoutSpot */,
+				FAD39A9B2CAF82EB00E6509B /* WSIcon */,
 			);
 		};
 /* End PBXProject section */
@@ -230,6 +281,14 @@
 				FAD39A702CAF1E3200E6509B /* AP2IL.archive in Resources */,
 				FAD39A722CAF1E3200E6509B /* IL2AP.archive in Resources */,
 				FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD39A9A2CAF82EB00E6509B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAD39AAE2CAF830100E6509B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +325,15 @@
 				FACFF24F2A4AB2CF00340E22 /* UIColor+Semantic.swift in Sources */,
 				FA1E7E512A3D5AFB007DC95D /* ScalarSeries.swift in Sources */,
 				FACFF2442A488A8300340E22 /* GraphDrawView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD39A982CAF82EB00E6509B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAD39AAF2CAF830100E6509B /* ContentView.swift in Sources */,
+				FAD39AB02CAF830100E6509B /* WSIconApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +537,74 @@
 			};
 			name = Release;
 		};
+		FAD39AA72CAF82EB00E6509B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WSIcon/WSIcon.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WSIcon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 6;
+			};
+			name = Debug;
+		};
+		FAD39AA82CAF82EB00E6509B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WSIcon/WSIcon.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WSIcon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 6;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -486,6 +622,15 @@
 			buildConfigurations = (
 				FA5D55412A3AB7C700135067 /* Debug */,
 				FA5D55422A3AB7C700135067 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAD39AA92CAF82EB00E6509B /* Build configuration list for PBXNativeTarget "WSIcon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAD39AA72CAF82EB00E6509B /* Debug */,
+				FAD39AA82CAF82EB00E6509B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
