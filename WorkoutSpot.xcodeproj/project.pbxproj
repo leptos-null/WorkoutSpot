@@ -38,6 +38,7 @@
 		FAD39AAE2CAF830100E6509B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD39AAA2CAF830100E6509B /* Assets.xcassets */; };
 		FAD39AAF2CAF830100E6509B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAB2CAF830100E6509B /* ContentView.swift */; };
 		FAD39AB02CAF830100E6509B /* WSIconApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAC2CAF830100E6509B /* WSIconApp.swift */; };
+		FAD39AB32CAF888400E6509B /* AssetsContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AB22CAF888400E6509B /* AssetsContents.swift */; };
 		FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		FAD39AAB2CAF830100E6509B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FAD39AAC2CAF830100E6509B /* WSIconApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSIconApp.swift; sourceTree = "<group>"; };
 		FAD39AB12CAF838000E6509B /* WSIcon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WSIcon.entitlements; sourceTree = "<group>"; };
+		FAD39AB22CAF888400E6509B /* AssetsContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsContents.swift; sourceTree = "<group>"; };
 		FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Measurement.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -180,6 +182,7 @@
 			children = (
 				FAD39AAC2CAF830100E6509B /* WSIconApp.swift */,
 				FAD39AAB2CAF830100E6509B /* ContentView.swift */,
+				FAD39AB22CAF888400E6509B /* AssetsContents.swift */,
 				FAD39AB12CAF838000E6509B /* WSIcon.entitlements */,
 				FAD39AAA2CAF830100E6509B /* Assets.xcassets */,
 			);
@@ -334,6 +337,7 @@
 			files = (
 				FAD39AAF2CAF830100E6509B /* ContentView.swift in Sources */,
 				FAD39AB02CAF830100E6509B /* WSIconApp.swift in Sources */,
+				FAD39AB32CAF888400E6509B /* AssetsContents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
