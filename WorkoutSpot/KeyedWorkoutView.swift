@@ -188,7 +188,7 @@ struct KeyedWorkoutView: View {
                             WorkoutPointStatsView(stats: viewModel.keyedData[indx])
                                 .padding(8)
                                 .padding(.horizontal, 4)
-                                .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
+                                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
                         }
                         .padding(.horizontal, horizontalInset - pointStatsViewRadius)
                         /* apply a negative padding of the background corner radius.
@@ -209,7 +209,7 @@ struct KeyedWorkoutView: View {
                             GeometryReader { geometryProxy in
                                 Rectangle()
                                     .frame(width: 4)
-                                    .foregroundStyle(.ultraThickMaterial)
+                                    .foregroundStyle(.regularMaterial)
                                     .position(
                                         x: relativeSelectionPositionX,
                                         y: geometryProxy.size.height / 2
