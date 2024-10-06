@@ -39,8 +39,19 @@
 		FAD39AAF2CAF830100E6509B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAB2CAF830100E6509B /* ContentView.swift */; };
 		FAD39AB02CAF830100E6509B /* WSIconApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AAC2CAF830100E6509B /* WSIconApp.swift */; };
 		FAD39AB32CAF888400E6509B /* AssetsContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD39AB22CAF888400E6509B /* AssetsContents.swift */; };
+		FADC3F572CB323EB00560392 /* GatherScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC3F542CB323EB00560392 /* GatherScreenshots.swift */; };
 		FAF05E6D2CAA034A00BB212D /* Text+Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FADC3F4F2CB323E500560392 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA5D552A2A3AB7C600135067 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA5D55312A3AB7C600135067;
+			remoteInfo = WorkoutSpot;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		FA1E7E442A3BB34E007DC95D /* HKWorkoutActivityType+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HKWorkoutActivityType+String.swift"; sourceTree = "<group>"; };
@@ -79,6 +90,8 @@
 		FAD39AAC2CAF830100E6509B /* WSIconApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSIconApp.swift; sourceTree = "<group>"; };
 		FAD39AB12CAF838000E6509B /* WSIcon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WSIcon.entitlements; sourceTree = "<group>"; };
 		FAD39AB22CAF888400E6509B /* AssetsContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsContents.swift; sourceTree = "<group>"; };
+		FADC3F492CB323E500560392 /* WorkoutSpotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorkoutSpotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FADC3F542CB323EB00560392 /* GatherScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatherScreenshots.swift; sourceTree = "<group>"; };
 		FAF05E6C2CAA034A00BB212D /* Text+Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Measurement.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +110,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FADC3F462CB323E500560392 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -105,6 +125,7 @@
 			children = (
 				FA5D55342A3AB7C600135067 /* WorkoutSpot */,
 				FAD39AAD2CAF830100E6509B /* WSIcon */,
+				FADC3F562CB323EB00560392 /* WorkoutSpotUITests */,
 				FA5D55332A3AB7C600135067 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,6 +135,7 @@
 			children = (
 				FA5D55322A3AB7C600135067 /* WorkoutSpot.app */,
 				FAD39A9C2CAF82EB00E6509B /* WSIcon.app */,
+				FADC3F492CB323E500560392 /* WorkoutSpotUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,6 +211,14 @@
 			path = WSIcon;
 			sourceTree = "<group>";
 		};
+		FADC3F562CB323EB00560392 /* WorkoutSpotUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FADC3F542CB323EB00560392 /* GatherScreenshots.swift */,
+			);
+			path = WorkoutSpotUITests;
+			sourceTree = "<group>";
+		};
 		FAF05E6E2CABB48C00BB212D /* Processing */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,6 +268,26 @@
 			productReference = FAD39A9C2CAF82EB00E6509B /* WSIcon.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FADC3F482CB323E500560392 /* WorkoutSpotUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FADC3F532CB323E500560392 /* Build configuration list for PBXNativeTarget "WorkoutSpotUITests" */;
+			buildPhases = (
+				FADC3F452CB323E500560392 /* Sources */,
+				FADC3F462CB323E500560392 /* Frameworks */,
+				FADC3F472CB323E500560392 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FADC3F502CB323E500560392 /* PBXTargetDependency */,
+			);
+			name = WorkoutSpotUITests;
+			packageProductDependencies = (
+			);
+			productName = WorkoutSpotUITests;
+			productReference = FADC3F492CB323E500560392 /* WorkoutSpotUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -254,6 +304,10 @@
 					};
 					FAD39A9B2CAF82EB00E6509B = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					FADC3F482CB323E500560392 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = FA5D55312A3AB7C600135067;
 					};
 				};
 			};
@@ -272,6 +326,7 @@
 			targets = (
 				FA5D55312A3AB7C600135067 /* WorkoutSpot */,
 				FAD39A9B2CAF82EB00E6509B /* WSIcon */,
+				FADC3F482CB323E500560392 /* WorkoutSpotUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -292,6 +347,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAD39AAE2CAF830100E6509B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FADC3F472CB323E500560392 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +403,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FADC3F452CB323E500560392 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FADC3F572CB323EB00560392 /* GatherScreenshots.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FADC3F502CB323E500560392 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA5D55312A3AB7C600135067 /* WorkoutSpot */;
+			targetProxy = FADC3F4F2CB323E500560392 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FA5D553E2A3AB7C700135067 /* Debug */ = {
@@ -611,6 +689,44 @@
 			};
 			name = Release;
 		};
+		FADC3F512CB323E500560392 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WorkoutSpotUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = WorkoutSpot;
+			};
+			name = Debug;
+		};
+		FADC3F522CB323E500560392 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7P56K8K4MY;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = null.leptos.WorkoutSpotUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = WorkoutSpot;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -637,6 +753,15 @@
 			buildConfigurations = (
 				FAD39AA72CAF82EB00E6509B /* Debug */,
 				FAD39AA82CAF82EB00E6509B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FADC3F532CB323E500560392 /* Build configuration list for PBXNativeTarget "WorkoutSpotUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FADC3F512CB323E500560392 /* Debug */,
+				FADC3F522CB323E500560392 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
