@@ -130,7 +130,7 @@ struct WorkoutList: View {
                                     }
                                 } header: {
                                     Text(staple.date, style: .date)
-                                        .font(.title3.weight(.semibold))
+                                        .font(.callout.weight(.semibold))
                                 }
                             }
                             if trailFetchInFlight {
