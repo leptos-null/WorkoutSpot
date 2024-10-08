@@ -120,8 +120,27 @@ xcrun simctl status_bar \(deviceUDID) override \
         
         app.launch()
         
-        let window: XCUIElement = app
+        let window: XCUIElement = app.windows.firstMatch
         
         write(screenshot: window.screenshot(), name: "0_home", description: "Home")
+        window.collectionViews.cells.staticTexts["10min 23sec"].tap() // AP2IL - Apple Park to Infinite Loop
+        sleep(1) // wait for map content to fully show up
+        
+        let graphScrollView = window.scrollViews.firstMatch
+        
+        write(screenshot: window.screenshot(), name: "1_time", description: "Time, full route")
+        
+        graphScrollView.pinch(withScale: 2, velocity: 2)
+        write(screenshot: window.screenshot(), name: "2_time_segment", description: "Time segment")
+        
+        graphScrollView.swipeLeft() // effectively pick a random spot
+        write(screenshot: window.screenshot(), name: "3_time_point", description: "Time point")
+        
+        window.segmentedControls.buttons["Distance"].tap()
+        graphScrollView.swipeRight() // effectively pick another spot
+        write(screenshot: window.screenshot(), name: "4_distance_point", description: "Distance point")
+        
+        graphScrollView.tap() // hide point stats view
+        write(screenshot: window.screenshot(), name: "5_distance_segment", description: "Distance segment")
     }
 }
