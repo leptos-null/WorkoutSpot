@@ -174,7 +174,7 @@ class GraphDrawView: UIView {
                     guard validX ~= pointX else { continue }
                     
                     let path = UIBezierPath()
-                    path.move(to: CGPoint(x: pointX, y: 0))
+                    path.move(to: CGPoint(x: pointX, y: 0.5))
                     path.addLine(to: CGPoint(x: pointX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
                     
                     // start in the off phase so that the first dot doesn't
