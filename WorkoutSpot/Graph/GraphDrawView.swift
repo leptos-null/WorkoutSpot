@@ -36,6 +36,10 @@ class GraphDrawView: UIView {
         didSet { updateGuides() }
     }
     
+    var showGridLines: Bool = false {
+        didSet { setNeedsDisplay() }
+    }
+    
     var graphInsets: UIEdgeInsets = .zero {
         didSet { updateGuides() }
     }
@@ -85,13 +89,109 @@ class GraphDrawView: UIView {
             return (guide, color)
         }
         
+        let indexOffset = guides.data.startIndex
+        
+        if showGridLines {
+            UIColor.secondaryLabel.withAlphaComponent(0.3).setStroke()
+            
+            let graphConfig = guides.config
+            
+            // add a vertical line on the trailing edge of the graph.
+            // this is just to add a "border" look
+            let trailX = graphConfig.size.width - graphConfig.graphInsets.right
+            let trailPath = UIBezierPath()
+            trailPath.move(to: CGPoint(x: trailX, y: 0.5))
+            trailPath.addLine(to: CGPoint(x: trailX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
+            trailPath.stroke()
+            
+            // add 3 horizontal lines across the graph.
+            // the first line is at the very top, which is just to add a "border" look
+            let totalHeight = graphConfig.size.height
+            for lineMarkY in stride(from: 0, to: totalHeight - graphConfig.graphInsets.bottom, by: totalHeight / 3) {
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: graphConfig.graphInsets.left, y: lineMarkY))
+                path.addLine(to: CGPoint(x: graphConfig.size.width - graphConfig.graphInsets.right, y: lineMarkY))
+                
+                path.stroke()
+            }
+            
+            if let keySeries = guides.keySeries {
+                // our goal is to show vertical lines to visually segment the graph.
+                // we would like the vertical lines to not move with respect to the underlying data.
+                // i.e. if there's a vertical line at `time = 250 seconds` that line should
+                // always be at `time = 250 seconds`, no matter how the user moves the graph
+                // (unless the user zooms out and doesn't need to see so many lines).
+                //
+                // in order for the lines to not "move" as the user changes the selection range
+                // we must divide the total range into `c * x**n` segments.
+                //   `c` must be constant; minimum number of lines visible at once.
+                //   `x` must be constant; how many segments a single segment is split into when the user zooms in.
+                //   `n` a variable that is selected to satisfy:
+                //     `c >= selection.count / (total.count / x**n )`
+                //
+                // this results in lines that do not "move" because `n + 1` multiplies
+                // the result of `n` by `x`. So all the lines from `n` are present and
+                // have not moved. lines are only added in-between the existing lines.
+                // you can observe this with a function such as
+                //
+                //   func segment(t: Double, c: Double, x: Double, n: Double) -> [Double] {
+                //       let width = t / (c * pow(x, n))
+                //       return Array(stride(from: .zero, to: t, by: width))
+                //   }
+                //
+                //   `t` is the total range count.
+                //   select constant values for `t`, `c`, and `x`.
+                //   vary `n` and observe that every value in the output for `n` is present in `n + 1`
+                //
+                // for selecting `n`, we simply solve the constraint for `n`:
+                //   c <= selection.count / (total.count / x**n )
+                //   c * (total.count / x**n ) <= selection.count
+                //   c * total.count / x**n <= selection.count
+                //   c * total.count <= selection.count * x**n
+                //   c * total.count / selection.count <= x**n
+                //   log_x(c * total.count / selection.count) <= n
+                //
+                // and minimize `n` so we show the least amount of lines
+                // (otherwise the graph could be over-whelmed with lines).
+                //
+                // using this equation, I've selected `c = 2`, `x = 2`
+                
+                let baseCount = guides.data.base.count // `total.count` in notation above
+                let selection = guides.data.indices // `selection` in notation above
+                let scale = baseCount / selection.count
+                let highestSetBitIndex = scale.bitWidth - scale.leadingZeroBitCount // logb(scale) + 1
+                // slide another 1 bit to multiply by another 2
+                let segmentCount = (1 << highestSetBitIndex) << 1
+                
+                let segmentSize = baseCount / segmentCount
+                let selectionMod = selection.lowerBound % segmentSize
+                let firstLine = (selectionMod == 0) ? selection.lowerBound : (selection.lowerBound - selectionMod + segmentSize)
+                let lines = stride(from: firstLine, to: selection.upperBound, by: segmentSize)
+                
+                let validX = graphConfig.graphInsets.left...(graphConfig.size.width - graphConfig.graphInsets.right)
+                for line in lines {
+                    let pointX = keySeries.xForOffset(line - indexOffset)
+                    guard validX ~= pointX else { continue }
+                    
+                    let path = UIBezierPath()
+                    path.move(to: CGPoint(x: pointX, y: 0))
+                    path.addLine(to: CGPoint(x: pointX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
+                    
+                    // start in the off phase so that the first dot doesn't
+                    // intersect the top horizontal line
+                    path.setLineDash([ 1, 2 ], count: 2, phase: 1)
+                    path.stroke()
+                }
+            }
+        }
+        
         for (guide, color) in validPairs {
             color.setStroke()
             guide.path.stroke()
         }
         
         if let pointMarksIndex, let keyGuide = guides.keySeries {
-            let pointMarkX = keyGuide.xForOffset(pointMarksIndex - guides.data.startIndex)
+            let pointMarkX = keyGuide.xForOffset(pointMarksIndex - indexOffset)
             
             for (guide, color) in validPairs {
                 let pointMark = CGPoint(
