@@ -30,7 +30,6 @@ class GatherScreenshots: XCTestCase {
 #endif
         
         let directory = project
-            .appendingPathComponent("docs")
             .appendingPathComponent("Screenshots")
             .appendingPathComponent(model)
         
