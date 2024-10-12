@@ -92,6 +92,12 @@ class GraphDrawView: UIView {
         let indexOffset = guides.data.startIndex
         
         if showGridLines {
+            // width of the lines running in the horizontal direction
+            //   (which is effectively the height of those lines)
+            let horizontalLineWidth: CGFloat = 1
+            // width of the lines running in the vertical direction
+            let verticalLineWidth: CGFloat = 1
+            
             UIColor.secondaryLabel.withAlphaComponent(0.3).setStroke()
             
             let graphConfig = guides.config
@@ -100,8 +106,9 @@ class GraphDrawView: UIView {
             // this is just to add a "border" look
             let trailX = graphConfig.size.width - graphConfig.graphInsets.right
             let trailPath = UIBezierPath()
-            trailPath.move(to: CGPoint(x: trailX, y: 0.5))
+            trailPath.move(to: CGPoint(x: trailX, y: horizontalLineWidth/2))
             trailPath.addLine(to: CGPoint(x: trailX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
+            trailPath.lineWidth = verticalLineWidth
             trailPath.stroke()
             
             // add 3 horizontal lines across the graph.
@@ -112,6 +119,7 @@ class GraphDrawView: UIView {
                 path.move(to: CGPoint(x: graphConfig.graphInsets.left, y: lineMarkY))
                 path.addLine(to: CGPoint(x: graphConfig.size.width - graphConfig.graphInsets.right, y: lineMarkY))
                 
+                path.lineWidth = horizontalLineWidth
                 path.stroke()
             }
             
@@ -174,9 +182,10 @@ class GraphDrawView: UIView {
                     guard validX ~= pointX else { continue }
                     
                     let path = UIBezierPath()
-                    path.move(to: CGPoint(x: pointX, y: 0.5))
+                    path.move(to: CGPoint(x: pointX, y: horizontalLineWidth/2))
                     path.addLine(to: CGPoint(x: pointX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
                     
+                    path.lineWidth = verticalLineWidth
                     // start in the off phase so that the first dot doesn't
                     // intersect the top horizontal line
                     path.setLineDash([ 1, 2 ], count: 2, phase: 1)
