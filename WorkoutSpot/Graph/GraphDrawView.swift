@@ -104,7 +104,15 @@ class GraphDrawView: UIView {
             
             // add a vertical line on the trailing edge of the graph.
             // this is just to add a "border" look
-            let trailX = graphConfig.size.width - graphConfig.graphInsets.right
+            let trailX: CGFloat
+            switch effectiveUserInterfaceLayoutDirection {
+            case .leftToRight: trailX = graphConfig.size.width - graphConfig.graphInsets.right
+            case .rightToLeft: trailX = graphConfig.graphInsets.left
+            @unknown default:
+                assertionFailure("Unknown effectiveUserInterfaceLayoutDirection")
+                trailX = graphConfig.size.width / 2 // put it in the middle
+            }
+            
             let trailPath = UIBezierPath()
             trailPath.move(to: CGPoint(x: trailX, y: horizontalLineWidth/2))
             trailPath.addLine(to: CGPoint(x: trailX, y: graphConfig.size.height - graphConfig.graphInsets.bottom))
