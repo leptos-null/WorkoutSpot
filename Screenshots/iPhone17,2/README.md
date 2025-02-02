@@ -1,4 +1,4 @@
-## iPhone 16 Pro Max 18.0
+## iPhone 16 Pro Max 18.2
 
 ![Home](0_home.png)
 

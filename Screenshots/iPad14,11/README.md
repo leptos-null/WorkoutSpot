@@ -1,4 +1,4 @@
-## iPhone 16 18.0
+## iPad Air 13-inch (M2) 18.2
 
 ![Home](0_home.png)
 
