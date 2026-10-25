@@ -10,12 +10,12 @@ import Foundation
 import HealthKit
 import CoreLocation
 
-final class HealthStore {
+final class HealthStore: Sendable {
     let healthStore = HKHealthStore()
     
     // all sample types used throughout the app.
     // request all up front so that we don't show the
-    // authorization screen multiple times in a short spane
+    // authorization screen multiple times in a short span
     static let sampleTypes: Set<HKSampleType> = {
         var types: Set<HKSampleType> = [
             HKWorkoutType.workoutType(),
