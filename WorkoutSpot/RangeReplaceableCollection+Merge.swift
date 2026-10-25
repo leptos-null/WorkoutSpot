@@ -9,12 +9,13 @@
 import Foundation
 
 extension RangeReplaceableCollection {
-    static func sortedMerge<LS: Sequence, RS: Sequence, SC: SortComparator>(_ lhs: LS, _ rhs: RS, using sortComparator: SC) -> Self
+    static func sortedMerge<LS: RandomAccessCollection, RS: RandomAccessCollection, SC: SortComparator>(_ lhs: LS, _ rhs: RS, using sortComparator: SC) -> Self
     where LS.Element == Element, RS.Element == Element, SC.Compared == Element {
         var lhsIterator = lhs.makeIterator()
         var rhsIterator = rhs.makeIterator()
         
         var build: Self = .init()
+        build.reserveCapacity(lhs.count + rhs.count)
         
         var lhsUp = lhsIterator.next()
         var rhsUp = rhsIterator.next()
