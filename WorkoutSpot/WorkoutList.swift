@@ -213,6 +213,7 @@ struct WorkoutCell: View {
         HStack {
             Image(systemName: workout.workoutActivityType.systemImageName ?? "heart")
                 .font(.title)
+                .symbolColorRenderingModeGradientIfAvailable()
             
             VStack(alignment: .leading) {
                 Text(workout.workoutActivityType.localizedName)
@@ -301,6 +302,18 @@ struct WorkoutDetail: View {
                 .task {
                     await viewModel.update(for: workout, healthStore: healthStore)
                 }
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    nonisolated func symbolColorRenderingModeGradientIfAvailable() -> some View {
+        if #available(iOS 26.0, visionOS 26.0, *) {
+            self
+                .symbolColorRenderingMode(.gradient)
+        } else {
+            self
         }
     }
 }
