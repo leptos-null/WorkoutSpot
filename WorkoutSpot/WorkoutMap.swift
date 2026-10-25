@@ -79,13 +79,19 @@ struct WorkoutMap<S: Sequence>: UIViewRepresentable where S: Equatable, S.Elemen
             @unknown default: (0, 0)
             }
             
+            // `setVisibleMapRect` already takes `view.safeAreaInsets` into consideration (i.e. adds the safe area into the padding).
+            // in my testing on iOS 27.0, `view.safeAreaInsets` is sometimes (incorrectly) all zeros.
+            // to handle both cases (when `view.safeAreaInsets` is correct or all zeros),
+            // add the SwiftUI reported safe area (which is correct), and then subtract off the `view.safeAreaInsets`.
+            // the end result, after `setVisibleMapRect` adds back in `view.safeAreaInsets`,
+            // is just the SwiftUI reported safe area.
             view.setVisibleMapRect(
                 routeOverlay.boundingMapRect,
                 edgePadding: UIEdgeInsets(
-                    top: 32 + safeAreaInsets.top,
-                    left: 18 + safeAreaLeftInset,
-                    bottom: 32 + safeAreaInsets.bottom,
-                    right: 18 + safeAreaRightInset
+                    top: 32 + (safeAreaInsets.top - view.safeAreaInsets.top),
+                    left: 18 + (safeAreaLeftInset - view.safeAreaInsets.left),
+                    bottom: 32 + (safeAreaInsets.bottom - view.safeAreaInsets.bottom),
+                    right: 18 + (safeAreaRightInset - view.safeAreaInsets.right)
                 ),
                 animated: true
             )
