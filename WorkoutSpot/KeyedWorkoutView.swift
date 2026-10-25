@@ -165,14 +165,18 @@ struct KeyedWorkoutView: View {
                 if let coordinates = viewModel.analysis.timeDomain.coordinate,
                    let startUnit = viewModel.segmentStartUnit,
                    let endUnit = viewModel.segmentEndUnit {
-                    WorkoutMap(
-                        coordinates: coordinates,
-                        routeColor: .workoutFull,
-                        segmentColor: .workoutSegment,
-                        segmentStart: startUnit,
-                        segmentEnd: endUnit,
-                        annotationCoordinate: viewModel.annotationCoordinate
-                    )
+                    GeometryReader { geometry in
+                        WorkoutMap(
+                            coordinates: coordinates,
+                            routeColor: .workoutFull,
+                            segmentColor: .workoutSegment,
+                            segmentStart: startUnit,
+                            segmentEnd: endUnit,
+                            annotationCoordinate: viewModel.annotationCoordinate,
+                            safeAreaInsets: geometry.safeAreaInsets
+                        )
+                        .ignoresSafeArea(edges: .all)
+                    }
                     .padding(.bottom)
                 }
                 HStack {
@@ -197,6 +201,7 @@ struct KeyedWorkoutView: View {
                          */
                     }
                 }
+                .padding(.horizontal, horizontalInset)
                 
                 HStack(spacing: 6) {
                     WorkoutGraphView(
@@ -226,12 +231,12 @@ struct KeyedWorkoutView: View {
                             .padding(.bottom, 8)
                     }
                 }
+                .padding(.horizontal, horizontalInset)
             }
             .contentShape(Rectangle())
             .onTapGesture {
                 viewModel.selectionPoint = nil
             }
-            .padding(.horizontal, horizontalInset)
             
             if let distanceDomain = viewModel.analysis.distanceDomain {
                 Picker("Domain", selection: $viewModel.keyedData) {

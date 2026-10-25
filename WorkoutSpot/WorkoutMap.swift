@@ -20,6 +20,8 @@ struct WorkoutMap<S: Sequence>: UIViewRepresentable where S: Equatable, S.Elemen
     
     var annotationCoordinate: CLLocationCoordinate2D?
     
+    var safeAreaInsets: EdgeInsets
+    
     private func makePolyline() -> MKPolyline? {
         let result = coordinates.withContiguousStorageIfAvailable { buffer -> MKPolyline? in
             guard let baseAddress = buffer.baseAddress else { return nil }
@@ -69,9 +71,22 @@ struct WorkoutMap<S: Sequence>: UIViewRepresentable where S: Equatable, S.Elemen
             
             view.addOverlays([ routeOverlay, segmentOverlay ])
             
+            // hopefully `view.effectiveUserInterfaceLayoutDirection` matches `context.environment.layoutDirection`.
+            // I decided to switch on the SwiftUI value, since the `safeAreaInsets` are coming in from SwiftUI
+            let (safeAreaLeftInset, safeAreaRightInset): (CGFloat, CGFloat) = switch context.environment.layoutDirection {
+            case .leftToRight: (safeAreaInsets.leading, safeAreaInsets.trailing)
+            case .rightToLeft: (safeAreaInsets.trailing, safeAreaInsets.leading)
+            @unknown default: (0, 0)
+            }
+            
             view.setVisibleMapRect(
                 routeOverlay.boundingMapRect,
-                edgePadding: UIEdgeInsets(top: 32, left: 18, bottom: 32, right: 18),
+                edgePadding: UIEdgeInsets(
+                    top: 32 + safeAreaInsets.top,
+                    left: 18 + safeAreaLeftInset,
+                    bottom: 32 + safeAreaInsets.bottom,
+                    right: 18 + safeAreaRightInset
+                ),
                 animated: true
             )
             
