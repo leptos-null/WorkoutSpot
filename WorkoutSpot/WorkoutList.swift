@@ -158,6 +158,7 @@ struct WorkoutList: View {
                 WorkoutDetail(workout: workout, healthStore: healthStore)
                     .navigationTitle(workout.workoutActivityType.localizedName)
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.visible, for: .navigationBar)
             } else {
                 Text("Select a workout from the sidebar")
             }
