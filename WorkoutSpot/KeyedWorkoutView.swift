@@ -155,102 +155,145 @@ struct KeyedWorkoutView: View {
         return formatter
     }
     
+    private func mapAlignmentDivisionRegion(for geometryProxy: GeometryProxy) -> HorizontalDivisionRegion? {
+        guard #available(anyAppleOS 27.1, *) else { return nil }
+        
+        let containerSize: CGSize = geometryProxy.size
+        let containerMidX: CGFloat = containerSize.width / 2
+        // find a region in the middle 2 quarters
+        let minY: CGFloat = containerSize.height / 4 // 25%
+        let maxY: CGFloat = minY * 3 // 75%
+        let acceptedRange = minY..<maxY
+        
+        let bestMatch: ReservedRegion? = geometryProxy
+            .reservedRegions(kind: .division)
+            .filter { reservedRegion in
+                acceptedRange ~= reservedRegion.frame.minY
+                // check that this region contains the middle point along the x-axis;
+                // if it doesn't, this region is likely on an edge that isn't important to us.
+                && reservedRegion.frame.minX..<reservedRegion.frame.maxX ~= containerMidX
+            }
+            .min { lhs, rhs in
+                lhs.frame.minY < rhs.frame.minY
+            }
+        
+        guard let bestMatch else { return nil }
+        return .init(
+            safeStart: bestMatch.frame.minY,
+            safeHeight: bestMatch.frame.height,
+            marginTop: bestMatch.margins.top,
+            marginBottom: bestMatch.margins.bottom
+        )
+    }
+    
     var body: some View {
-        VStack(spacing: 0) {
+        GeometryReader { fullViewGeometryProxy in
             VStack(spacing: 0) {
-                // we always want to use the same coordinate series
-                // since WorkoutMap re-focuses the map if the input
-                // coordinates change (even if the route appears the same).
-                // Use time domain because it's non-optional and usually has less points
-                if let coordinates = viewModel.analysis.timeDomain.coordinate,
-                   let startUnit = viewModel.segmentStartUnit,
-                   let endUnit = viewModel.segmentEndUnit {
-                    GeometryReader { geometry in
-                        WorkoutMap(
-                            coordinates: coordinates,
-                            routeColor: .workoutFull,
-                            segmentColor: .workoutSegment,
-                            segmentStart: startUnit,
-                            segmentEnd: endUnit,
-                            annotationCoordinate: viewModel.annotationCoordinate,
-                            safeAreaInsets: geometry.safeAreaInsets
-                        )
-                        .ignoresSafeArea(edges: .all)
-                    }
-                    .padding(.bottom)
-                }
-                HStack {
-                    WorkoutSegmentStatsView(viewModel: viewModel)
-                        .padding(8)
-                        .padding(.horizontal, 4)
-                        .opacity((viewModel.selectionPoint == nil) ? 1 : 0)
-                    Spacer()
-                }
-                .overlay {
-                    if let indx = viewModel.selectionPoint, let relativeSelectionPositionX {
-                        BoundedPosition(x: relativeSelectionPositionX) {
-                            WorkoutPointStatsView(stats: viewModel.keyedData[indx])
-                                .padding(8)
-                                .padding(.horizontal, 4)
-                                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
+                VStack(spacing: 0) {
+                    // we always want to use the same coordinate series
+                    // since WorkoutMap re-focuses the map if the input
+                    // coordinates change (even if the route appears the same).
+                    // Use time domain because it's non-optional and usually has less points
+                    if let coordinates = viewModel.analysis.timeDomain.coordinate,
+                       let startUnit = viewModel.segmentStartUnit,
+                       let endUnit = viewModel.segmentEndUnit {
+                        let alignmentDivisionRegion = mapAlignmentDivisionRegion(for: fullViewGeometryProxy)
+                        
+                        GeometryReader { mapGeometry in
+                            WorkoutMap(
+                                coordinates: coordinates,
+                                routeColor: .workoutFull,
+                                segmentColor: .workoutSegment,
+                                segmentStart: startUnit,
+                                segmentEnd: endUnit,
+                                annotationCoordinate: viewModel.annotationCoordinate,
+                                safeAreaInsets: mapGeometry.safeAreaInsets
+                            )
+                            .ignoresSafeArea(edges: .all)
                         }
-                        .padding(.horizontal, horizontalInset - pointStatsViewRadius)
-                        /* apply a negative padding of the background corner radius.
-                         this allows the corner to go out of bounds which results in
-                         the rectangle below to never become disconnected from the background.
-                         */
-                    }
-                }
-                .padding(.horizontal, horizontalInset)
-                
-                HStack(spacing: 6) {
-                    WorkoutGraphView(
-                        keyedWorkoutViewModel: viewModel,
-                        graphDrawViewModel: graphViewModel
-                    )
-                    .padding(.top)
-                    .background {
-                        if let relativeSelectionPositionX {
-                            GeometryReader { geometryProxy in
-                                Rectangle()
-                                    .frame(width: 4)
-                                    .foregroundStyle(.regularMaterial)
-                                    .position(
-                                        x: relativeSelectionPositionX,
-                                        y: geometryProxy.size.height / 2
-                                    )
+                        .safeAreaInset(edge: .bottom) {
+                            if let alignmentDivisionRegion {
+                                Spacer()
+                                    .frame(height: alignmentDivisionRegion.marginTop)
                             }
-                            .clipped()
+                        }
+                        .frame(height: alignmentDivisionRegion?.unsafeStart)
+                        .padding(.bottom, alignmentDivisionRegion?.heightAfterUnsafeStart)
+                    }
+                    HStack {
+                        WorkoutSegmentStatsView(viewModel: viewModel)
+                            .padding(8)
+                            .padding(.horizontal, 4)
+                            .opacity((viewModel.selectionPoint == nil) ? 1 : 0)
+                        Spacer()
+                    }
+                    .overlay {
+                        if let indx = viewModel.selectionPoint, let relativeSelectionPositionX {
+                            BoundedPosition(x: relativeSelectionPositionX) {
+                                WorkoutPointStatsView(stats: viewModel.keyedData[indx])
+                                    .padding(8)
+                                    .padding(.horizontal, 4)
+                                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
+                            }
+                            .padding(.horizontal, horizontalInset - pointStatsViewRadius)
+                            /* apply a negative padding of the background corner radius.
+                             this allows the corner to go out of bounds which results in
+                             the rectangle below to never become disconnected from the background.
+                             */
                         }
                     }
-                    VStack {
-                        WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .max)
-                            .padding(.top, 8)
-                        Spacer()
-                        WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .min)
-                            .padding(.bottom, 8)
+                    .padding(.horizontal, horizontalInset)
+                    
+                    HStack(spacing: 6) {
+                        WorkoutGraphView(
+                            keyedWorkoutViewModel: viewModel,
+                            graphDrawViewModel: graphViewModel
+                        )
+                        .padding(.top)
+                        .background {
+                            if let relativeSelectionPositionX {
+                                GeometryReader { geometryProxy in
+                                    Rectangle()
+                                        .frame(width: 4)
+                                        .foregroundStyle(.regularMaterial)
+                                        .position(
+                                            x: relativeSelectionPositionX,
+                                            y: geometryProxy.size.height / 2
+                                        )
+                                }
+                                .clipped()
+                            }
+                        }
+                        VStack {
+                            WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .max)
+                                .padding(.top, 8)
+                            Spacer()
+                            WorkoutExtremaStatsView(data: viewModel.keyedData[viewModel.selectionRange], extrema: .min)
+                                .padding(.bottom, 8)
+                        }
                     }
+                    .padding(.horizontal, horizontalInset)
                 }
-                .padding(.horizontal, horizontalInset)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                viewModel.selectionPoint = nil
-            }
-            
-            if let distanceDomain = viewModel.analysis.distanceDomain {
-                Picker("Domain", selection: $viewModel.keyedData) {
-                    Text("Time")
-                        .tag(viewModel.analysis.timeDomain)
-                    Text("Distance")
-                        .tag(distanceDomain)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    viewModel.selectionPoint = nil
                 }
-                .pickerStyle(.segmented)
+                
+                if let distanceDomain = viewModel.analysis.distanceDomain {
+                    Picker("Domain", selection: $viewModel.keyedData) {
+                        Text("Time")
+                            .tag(viewModel.analysis.timeDomain)
+                        Text("Distance")
+                            .tag(distanceDomain)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                WorkoutGraphPreview(viewModel: viewModel)
+                    .frame(height: 36)
+                    .padding(.top, 2)
             }
-            
-            WorkoutGraphPreview(viewModel: viewModel)
-                .frame(height: 36)
-                .padding(.top, 2)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -282,6 +325,37 @@ struct KeyedWorkoutView: View {
                 }
             }
         }
+    }
+}
+
+private struct HorizontalDivisionRegion {
+    //       0 is the top
+    //
+    //   (1) ------------  <-  safeStart
+    //
+    //   (2) ------------  <-  safeStart + marginTop
+    //
+    //
+    //
+    //   (3) ------------  <-  safeStart + safeHeight - marginBottom
+    //
+    //   (4) ------------  <-  safeStart + safeHeight
+    //
+    
+    let safeStart: CGFloat
+    let safeHeight: CGFloat
+    
+    let marginTop: CGFloat
+    let marginBottom: CGFloat
+    
+    // i.e. point (2)
+    var unsafeStart: CGFloat {
+        safeStart + marginTop
+    }
+    
+    // i.e. the distance from point (2) to point (4)
+    var heightAfterUnsafeStart: CGFloat {
+        safeHeight - marginTop
     }
 }
 
