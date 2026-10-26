@@ -15,6 +15,7 @@
 		FA1E7E512A3D5AFB007DC95D /* ScalarSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */; };
 		FA1E7E532A3D8826007DC95D /* CoordinateSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1E7E522A3D8826007DC95D /* CoordinateSeries.swift */; };
 		FA1E7E552A3E5316007DC95D /* WorkoutAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */; };
+		FA2D0620308FD47C0033BDDD /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FA2D061F308FD47C0033BDDD /* AppIcon.icon */; };
 		FA5D55362A3AB7C600135067 /* WorkoutSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */; };
 		FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5D55392A3AB7C700135067 /* Assets.xcassets */; };
 		FA8614C62CA8AE55002877D7 /* WorkoutGraphPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8614C52CA8AE55002877D7 /* WorkoutGraphPreview.swift */; };
@@ -62,6 +63,7 @@
 		FA1E7E502A3D5AFB007DC95D /* ScalarSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalarSeries.swift; sourceTree = "<group>"; };
 		FA1E7E522A3D8826007DC95D /* CoordinateSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSeries.swift; sourceTree = "<group>"; };
 		FA1E7E542A3E5316007DC95D /* WorkoutAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAnalysis.swift; sourceTree = "<group>"; };
+		FA2D061F308FD47C0033BDDD /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		FA5D55322A3AB7C600135067 /* WorkoutSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorkoutSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA5D55352A3AB7C600135067 /* WorkoutSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSpotApp.swift; sourceTree = "<group>"; };
 		FA5D55392A3AB7C700135067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				FAD39A6E2CAF1E3200E6509B /* Resources */,
 				FA5D55432A3AB8CF00135067 /* WorkoutSpot.entitlements */,
 				FA5D55392A3AB7C700135067 /* Assets.xcassets */,
+				FA2D061F308FD47C0033BDDD /* AppIcon.icon */,
 			);
 			path = WorkoutSpot;
 			sourceTree = "<group>";
@@ -337,6 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAD39A702CAF1E3200E6509B /* AP2IL.archive in Resources */,
+				FA2D0620308FD47C0033BDDD /* AppIcon.icon in Resources */,
 				FAD39A722CAF1E3200E6509B /* IL2AP.archive in Resources */,
 				FA5D553A2A3AB7C700135067 /* Assets.xcassets in Resources */,
 			);
