@@ -150,6 +150,8 @@ struct WorkoutList: View {
                         workoutSource.streamUpdates(initialCompletion: continuation.resume)
                     }
                 }
+            } else if let fetchError = prefetchError ?? workoutSource.error {
+                ErrorBulletinView("An error occurred fetching workouts.", error: fetchError)
             } else {
                 ProgressView()
             }
