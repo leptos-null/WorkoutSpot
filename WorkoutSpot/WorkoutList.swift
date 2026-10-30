@@ -225,6 +225,8 @@ struct WorkoutCell: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            .layoutPriority(1)
+            
             Spacer()
             VStack(alignment: .trailing) {
                 Text(dateRange, format: .components(style: .condensedAbbreviated))
