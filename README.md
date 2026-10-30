@@ -27,8 +27,8 @@ Change the segment selection by zooming and scrolling on the graph.
 
 ### Screenshots
 
-<img width="49%" src="Screenshots/iPhone17,2/0_home.png" alt="Workout list on iPhone"><img hspace="1%"><img width="49%" src="Screenshots/iPhone17,2/2_time_segment.png" alt="Workout view on iPhone">
+<img width="49%" src="Screenshots/iPhone18,4/0_home.png" alt="Workout list on iPhone"><img hspace="1%"><img width="49%" src="Screenshots/iPhone18,4/2_time_segment.png" alt="Workout view on iPhone">
 
-<img width="100%" src="Screenshots/iPad14,11/3_time_point.png" alt="Workout view on iPad">
+<img width="100%" src="Screenshots/iPad17,4/3_time_point.png" alt="Workout view on iPad">
 
 [More screenshots](Screenshots/)

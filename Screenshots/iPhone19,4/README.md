@@ -1,4 +1,4 @@
-## iPhone 16 Pro Max 18.2
+## iPhone Duo 27.1
 
 ![Home](0_home.png)
 

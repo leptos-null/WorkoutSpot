@@ -1,4 +1,4 @@
-## iPad Air 13-inch (M2) 18.2
+## iPad Pro 13-inch (M5) 27.0
 
 ![Home](0_home.png)
 
