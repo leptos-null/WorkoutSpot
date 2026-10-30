@@ -90,6 +90,7 @@ final class KeyedWorkoutViewModel: ObservableObject {
 
 // with help from https://nilcoalescing.com/blog/AnchoredPositionInSwiftUI/
 struct BoundedPosition: Layout {
+    // offsets from `bounds.origin`
     let proposedX: CGFloat?
     let proposedY: CGFloat?
     
@@ -98,7 +99,7 @@ struct BoundedPosition: Layout {
         proposedY = y
     }
     
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) -> CGSize {
         let maxNeeded = subviews.reduce(into: CGSize.zero) { partialResult, subview in
             let subSize = subview.sizeThatFits(proposal)
             partialResult.width = max(partialResult.width, subSize.width)
@@ -107,12 +108,12 @@ struct BoundedPosition: Layout {
         return proposal.replacingUnspecifiedDimensions(by: maxNeeded)
     }
     
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) {
         for subview in subviews {
             let dimensions = subview.dimensions(in: proposal)
             
-            let xCenter = proposedX ?? dimensions[HorizontalAlignment.center]
-            let yCenter = proposedY ?? dimensions[VerticalAlignment.center]
+            let xCenter = (proposedX ?? dimensions[HorizontalAlignment.center]) + bounds.minX
+            let yCenter = (proposedY ?? dimensions[VerticalAlignment.center]) + bounds.minY
             
             let midWidth = dimensions.width/2
             let midHeight = dimensions.height/2
@@ -229,17 +230,17 @@ struct KeyedWorkoutView: View {
                     }
                     .overlay {
                         if let indx = viewModel.selectionPoint, let relativeSelectionPositionX {
-                            BoundedPosition(x: relativeSelectionPositionX) {
+                            // apply a negative padding of the background corner radius.
+                            // this allows the corner to go out of bounds which results in
+                            // the rectangle below to never become disconnected from the background.
+                            let outsetX: CGFloat = horizontalInset - pointStatsViewRadius
+                            BoundedPosition(x: relativeSelectionPositionX - outsetX) {
                                 WorkoutPointStatsView(stats: viewModel.keyedData[indx])
                                     .padding(8)
                                     .padding(.horizontal, 4)
                                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: pointStatsViewRadius))
                             }
-                            .padding(.horizontal, horizontalInset - pointStatsViewRadius)
-                            /* apply a negative padding of the background corner radius.
-                             this allows the corner to go out of bounds which results in
-                             the rectangle below to never become disconnected from the background.
-                             */
+                            .padding(.horizontal, outsetX)
                         }
                     }
                     .padding(.horizontal, horizontalInset)
